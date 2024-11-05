@@ -1,10 +1,16 @@
 # !/bin/bash
 
-
-golangci-lint > /dev/null
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
 
 if [ $? != 0 ]; then
-  echo "golangci-lint is required!"
+  echo "golangci-lint installation failed!"
+  exit -1
+fi
+
+~/go/bin/golangci-lint > /dev/null
+
+if [ $? != 0 ]; then
+  echo "golangci-lint installation failed!"
   exit -1
 fi
 
@@ -24,7 +30,7 @@ do
   for j in $(find . -type f -name *.go)
   do
     echo "Linting $j..."
-    golangci-lint run $j
+    ~/go/bin/golangci-lint run $j
 
     if [ $? != 0 ]; then
       echo "Failed!"
