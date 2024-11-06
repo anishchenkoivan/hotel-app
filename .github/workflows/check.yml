@@ -1,4 +1,4 @@
-name: Lint go Code
+name: Check go Code
 
 on: [push, pull_request]
 
