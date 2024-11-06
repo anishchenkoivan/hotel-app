@@ -7,25 +7,21 @@ if [ $? != 0 ]; then
   exit -1
 fi
 
-~/go/bin/golangci-lint > /dev/null
-
-if [ $? != 0 ]; then
-  echo "golangci-lint installation failed!"
-  exit -1
-fi
-
 for i in *-service
 do
 
   echo "Testing $i..."
-  cd $i
 
+  cd $i/tests
+  pwd
   go test
 
   if [ $? != 0 ]; then
     echo "Failed!"
     exit -1
   fi
+  
+  cd ..
 
   for j in $(find . -type f -name *.go)
   do
