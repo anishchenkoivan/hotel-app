@@ -1,38 +1,37 @@
 # !/bin/bash
 
-go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
+check() {
+  if [ $1 != 0 ]; then
+    echo "Pipeline failed: $2"
+    exit -1
+  fi
+}
 
-if [ $? != 0 ]; then
-  echo "golangci-lint installation failed!"
-  exit -1
-fi
+setup() {
+  echo "Setting up..."
+  go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
+  check $? "failed to install golangci-lint"
+}
+
+checktests() {
+  echo "Checking tests for $1..."
+  cd tests
+
+  if [ $? == 0 ]; then
+    go test
+    check $? "go test failed!"
+    cd ..
+  fi
+}
+
+setup
 
 for i in *-service
 do
-
-  echo "Testing $i..."
-
-  cd $i/tests
-  pwd
-  go test
-
-  if [ $? != 0 ]; then
-    echo "Failed!"
-    exit -1
-  fi
-  
-  cd ..
-
-  for j in $(find . -type f -name *.go)
-  do
-    echo "Linting $j..."
-    ~/go/bin/golangci-lint run $j
-
-    if [ $? != 0 ]; then
-      echo "Failed!"
-      exit -1
-    fi
-  done
-
+  echo "Entering $i..."
+  cd $i
+  golangci-lint run
+  check $? "golangci-lint $i failed!"
+  checktests
   cd ..
 done
