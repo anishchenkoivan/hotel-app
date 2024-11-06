@@ -1,14 +1,24 @@
 package app
 
 import (
+	"context"
+	"errors"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers"
 	"github.com/gorilla/mux"
+	"log"
+	"net/http"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"golang.org/x/sync/errgroup"
 )
 
 type HotelServiceApp struct {
 	hotelHandler    handlers.HotelHandler
 	hotelierHandler handlers.HotelierHandler
 	roomHandler     handlers.RoomHandler
+	server          http.Server
 }
 
 func NewHotelServiceApp() *HotelServiceApp {
@@ -18,6 +28,10 @@ func NewHotelServiceApp() *HotelServiceApp {
 		handlers.NewHotelHandler(),
 		handlers.NewHotelierHandler(),
 		handlers.NewRoomHandler(),
+		http.Server{
+			Addr:    ":8080",
+			Handler: router,
+		},
 	}
 
 	router.HandleFunc("/hotel", hotelApp.hotelHandler.CreateHotel).Methods("POST")
@@ -40,9 +54,39 @@ func NewHotelServiceApp() *HotelServiceApp {
 }
 
 func (app *HotelServiceApp) Start() error {
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	group, ctx := errgroup.WithContext(ctx)
+	group.Go(func() error {
+		if err := app.server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			return err
+		}
+		return nil
+	})
+
+	group.Go(func() error {
+		<-ctx.Done()
+		return app.Stop()
+	})
+
+	log.Println("Hotel Service started on port 8080")
+
+	if err := group.Wait(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (app *HotelServiceApp) Shutdown() error {
+func (app *HotelServiceApp) Stop() error {
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := app.server.Shutdown(shutdownCtx); err != nil {
+		return err
+	}
+
+	log.Println("Hotel Service stopped")
 	return nil
 }
