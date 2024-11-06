@@ -8,8 +8,8 @@ func TestOk(t *testing.T) {
   }
 }
 
-// func TestFail(t *testing.T) {
-//   if 2 + 2 != 5 {
-//     t.Fatalf("Fail test failed")
-//   }
-// }
+func TestFail(t *testing.T) {
+  if 2 + 2 != 5 {
+    t.Fatalf("Fail test failed")
+  }
+}

@@ -15,6 +15,6 @@ jobs:
       with:
         go-version: '1.23.2'
 
-    - name: Lint and check code
+    - name: Lint and test code
       run: |
         ./check.sh
