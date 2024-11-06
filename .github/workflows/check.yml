@@ -1,4 +1,4 @@
-name: Check go Code
+name: Check go code
 
 on: [pull_request]
 
