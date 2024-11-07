@@ -4,20 +4,28 @@ import (
 	"github.com/google/uuid"
 )
 
-type Hotel struct {
-	ID          uuid.UUID
+type HotelData struct {
 	Name        string
 	Description string
 	Hotelier    Hotelier
 	Location    string
 }
 
-type Hotelier struct {
-	Id       uuid.UUID
+type Hotel struct {
+	Id uuid.UUID
+	HotelData
+}
+
+type HotelierData struct {
 	Username string
 }
 
-type Room struct {
+type Hotelier struct {
+	Id uuid.UUID
+	HotelierData
+}
+
+type RoomData struct {
 	Id          uuid.UUID
 	IsAvailable bool
 	Name        string
@@ -25,4 +33,9 @@ type Room struct {
 	Hotel       Hotel
 	PricePerDay float64
 	Capacity    int
+}
+
+type Room struct {
+	Id uuid.UUID
+	RoomData
 }

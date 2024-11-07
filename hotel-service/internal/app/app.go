@@ -15,40 +15,38 @@ import (
 )
 
 type HotelServiceApp struct {
-	hotelHandler    handlers.HotelHandler
-	hotelierHandler handlers.HotelierHandler
-	roomHandler     handlers.RoomHandler
-	server          http.Server
+	server http.Server
 }
 
 func NewHotelServiceApp() *HotelServiceApp {
 	router := mux.NewRouter().PathPrefix("/hotel-service/api").Subrouter()
 
 	hotelApp := HotelServiceApp{
-		handlers.NewHotelHandler(),
-		handlers.NewHotelierHandler(),
-		handlers.NewRoomHandler(),
 		http.Server{
 			Addr:    ":8080",
 			Handler: router,
 		},
 	}
 
-	router.HandleFunc("/hotel", hotelApp.hotelHandler.CreateHotel).Methods("POST")
-	router.HandleFunc("/hotel", hotelApp.hotelHandler.FindAllHotels).Methods("GET")
-	router.HandleFunc("/hotel/{id}", hotelApp.hotelHandler.UpdateHotel).Methods("PUT")
-	router.HandleFunc("/hotel/{id}", hotelApp.hotelHandler.FindHotelById).Methods("GET")
-	router.HandleFunc("/hotel/{id}", hotelApp.hotelHandler.DeleteHotelById).Methods("DELETE")
+	hotelHandler := handlers.NewHotelHandler()
+	hotelierHandler := handlers.NewHotelierHandler()
+	roomHandler := handlers.NewRoomHandler()
 
-	router.HandleFunc("/hotelier", hotelApp.hotelierHandler.CreateHotelier).Methods("POST")
-	router.HandleFunc("/hotelier/{id}", hotelApp.hotelierHandler.UpdateHotelier).Methods("PUT")
-	router.HandleFunc("/hotelier/{id}", hotelApp.hotelierHandler.DeleteHotelierById).Methods("DELETE")
+	router.HandleFunc("/hotel", hotelHandler.CreateHotel).Methods("POST")
+	router.HandleFunc("/hotel", hotelHandler.FindAllHotels).Methods("GET")
+	router.HandleFunc("/hotel/{id}", hotelHandler.UpdateHotel).Methods("PUT")
+	router.HandleFunc("/hotel/{id}", hotelHandler.FindHotelById).Methods("GET")
+	router.HandleFunc("/hotel/{id}", hotelHandler.DeleteHotel).Methods("DELETE")
 
-	router.HandleFunc("/room", hotelApp.roomHandler.FindAllRooms).Methods("POST")
-	router.HandleFunc("/room", hotelApp.roomHandler.FindAllRooms).Methods("GET")
-	router.HandleFunc("/room/{id}", hotelApp.roomHandler.UpdateRoom).Methods("PUT")
-	router.HandleFunc("/room/{id}", hotelApp.roomHandler.FindRoomById).Methods("GET")
-	router.HandleFunc("/room/{id}", hotelApp.roomHandler.DeleteRoomById).Methods("DELETE")
+	router.HandleFunc("/hotelier", hotelierHandler.CreateHotelier).Methods("POST")
+	router.HandleFunc("/hotelier/{id}", hotelierHandler.UpdateHotelier).Methods("PUT")
+	router.HandleFunc("/hotelier/{id}", hotelierHandler.DeleteHotelier).Methods("DELETE")
+
+	router.HandleFunc("/room", roomHandler.FindAllRooms).Methods("POST")
+	router.HandleFunc("/room", roomHandler.FindAllRooms).Methods("GET")
+	router.HandleFunc("/room/{id}", roomHandler.UpdateRoom).Methods("PUT")
+	router.HandleFunc("/room/{id}", roomHandler.FindRoomById).Methods("GET")
+	router.HandleFunc("/room/{id}", roomHandler.DeleteRoom).Methods("DELETE")
 
 	return &hotelApp
 }

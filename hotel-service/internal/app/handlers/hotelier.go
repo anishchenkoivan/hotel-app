@@ -21,6 +21,6 @@ func (handler *HotelierHandler) UpdateHotelier(w http.ResponseWriter, r *http.Re
 
 }
 
-func (handler *HotelierHandler) DeleteHotelierById(w http.ResponseWriter, r *http.Request) {
+func (handler *HotelierHandler) DeleteHotelier(w http.ResponseWriter, r *http.Request) {
 
 }
