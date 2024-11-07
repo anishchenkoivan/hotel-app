@@ -9,5 +9,5 @@ type HotelierRepository interface {
 	Get(id uuid.UUID) (*model.Hotelier, error)
 	GetAll() ([]*model.Hotelier, error)
 	Put(*model.Hotelier) error
-	Remove(*model.Hotelier) error
+	Remove(uuid.UUID) error
 }

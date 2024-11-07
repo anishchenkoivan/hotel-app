@@ -35,7 +35,7 @@ func (handler *HotelHandler) CreateHotel(w http.ResponseWriter, r *http.Request)
 	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(hotelId)
 	if err != nil {
-		handler.handleError(err, w)
+		handler.handleError(apperrors.NewParsingError("CreateHotel: "+err.Error()), w)
 	}
 }
 

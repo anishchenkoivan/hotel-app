@@ -39,6 +39,7 @@ func NewHotelServiceApp() *HotelServiceApp {
 	router.HandleFunc("/hotel/{id}", hotelHandler.DeleteHotel).Methods("DELETE")
 
 	router.HandleFunc("/hotelier", hotelierHandler.CreateHotelier).Methods("POST")
+	router.HandleFunc("/hotelier/{id}", hotelierHandler.FindHotelierById).Methods("GET")
 	router.HandleFunc("/hotelier/{id}", hotelierHandler.UpdateHotelier).Methods("PUT")
 	router.HandleFunc("/hotelier/{id}", hotelierHandler.DeleteHotelier).Methods("DELETE")
 

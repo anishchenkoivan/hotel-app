@@ -22,7 +22,7 @@ func (p PostgresHotelierRepository) Put(hotelier *model.Hotelier) error {
 	panic("implement me")
 }
 
-func (p PostgresHotelierRepository) Remove(hotelier *model.Hotelier) error {
+func (p PostgresHotelierRepository) Remove(uuid.UUID) error {
 	//TODO implement me
 	panic("implement me")
 }
