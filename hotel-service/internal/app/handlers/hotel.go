@@ -26,14 +26,14 @@ func (handler *HotelHandler) CreateHotel(w http.ResponseWriter, r *http.Request)
 		handler.handleError(apperrors.NewParsingError("CreateHotel: "+err.Error()), w)
 	}
 
-	id, err := handler.service.CreateHotel(hotelData)
+	hotelId, err := handler.service.CreateHotel(hotelData)
 	if err != nil {
 		handler.handleError(err, w)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(id)
+	err = json.NewEncoder(w).Encode(hotelId)
 	if err != nil {
 		handler.handleError(err, w)
 	}
