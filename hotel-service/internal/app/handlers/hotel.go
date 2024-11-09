@@ -19,6 +19,15 @@ func NewHotelHandler() HotelHandler {
 	return HotelHandler{service: service.NewHotelService()}
 }
 
+// CreateHotel
+// @Summary Create a new hotel
+// @Accept json
+// @Produce json
+// @Param hotel body model.HotelData true "Hotel data"
+// @Success 201 {object} uuid.UUID
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /hotels [post]
 func (handler *HotelHandler) CreateHotel(w http.ResponseWriter, r *http.Request) {
 	var hotelData model.HotelData
 	err := json.NewDecoder(r.Body).Decode(&hotelData)
@@ -39,6 +48,15 @@ func (handler *HotelHandler) CreateHotel(w http.ResponseWriter, r *http.Request)
 	}
 }
 
+// DeleteHotel
+// @Summary Delete a hotel
+// @Accept json
+// @Produce json
+// @Param id path model.HotelData true "Hotel ID"
+// @Success 204 "No Content"
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /hotels [post]
 func (handler *HotelHandler) DeleteHotel(w http.ResponseWriter, r *http.Request) {
 	hotelId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {

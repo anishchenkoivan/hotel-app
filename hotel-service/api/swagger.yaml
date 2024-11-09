@@ -1,0 +1,51 @@
+definitions:
+  model.HotelData:
+    properties:
+      description:
+        type: string
+      hotelier:
+        $ref: '#/definitions/model.Hotelier'
+      location:
+        type: string
+      name:
+        type: string
+    type: object
+  model.Hotelier:
+    properties:
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /hotels:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: description
+        type: string
+      - in: path
+        name: location
+        type: string
+      - in: path
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a hotel
+swagger: "2.0"
