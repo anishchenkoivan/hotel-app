@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/anishchenkoivan/hotel-app/booking-service/config"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/app/handlers"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/service"
 	"github.com/gorilla/mux"
@@ -14,9 +15,10 @@ import (
 
 type BookingServiceApp struct {
 	httpServer *http.Server
+	config     config.Config
 }
 
-func NewBookingServiceApp(repo service.Repository) *BookingServiceApp {
+func NewBookingServiceApp(repo service.Repository, cfg config.Config) *BookingServiceApp {
 	handler := handlers.NewlHandler(repo)
 
 	router := mux.NewRouter().PathPrefix("/booking-service/api").Subrouter()
@@ -25,11 +27,11 @@ func NewBookingServiceApp(repo service.Repository) *BookingServiceApp {
 	router.HandleFunc("/hotel", handler.SearchByPhone).Methods("GET")
 
 	httpServer := http.Server{
-		Addr:    ":8080",
+		Addr:    cfg.ServerHost + ":" + cfg.ServerPort,
 		Handler: router,
 	}
 
-	return &BookingServiceApp{&httpServer}
+	return &BookingServiceApp{&httpServer, cfg}
 }
 
 func (app *BookingServiceApp) Start(ctx context.Context) error {
@@ -44,8 +46,8 @@ func (app *BookingServiceApp) Start(ctx context.Context) error {
 
 	group.Go(func() error {
 		<-ctx.Done()
-    err := app.Shutdown()
-    return err
+		err := app.Shutdown()
+		return err
 	})
 
 	err := group.Wait()
@@ -53,7 +55,7 @@ func (app *BookingServiceApp) Start(ctx context.Context) error {
 }
 
 func (app *BookingServiceApp) Shutdown() error {
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), app.config.AppShutdownTimeout*time.Second)
 	defer cancel()
 	err := app.httpServer.Shutdown(shutdownCtx)
 	return err

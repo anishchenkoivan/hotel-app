@@ -1,18 +1,20 @@
 package repository
 
 import (
+	"github.com/anishchenkoivan/hotel-app/booking-service/config"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type GormRepository struct {
-	db *gorm.DB
+	db     *gorm.DB
+	config config.Config
 }
 
-func NewGormRepository(db *gorm.DB) GormRepository {
+func NewGormRepository(db *gorm.DB, cfg config.Config) GormRepository {
 	db.AutoMigrate(&model.Reservation{})
-	return GormRepository{db: db}
+  return GormRepository{db: db, config: cfg}
 }
 
 func (p GormRepository) GetById(id uuid.UUID) (model.Reservation, error) {
@@ -23,7 +25,7 @@ func (p GormRepository) GetById(id uuid.UUID) (model.Reservation, error) {
 
 func (p GormRepository) SearchByPhone(phone string) ([]model.Reservation, error) {
 	var found []model.Reservation
-  res := p.db.Model(&model.Reservation{}).Find(&found, model.Reservation{ReservationData: model.ReservationData{Client: model.Client{Phone: phone}}})
+	res := p.db.Model(&model.Reservation{}).Find(&found, model.Reservation{ReservationData: model.ReservationData{Client: model.Client{Phone: phone}}})
 	return found, res.Error
 }
 
