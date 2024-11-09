@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
-	"github.com/google/uuid"
+  "github.com/google/uuid"
 )
 
 type GetByIdQuery struct {
@@ -14,17 +14,17 @@ type SearchByPhoneQuery struct {
 }
 
 type AddReservationQuery struct {
-  model.ReservationData
+	model.ReservationData
 }
 
 type GetByIdResponse struct {
-  model.Reservation
+	model.Reservation
 }
 
 type SearchByPhoneResponse struct {
-  reservations []model.Reservation
+	reservations []model.Reservation
 }
 
 type AddReservationResponse struct {
-  Id uuid.UUID
+	Id uuid.UUID
 }

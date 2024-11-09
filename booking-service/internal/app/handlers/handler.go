@@ -11,8 +11,9 @@ type Handler struct {
 	service service.Service
 }
 
-func NewlHandler() Handler {
-	return Handler{service: service.NewService()}
+func NewlHandler(repo service.Repository) Handler {
+  service := service.NewService(repo)
+	return Handler{service: service}
 }
 
 func (handler *Handler) GetById(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +36,7 @@ func (handler *Handler) GetById(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  resp := GetByIdResponse{*reserv}
+  resp := GetByIdResponse{reserv}
   err = encoder.Encode(resp)
 
   if err != nil {

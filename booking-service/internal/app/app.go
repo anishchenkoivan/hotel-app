@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/app/handlers"
+	"github.com/anishchenkoivan/hotel-app/booking-service/internal/service"
 	"github.com/gorilla/mux"
 	"golang.org/x/sync/errgroup"
 )
@@ -15,8 +16,8 @@ type BookingServiceApp struct {
 	httpServer *http.Server
 }
 
-func NewBookingServiceApp() *BookingServiceApp {
-	handler := handlers.NewlHandler()
+func NewBookingServiceApp(repo service.Repository) *BookingServiceApp {
+	handler := handlers.NewlHandler(repo)
 
 	router := mux.NewRouter().PathPrefix("/booking-service/api").Subrouter()
 
