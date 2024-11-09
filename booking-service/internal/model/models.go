@@ -8,17 +8,21 @@ import (
 )
 
 type Client struct {
-	name    string
-	surname string
-	phone   string
-	email   string
+	Name    string
+	Surname string
+	Phone   string
+	Email   string
+}
+
+type ReservationData struct {
+	Client  Client
+	RoomId  uuid.UUID
+	InTime  time.Time
+	OutTime time.Time
+	Cost    money.Money
 }
 
 type Reservation struct {
-	id       uuid.UUID
-	client   Client
-	room_id  uuid.UUID
-	in_time  time.Time
-	out_time time.Time
-	cost     money.Money
+	Id uuid.UUID
+	ReservationData
 }

@@ -7,7 +7,6 @@ import (
 
 type Repository interface {
 	GetById(id uuid.UUID) (*model.Reservation, error)
-  GetByPhone(phone string) (*model.Reservation, error)
-  GetByName(name string, surname string) (*model.Reservation, error)
-  Put(reserv model.Reservation) error
+  SearchByPhone(phone string) ([]model.Reservation, error)
+  Put(reserv model.ReservationData) (uuid.UUID, error)
 }
