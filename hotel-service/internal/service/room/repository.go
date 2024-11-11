@@ -9,5 +9,6 @@ type RoomRepository interface {
 	Get(id uuid.UUID) (*model.Room, error)
 	GetAll() ([]*model.Room, error)
 	Put(room *model.Room) error
-	Remove(id uuid.UUID) error
+	Update(room *model.Room) error
+	Delete(id uuid.UUID) error
 }

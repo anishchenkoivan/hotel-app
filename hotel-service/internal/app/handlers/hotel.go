@@ -12,11 +12,11 @@ import (
 )
 
 type HotelHandler struct {
-	service service.HotelService
+	service *service.HotelService
 }
 
-func NewHotelHandler() HotelHandler {
-	return HotelHandler{service: service.NewHotelService()}
+func NewHotelHandler(service *service.HotelService) HotelHandler {
+	return HotelHandler{service: service}
 }
 
 // CreateHotel

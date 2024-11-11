@@ -7,13 +7,14 @@ import (
 type HotelData struct {
 	Name        string
 	Description string
-	Hotelier    Hotelier
 	Location    string
+	HotelierID  uuid.UUID `gorm:"type:uuid"`
+	Hotelier    Hotelier  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:HotelierID"`
 }
 
 type Hotel struct {
-	Id uuid.UUID
-	HotelData
+	ID        uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
+	HotelData `gorm:"embedded"`
 }
 
 type HotelierData struct {
@@ -21,21 +22,21 @@ type HotelierData struct {
 }
 
 type Hotelier struct {
-	Id uuid.UUID
-	HotelierData
+	ID           uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
+	HotelierData `gorm:"embedded"`
 }
 
 type RoomData struct {
-	Id          uuid.UUID
 	IsAvailable bool
 	Name        string
 	Description string
-	Hotel       Hotel
+	HotelID     uuid.UUID `gorm:"type:uuid"`
+	Hotel       Hotel     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:HotelID"`
 	PricePerDay float64
 	Capacity    int
 }
 
 type Room struct {
-	Id uuid.UUID
-	RoomData
+	ID       uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
+	RoomData `gorm:"embedded"`
 }

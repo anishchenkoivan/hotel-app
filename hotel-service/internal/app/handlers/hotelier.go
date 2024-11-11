@@ -12,11 +12,11 @@ import (
 )
 
 type HotelierHandler struct {
-	service service.HotelierService
+	service *service.HotelierService
 }
 
-func NewHotelierHandler() HotelierHandler {
-	return HotelierHandler{service: service.NewHotelierService()}
+func NewHotelierHandler(service *service.HotelierService) HotelierHandler {
+	return HotelierHandler{service: service}
 }
 
 func (handler *HotelierHandler) FindHotelierById(w http.ResponseWriter, r *http.Request) {

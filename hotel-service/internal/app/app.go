@@ -3,34 +3,62 @@ package app
 import (
 	"context"
 	"errors"
+	"fmt"
+	"github.com/anishchenkoivan/hotel-app/hotel-service/config"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers"
+	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
+	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/repository"
+	hotelservice "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/hotel"
+	hotelierservice "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/hotelier"
+	roomservice "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/room"
 	"github.com/gorilla/mux"
+	"golang.org/x/sync/errgroup"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"os/signal"
 	"syscall"
-	"time"
-
-	"golang.org/x/sync/errgroup"
 )
 
 type HotelServiceApp struct {
 	server http.Server
+	config config.Config
 }
 
-func NewHotelServiceApp() *HotelServiceApp {
+func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 	router := mux.NewRouter().PathPrefix("/hotel-service/api").Subrouter()
 
 	hotelApp := HotelServiceApp{
 		http.Server{
-			Addr:    ":8080",
+			Addr:    config.ServerHost + ":" + config.ServerPort,
 			Handler: router,
 		},
+		config,
 	}
 
-	hotelHandler := handlers.NewHotelHandler()
-	hotelierHandler := handlers.NewHotelierHandler()
-	roomHandler := handlers.NewRoomHandler()
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%d",
+		config.DbHost, config.DbUser, config.DbPassword, config.DbName, config.DbPort)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err = db.AutoMigrate(&model.Hotel{}, &model.Hotelier{}, &model.Room{}); err != nil {
+		log.Fatal(err)
+	}
+
+	hotelRepository := repository.NewPostgresHotelRepository(db)
+	hotelierRepository := repository.NewPostgresHotelierRepository(db)
+	roomRepository := repository.NewPostgresRoomRepository(db)
+
+	hotelService := hotelservice.NewHotelService(hotelRepository)
+	hotelierService := hotelierservice.NewHotelierService(hotelierRepository)
+	roomService := roomservice.NewRoomService(roomRepository)
+
+	hotelHandler := handlers.NewHotelHandler(hotelService)
+	hotelierHandler := handlers.NewHotelierHandler(hotelierService)
+	roomHandler := handlers.NewRoomHandler(roomService)
 
 	router.HandleFunc("/hotel", hotelHandler.CreateHotel).Methods("POST")
 	router.HandleFunc("/hotel", hotelHandler.FindAllHotels).Methods("GET")
@@ -79,7 +107,7 @@ func (app *HotelServiceApp) Start() error {
 }
 
 func (app *HotelServiceApp) Stop() error {
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), app.config.AppShutdownTimeout)
 	defer cancel()
 
 	if err := app.server.Shutdown(shutdownCtx); err != nil {

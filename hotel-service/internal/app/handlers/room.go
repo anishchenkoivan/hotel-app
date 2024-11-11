@@ -12,11 +12,11 @@ import (
 )
 
 type RoomHandler struct {
-	service service.RoomService
+	service *service.RoomService
 }
 
-func NewRoomHandler() RoomHandler {
-	return RoomHandler{service: service.NewRoomService()}
+func NewRoomHandler(service *service.RoomService) RoomHandler {
+	return RoomHandler{service: service}
 }
 
 func (handler *RoomHandler) CreateRoom(w http.ResponseWriter, r *http.Request) {

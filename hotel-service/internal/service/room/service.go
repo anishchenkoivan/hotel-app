@@ -3,7 +3,6 @@ package service
 import (
 	"fmt"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
-	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/repository"
 	"github.com/google/uuid"
 )
 
@@ -11,10 +10,8 @@ type RoomService struct {
 	repository RoomRepository
 }
 
-func NewRoomService() RoomService {
-	return RoomService{
-		repository.NewPostgresRoomRepository(),
-	}
+func NewRoomService(repository RoomRepository) *RoomService {
+	return &RoomService{repository: repository}
 }
 
 func (service *RoomService) GetRoomById(id uuid.UUID) (*model.Room, error) {
@@ -32,7 +29,7 @@ func (service *RoomService) CreateRoom(roomData model.RoomData) (*model.Room, er
 	}
 
 	room := model.Room{
-		Id:       id,
+		ID:       id,
 		RoomData: roomData,
 	}
 
@@ -49,7 +46,7 @@ func (service *RoomService) UpdateRoom(id uuid.UUID, roomData model.RoomData) er
 		return fmt.Errorf("UpdateRoom: %w", err)
 	}
 	room.RoomData = roomData
-	err = service.repository.Put(room)
+	err = service.repository.Update(room)
 	if err != nil {
 		return fmt.Errorf("UpdateRoom: %w", err)
 	}
@@ -57,5 +54,5 @@ func (service *RoomService) UpdateRoom(id uuid.UUID, roomData model.RoomData) er
 }
 
 func (service *RoomService) DeleteRoom(id uuid.UUID) error {
-	return service.repository.Remove(id)
+	return service.repository.Delete(id)
 }
