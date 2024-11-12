@@ -19,6 +19,15 @@ func NewRoomHandler(service *service.RoomService) RoomHandler {
 	return RoomHandler{service: service}
 }
 
+// CreateRoom
+// @Summary Create a new room
+// @Accept json
+// @Produce json
+// @Param hotel body model.RoomData true "Room data"
+// @Success 201 {object} uuid.UUID
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /room [post]
 func (handler *RoomHandler) CreateRoom(w http.ResponseWriter, r *http.Request) {
 	var roomData model.RoomData
 	err := json.NewDecoder(r.Body).Decode(&roomData)
@@ -39,6 +48,16 @@ func (handler *RoomHandler) CreateRoom(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// UpdateRoom
+// @Summary Update a room
+// @Accept json
+// @Produce json
+// @Param id path uuid.UUID true "Room ID"
+// @Param hotel body model.RoomData true "Room data"
+// @Success 200 "No Content"
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /room/{id} [put]
 func (handler *RoomHandler) UpdateRoom(w http.ResponseWriter, r *http.Request) {
 	roomId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {
@@ -58,6 +77,15 @@ func (handler *RoomHandler) UpdateRoom(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// FindRoomById
+// @Summary Get a room by ID
+// @Accept json
+// @Produce json
+// @Param id path uuid.UUID true "Room ID"
+// @Success 200 {object} model.Room
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /room/{id} [get]
 func (handler *RoomHandler) FindRoomById(w http.ResponseWriter, r *http.Request) {
 	roomId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {
@@ -75,6 +103,14 @@ func (handler *RoomHandler) FindRoomById(w http.ResponseWriter, r *http.Request)
 	}
 }
 
+// FindAllRooms
+// @Summary	Get a list of all rooms
+// @Accept json
+// @Produce json
+// @Success 200 {object} []model.Room
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /room [get]
 func (handler *RoomHandler) FindAllRooms(w http.ResponseWriter, r *http.Request) {
 	rooms, err := handler.service.GetAllRooms()
 	if err != nil {
@@ -87,6 +123,15 @@ func (handler *RoomHandler) FindAllRooms(w http.ResponseWriter, r *http.Request)
 	}
 }
 
+// DeleteRoom
+// @Summary Delete a room
+// @Accept json
+// @Produce json
+// @Param id path uuid.UUID true "Room ID"
+// @Success 204 "No Content"
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /room/{id} [delete]
 func (handler *RoomHandler) DeleteRoom(w http.ResponseWriter, r *http.Request) {
 	roomId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {

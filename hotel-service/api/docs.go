@@ -15,7 +15,39 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/hotels": {
+        "/hotel": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a list of all hotels",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Hotel"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "consumes": [
                     "application/json"
@@ -23,24 +55,115 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete a hotel",
+                "summary": "Create a new hotel",
                 "parameters": [
                     {
-                        "type": "string",
-                        "name": "description",
-                        "in": "path"
-                    },
-                    {
-                        "type": "string",
-                        "name": "location",
-                        "in": "path"
-                    },
-                    {
-                        "type": "string",
-                        "name": "name",
-                        "in": "path"
+                        "description": "Hotel data",
+                        "name": "hotel",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.HotelData"
+                        }
                     }
                 ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/hotel/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a hotel by ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Hotel"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a hotel",
+                "parameters": [
+                    {
+                        "description": "Hotel data",
+                        "name": "hotel",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.HotelData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a hotel",
                 "responses": {
                     "204": {
                         "description": "No Content"
@@ -62,6 +185,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.Hotel": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "hotelier": {
+                    "$ref": "#/definitions/model.Hotelier"
+                },
+                "hotelierID": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "model.HotelData": {
             "type": "object",
             "properties": {
@@ -70,6 +216,9 @@ const docTemplate = `{
                 },
                 "hotelier": {
                     "$ref": "#/definitions/model.Hotelier"
+                },
+                "hotelierID": {
+                    "type": "string"
                 },
                 "location": {
                     "type": "string"

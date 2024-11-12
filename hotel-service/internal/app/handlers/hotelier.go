@@ -19,6 +19,15 @@ func NewHotelierHandler(service *service.HotelierService) HotelierHandler {
 	return HotelierHandler{service: service}
 }
 
+// FindHotelierById
+// @Summary Get a hotelier by ID
+// @Accept json
+// @Produce json
+// @Param id path uuid.UUID true "Hotelier ID"
+// @Success 200 {object} model.Hotelier
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /hotelier/{id} [get]
 func (handler *HotelierHandler) FindHotelierById(w http.ResponseWriter, r *http.Request) {
 	hotelierId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {
@@ -36,6 +45,15 @@ func (handler *HotelierHandler) FindHotelierById(w http.ResponseWriter, r *http.
 	}
 }
 
+// CreateHotelier
+// @Summary Create a new hotelier
+// @Accept json
+// @Produce json
+// @Param hotel body model.HotelierData true "Hotelier data"
+// @Success 201 {object} uuid.UUID
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /hotelier [post]
 func (handler *HotelierHandler) CreateHotelier(w http.ResponseWriter, r *http.Request) {
 	var hotelierData model.HotelierData
 	err := json.NewDecoder(r.Body).Decode(&hotelierData)
@@ -56,6 +74,16 @@ func (handler *HotelierHandler) CreateHotelier(w http.ResponseWriter, r *http.Re
 	}
 }
 
+// UpdateHotelier
+// @Summary Update a hotelier
+// @Accept json
+// @Produce json
+// @Param id path uuid.UUID true "Hotelier ID"
+// @Param hotel body model.HotelierData true "Hotelier data"
+// @Success 200 "No Content"
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /hotelier/{id} [put]
 func (handler *HotelierHandler) UpdateHotelier(w http.ResponseWriter, r *http.Request) {
 	hotelierId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {
@@ -76,6 +104,15 @@ func (handler *HotelierHandler) UpdateHotelier(w http.ResponseWriter, r *http.Re
 	w.WriteHeader(http.StatusOK)
 }
 
+// DeleteHotelier
+// @Summary Delete a hotelier
+// @Accept json
+// @Produce json
+// @Param id path uuid.UUID true "Hotelier ID"
+// @Success 204 "No Content"
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /hotelier/{id} [delete]
 func (handler *HotelierHandler) DeleteHotelier(w http.ResponseWriter, r *http.Request) {
 	hotelierId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {

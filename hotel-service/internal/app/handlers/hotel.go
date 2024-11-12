@@ -27,7 +27,7 @@ func NewHotelHandler(service *service.HotelService) HotelHandler {
 // @Success 201 {object} uuid.UUID
 // @Failure 400 {object} string
 // @Failure 500 {object} string
-// @Router /hotels [post]
+// @Router /hotel [post]
 func (handler *HotelHandler) CreateHotel(w http.ResponseWriter, r *http.Request) {
 	var hotelData model.HotelData
 	err := json.NewDecoder(r.Body).Decode(&hotelData)
@@ -52,11 +52,11 @@ func (handler *HotelHandler) CreateHotel(w http.ResponseWriter, r *http.Request)
 // @Summary Delete a hotel
 // @Accept json
 // @Produce json
-// @Param id path model.HotelData true "Hotel ID"
+// @Param id path uuid.UUID true "Hotel ID"
 // @Success 204 "No Content"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
-// @Router /hotels [post]
+// @Router /hotel/{id} [delete]
 func (handler *HotelHandler) DeleteHotel(w http.ResponseWriter, r *http.Request) {
 	hotelId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {
@@ -70,6 +70,16 @@ func (handler *HotelHandler) DeleteHotel(w http.ResponseWriter, r *http.Request)
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// UpdateHotel
+// @Summary Update a hotel
+// @Accept json
+// @Produce json
+// @Param id path uuid.UUID true "Hotel ID"
+// @Param hotel body model.HotelData true "Hotel data"
+// @Success 200 "No Content"
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /hotel/{id} [put]
 func (handler *HotelHandler) UpdateHotel(w http.ResponseWriter, r *http.Request) {
 	hotelId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {
@@ -89,6 +99,15 @@ func (handler *HotelHandler) UpdateHotel(w http.ResponseWriter, r *http.Request)
 	w.WriteHeader(http.StatusOK)
 }
 
+// FindHotelById
+// @Summary Get a hotel by ID
+// @Accept json
+// @Produce json
+// @Param id path uuid.UUID true "Hotel ID"
+// @Success 200 {object} model.Hotel
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /hotel/{id} [get]
 func (handler *HotelHandler) FindHotelById(w http.ResponseWriter, r *http.Request) {
 	hotelId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {
@@ -107,6 +126,14 @@ func (handler *HotelHandler) FindHotelById(w http.ResponseWriter, r *http.Reques
 	}
 }
 
+// FindAllHotels
+// @Summary	Get a list of all hotels
+// @Accept json
+// @Produce json
+// @Success 200 {object} []model.Hotel
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /hotel [get]
 func (handler *HotelHandler) FindAllHotels(w http.ResponseWriter, r *http.Request) {
 	hotels, err := handler.service.GetAllHotels()
 	if err != nil {
