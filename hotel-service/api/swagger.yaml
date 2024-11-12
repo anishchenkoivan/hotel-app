@@ -34,6 +34,47 @@ definitions:
       username:
         type: string
     type: object
+  model.HotelierData:
+    properties:
+      username:
+        type: string
+    type: object
+  model.Room:
+    properties:
+      capacity:
+        type: integer
+      description:
+        type: string
+      hotel:
+        $ref: '#/definitions/model.Hotel'
+      hotelID:
+        type: string
+      id:
+        type: string
+      isAvailable:
+        type: boolean
+      name:
+        type: string
+      pricePerDay:
+        type: number
+    type: object
+  model.RoomData:
+    properties:
+      capacity:
+        type: integer
+      description:
+        type: string
+      hotel:
+        $ref: '#/definitions/model.Hotel'
+      hotelID:
+        type: string
+      isAvailable:
+        type: boolean
+      name:
+        type: string
+      pricePerDay:
+        type: number
+    type: object
 info:
   contact: {}
 paths:
@@ -146,4 +187,201 @@ paths:
           schema:
             type: string
       summary: Update a hotel
+  /hotelier:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotelier data
+        in: body
+        name: hotel
+        required: true
+        schema:
+          $ref: '#/definitions/model.HotelierData'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create a new hotelier
+  /hotelier/{id}:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a hotelier
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Hotelier'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get a hotelier by ID
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotelier data
+        in: body
+        name: hotel
+        required: true
+        schema:
+          $ref: '#/definitions/model.HotelierData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update a hotelier
+  /room:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Room'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get a list of all rooms
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Room data
+        in: body
+        name: hotel
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoomData'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create a new room
+  /room/{id}:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a room
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Room'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get a room by ID
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Room data
+        in: body
+        name: hotel
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoomData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update a room
 swagger: "2.0"
