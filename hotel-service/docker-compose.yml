@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  postgres_user_service:
+    image: postgres
+    container_name: hotel_service
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - hotel_service_data:/var/lib/postgresql/data
+
+volumes:
+  hotel_service_data:

@@ -38,7 +38,7 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 	}
 
 	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%d",
+		"host=%s user=%s password=%s dbname=%s port=%s",
 		config.DbHost, config.DbUser, config.DbPassword, config.DbName, config.DbPort)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
