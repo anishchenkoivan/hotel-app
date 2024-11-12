@@ -22,22 +22,17 @@ func (service *RoomService) GetAllRooms() ([]*model.Room, error) {
 	return service.repository.GetAll()
 }
 
-func (service *RoomService) CreateRoom(roomData model.RoomData) (*model.Room, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return nil, err
-	}
-
+func (service *RoomService) CreateRoom(roomData model.RoomData) (uuid.UUID, error) {
 	room := model.Room{
-		ID:       id,
+		ID:       uuid.Nil,
 		RoomData: roomData,
 	}
 
-	err = service.repository.Put(&room)
+	id, err := service.repository.Put(&room)
 	if err != nil {
-		return nil, err
+		return uuid.Nil, err
 	}
-	return &room, nil
+	return id, nil
 }
 
 func (service *RoomService) UpdateRoom(id uuid.UUID, roomData model.RoomData) error {

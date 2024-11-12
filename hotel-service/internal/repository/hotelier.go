@@ -38,11 +38,11 @@ func (p *PostgresHotelierRepository) GetAll() ([]*model.Hotelier, error) {
 	return hoteliers, nil
 }
 
-func (p *PostgresHotelierRepository) Put(hotelier *model.Hotelier) error {
+func (p *PostgresHotelierRepository) Put(hotelier *model.Hotelier) (uuid.UUID, error) {
 	if err := p.db.Save(hotelier).Error; err != nil {
-		return err
+		return uuid.Nil, err
 	}
-	return nil
+	return hotelier.ID, nil
 }
 
 func (p *PostgresHotelierRepository) Update(hotelier *model.Hotelier) error {

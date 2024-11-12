@@ -31,17 +31,12 @@ func (service *HotelService) GetAllHotels() ([]*model.Hotel, error) {
 }
 
 func (service *HotelService) CreateHotel(hotelData model.HotelData) (uuid.UUID, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return uuid.Nil, fmt.Errorf("CreateHotel: %w", err)
-	}
-
 	hotel := model.Hotel{
-		ID:        id,
+		ID:        uuid.Nil,
 		HotelData: hotelData,
 	}
 
-	err = service.repository.Put(&hotel)
+	id, err := service.repository.Put(&hotel)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("CreateHotel: %w", err)
 	}

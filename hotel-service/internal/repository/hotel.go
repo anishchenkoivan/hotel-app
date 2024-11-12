@@ -40,11 +40,11 @@ func (p *PostgresHotelRepository) GetAll() ([]*model.Hotel, error) {
 	return hotels, nil
 }
 
-func (p *PostgresHotelRepository) Put(hotel *model.Hotel) error {
+func (p *PostgresHotelRepository) Put(hotel *model.Hotel) (uuid.UUID, error) {
 	if err := p.db.Save(hotel).Error; err != nil {
-		return err
+		return uuid.Nil, err
 	}
-	return nil
+	return hotel.ID, nil
 }
 
 func (p *PostgresHotelRepository) Update(hotel *model.Hotel) error {

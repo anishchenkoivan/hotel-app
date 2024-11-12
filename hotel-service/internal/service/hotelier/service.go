@@ -23,17 +23,12 @@ func (service *HotelierService) GetAllHoteliers() ([]*model.Hotelier, error) {
 }
 
 func (service *HotelierService) CreateHotelier(hotelierData model.HotelierData) (uuid.UUID, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return uuid.Nil, fmt.Errorf("CreateHotelier: %w", err)
-	}
-
 	hotelier := model.Hotelier{
-		ID:           id,
+		ID:           uuid.Nil,
 		HotelierData: hotelierData,
 	}
 
-	err = service.repository.Put(&hotelier)
+	id, err := service.repository.Put(&hotelier)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("CreateHotelier: %w", err)
 	}
