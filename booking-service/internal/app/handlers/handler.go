@@ -2,7 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/service"
 )
@@ -12,99 +16,112 @@ type Handler struct {
 }
 
 func NewlHandler(repo service.Repository) Handler {
-  service := service.NewService(repo)
+	service := service.NewService(repo)
 	return Handler{service: service}
 }
 
+// GetById
+// @Summary Get reservation by ID
+// @Produce json
+// @Param id path string true "Reservation ID"
+// @Success 200 {object} ReservationDto
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /get-by-id/{id} [get]
 func (handler *Handler) GetById(w http.ResponseWriter, r *http.Request) {
-	decoder := json.NewDecoder(r.Body)
-	encoder := json.NewEncoder(w)
-
-	r.ParseForm()
-	query := GetByIdQuery{}
-	err := decoder.Decode(&query)
+  fmt.Println("jopa")
+	id, err := uuid.Parse(mux.Vars(r)["id"])
 
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, "Failed to parse request", http.StatusBadRequest)
 		return
 	}
 
-  reserv, err := handler.service.GetById(query.Id)
+	reserv, err := handler.service.GetById(id)
 
-  if err != nil {
-    w.WriteHeader(http.StatusInternalServerError)
-    return
-  }
+	if err != nil {
+		http.Error(w, "Failed to find by id", http.StatusInternalServerError)
+		return
+	}
 
-  resp := GetByIdResponse{reserv}
-  err = encoder.Encode(resp)
+	resp := ReservationDtoFromModel(reserv)
+	encoder := json.NewEncoder(w)
+	err = encoder.Encode(resp)
 
-  if err != nil {
-    w.WriteHeader(http.StatusInternalServerError)
-    return
-  }
-
-	w.WriteHeader(http.StatusOK)
+	if err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
 }
 
+// SearchByPhone
+// @Summary Search reservation by phone
+// @Produce json
+// @Param phone path string true "Client phone"
+// @Success 200 {object} ReservationsArrayDto
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /search-by-phone/{phone} [get]
 func (handler *Handler) SearchByPhone(w http.ResponseWriter, r *http.Request) {
-	decoder := json.NewDecoder(r.Body)
-	encoder := json.NewEncoder(w)
-
-	r.ParseForm()
-	query := SearchByPhoneQuery{}
-	err := decoder.Decode(&query)
+	phone := mux.Vars(r)["phone"]
+	reservs, err := handler.service.SearchByPhone(phone)
 
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, "Failed to search", http.StatusInternalServerError)
 		return
 	}
 
-  reservations, err := handler.service.SearchByPhone(query.phone)
+	resp := ReservationsArrayDtoFromModelsArray(reservs)
+	encoder := json.NewEncoder(w)
+	err = encoder.Encode(resp)
 
-  if err != nil {
-    w.WriteHeader(http.StatusInternalServerError)
-    return
-  }
-
-  resp := SearchByPhoneResponse{reservations}
-  err = encoder.Encode(resp)
-
-  if err != nil {
-    w.WriteHeader(http.StatusInternalServerError)
-    return
-  }
-
-	w.WriteHeader(http.StatusOK)
+	if err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
 }
 
+// AddReservation
+// @Summary Add reservation
+// @Accept json
+// @Produce json
+// @Param phone query ReservationDto true "Reservation parametres"
+// @Success 200 {object} uuid.UUID
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /add-reservation [post]
 func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	encoder := json.NewEncoder(w)
 
 	r.ParseForm()
-	query := AddReservationQuery{}
+	query := ReservationDto{}
 	err := decoder.Decode(&query)
 
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, "Failed to parse request", http.StatusBadRequest)
 		return
 	}
 
-	uuid, err := handler.service.AddReservation(query.ReservationData)
+	data, err := ReservationDataFromDto(query)
 
-  if err != nil {
-    w.WriteHeader(http.StatusInternalServerError)
-    return
-  }
+	if err != nil {
+		http.Error(w, "Failed to parse request", http.StatusBadRequest)
+		return
+	}
+
+	uuid, err := handler.service.AddReservation(data)
+
+	if err != nil {
+		http.Error(w, "Failed to insert", http.StatusInternalServerError)
+		return
+	}
 
 	resp := AddReservationResponse{uuid}
 	err = encoder.Encode(resp)
 
-  if err != nil {
-    w.WriteHeader(http.StatusInternalServerError)
-    return
-  }
-
-	w.WriteHeader(http.StatusOK)
+	if err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
 }

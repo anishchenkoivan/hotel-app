@@ -1,30 +1,91 @@
 package handlers
 
 import (
+	"time"
+
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
-  "github.com/google/uuid"
+	"github.com/google/uuid"
 )
 
-type GetByIdQuery struct {
-	Id uuid.UUID
+type ReservationDto struct {
+	ClientName    string
+	ClientSurname string
+	ClientPhone   string
+	ClientEmail   string
+	RoomId        string
+	InTime        string
+	OutTime       string
+	Cost          uint64
 }
 
-type SearchByPhoneQuery struct {
-	phone string
-}
-
-type AddReservationQuery struct {
-	model.ReservationData
-}
-
-type GetByIdResponse struct {
-	model.Reservation
-}
-
-type SearchByPhoneResponse struct {
-	reservations []model.Reservation
+type ReservationsArrayDto struct {
+	Reservations []ReservationDto
 }
 
 type AddReservationResponse struct {
 	Id uuid.UUID
+}
+
+func ReservationDtoFromModel(data model.Reservation) ReservationDto {
+	return ReservationDto{
+		ClientName:    data.Client.Name,
+		ClientSurname: data.Client.Surname,
+		ClientPhone:   data.Client.Phone,
+		ClientEmail:   data.Client.Email,
+		RoomId:        data.RoomId.String(),
+		InTime:        data.InTime.String(),
+		OutTime:       data.OutTime.String(),
+		Cost:          data.Cost,
+	}
+}
+
+func ReservationsArrayDtoFromModelsArray(data []model.Reservation) ReservationsArrayDto {
+	reservs := make([]ReservationDto, len(data))
+
+	for i := range data {
+		reservs[i] = ReservationDto{
+			ClientName:    data[i].Client.Name,
+			ClientSurname: data[i].Client.Surname,
+			ClientPhone:   data[i].Client.Phone,
+			ClientEmail:   data[i].Client.Email,
+			RoomId:        data[i].RoomId.String(),
+			InTime:        data[i].InTime.String(),
+			OutTime:       data[i].OutTime.String(),
+			Cost:          data[i].Cost,
+		}
+	}
+
+	return ReservationsArrayDto{Reservations: reservs}
+}
+
+func ReservationDataFromDto(dto ReservationDto) (model.ReservationData, error) {
+	uuid, err := uuid.Parse(dto.RoomId)
+
+	if err != nil {
+		return model.ReservationData{}, err
+	}
+
+	inTime, err := time.Parse(time.Layout, dto.InTime)
+
+	if err != nil {
+		return model.ReservationData{}, err
+	}
+
+	outTime, err := time.Parse(time.Layout, dto.OutTime)
+
+	if err != nil {
+		return model.ReservationData{}, err
+	}
+
+	return model.ReservationData{
+		Client: model.Client{
+			Name:    dto.ClientName,
+			Surname: dto.ClientSurname,
+			Phone:   dto.ClientPhone,
+			Email:   dto.ClientEmail,
+		},
+		RoomId:  uuid,
+		InTime:  inTime,
+		OutTime: outTime,
+	}, nil
 }

@@ -1,0 +1,199 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Booking Service",
+        "contact": {},
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/add-reservation": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add reservation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "clientEmail",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "clientName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "clientPhone",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "clientSurname",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "cost",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "inTime",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "outTime",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "roomId",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/get-by-id/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get reservation by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Reservation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ReservationDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/search-by-phone/{phone}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Search reservation by phone",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Client phone",
+                        "name": "phone",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ReservationsArrayDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.ReservationDto": {
+            "type": "object",
+            "properties": {
+                "clientEmail": {
+                    "type": "string"
+                },
+                "clientName": {
+                    "type": "string"
+                },
+                "clientPhone": {
+                    "type": "string"
+                },
+                "clientSurname": {
+                    "type": "string"
+                },
+                "cost": {
+                    "type": "integer"
+                },
+                "inTime": {
+                    "type": "string"
+                },
+                "outTime": {
+                    "type": "string"
+                },
+                "roomId": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.ReservationsArrayDto": {
+            "type": "object",
+            "properties": {
+                "reservations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.ReservationDto"
+                    }
+                }
+            }
+        }
+    }
+}
