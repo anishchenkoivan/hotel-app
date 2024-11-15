@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	dto "github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers"
+	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers/dto"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
 	hotelrepository "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/hotel"
 	"github.com/google/uuid"

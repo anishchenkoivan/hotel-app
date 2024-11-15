@@ -11,6 +11,9 @@ type Config struct {
 	ServerHost string
 	ServerPort string
 
+	ServerGrpcHost string
+	ServerGrpcPort string
+
 	DbHost     string
 	DbPort     string
 	DbName     string
@@ -38,6 +41,9 @@ func NewConfig() *Config {
 	return &Config{
 		ServerHost: os.Getenv("HOTEL_SERVICE_SERVER_HOST"),
 		ServerPort: os.Getenv("HOTEL_SERVICE_SERVER_PORT"),
+
+		ServerGrpcHost: os.Getenv("HOTEL_SERVICE_SERVER_GRPC_HOST"),
+		ServerGrpcPort: os.Getenv("HOTEL_SERVICE_SERVER_GRPC_PORT"),
 
 		DbHost:     os.Getenv("HOTEL_SERVICE_DB_HOST"),
 		DbPort:     os.Getenv("HOTEL_SERVICE_DB_PORT"),

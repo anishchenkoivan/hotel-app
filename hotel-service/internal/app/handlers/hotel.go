@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers/dto"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/apperrors"
 	service "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/hotel"
 	"github.com/google/uuid"
@@ -28,7 +29,7 @@ func NewHotelHandler(service *service.HotelService) HotelHandler {
 // @Failure 500 {object} string
 // @Router /hotel [post]
 func (handler *HotelHandler) CreateHotel(w http.ResponseWriter, r *http.Request) {
-	var hotelDto HotelModifyDto
+	var hotelDto dto.HotelModifyDto
 	err := json.NewDecoder(r.Body).Decode(&hotelDto)
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("CreateHotel: "+err.Error()), w)
@@ -84,7 +85,7 @@ func (handler *HotelHandler) UpdateHotel(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("DeleteHotel: "+err.Error()), w)
 	}
-	var hotelModifyDto HotelModifyDto
+	var hotelModifyDto dto.HotelModifyDto
 	err = json.NewDecoder(r.Body).Decode(&hotelModifyDto)
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("DeleteHotel: "+err.Error()), w)

@@ -13,17 +13,20 @@ import (
 	roomservice "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/room"
 	"github.com/gorilla/mux"
 	"golang.org/x/sync/errgroup"
+	"google.golang.org/grpc"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
+	"net"
 	"net/http"
 	"os/signal"
 	"syscall"
 )
 
 type HotelServiceApp struct {
-	server http.Server
-	config config.Config
+	server     http.Server
+	grpcServer grpc.Server
+	config     config.Config
 }
 
 func NewHotelServiceApp(config config.Config) *HotelServiceApp {
@@ -34,6 +37,7 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 			Addr:    config.ServerHost + ":" + config.ServerPort,
 			Handler: router,
 		},
+		grpc.Server{},
 		config,
 	}
 
@@ -87,6 +91,17 @@ func (app *HotelServiceApp) Start() error {
 	group, ctx := errgroup.WithContext(ctx)
 	group.Go(func() error {
 		if err := app.server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			return err
+		}
+		return nil
+	})
+
+	group.Go(func() error {
+		listener, err := net.Listen("tcp", fmt.Sprintf("%s:%s", app.config.ServerGrpcHost, app.config.ServerGrpcPort))
+		if err != nil {
+			return err
+		}
+		if err = app.grpcServer.Serve(listener); err != nil {
 			return err
 		}
 		return nil

@@ -1,4 +1,4 @@
-package handlers
+package dto
 
 import (
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
