@@ -23,7 +23,7 @@ func NewHotelHandler(service *service.HotelService) HotelHandler {
 // @Summary Create a new hotel
 // @Accept json
 // @Produce json
-// @Param hotel body HotelModifyDto true "Hotel data"
+// @Param hotel body dto.HotelModifyDto true "Hotel data"
 // @Success 201 {object} uuid.UUID
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -52,7 +52,7 @@ func (handler *HotelHandler) CreateHotel(w http.ResponseWriter, r *http.Request)
 // @Summary Delete a hotel
 // @Accept json
 // @Produce json
-// @Param id path uuid.UUID true "Hotel ID"
+// @Param id path string true "Hotel ID"
 // @Success 204 "No Content"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -74,8 +74,8 @@ func (handler *HotelHandler) DeleteHotel(w http.ResponseWriter, r *http.Request)
 // @Summary Update a hotel
 // @Accept json
 // @Produce json
-// @Param id path uuid.UUID true "Hotel ID"
-// @Param hotel body HotelModifyDto true "Hotel data"
+// @Param id path string true "Hotel ID"
+// @Param hotel body dto.HotelModifyDto true "Hotel data"
 // @Success 200 "No Content"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -103,8 +103,8 @@ func (handler *HotelHandler) UpdateHotel(w http.ResponseWriter, r *http.Request)
 // @Summary Get a hotel by ID
 // @Accept json
 // @Produce json
-// @Param id path uuid.UUID true "Hotel ID"
-// @Success 200 {object} HotelDto
+// @Param id path string true "Hotel ID"
+// @Success 200 {object} dto.HotelDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /hotel/{id} [get]
@@ -130,7 +130,7 @@ func (handler *HotelHandler) FindHotelById(w http.ResponseWriter, r *http.Reques
 // @Summary	Get a list of all hotels
 // @Accept json
 // @Produce json
-// @Success 200 {object} []HotelDto
+// @Success 200 {object} []dto.HotelDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /hotel [get]

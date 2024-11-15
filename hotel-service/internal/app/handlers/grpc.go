@@ -12,6 +12,10 @@ type RoomGrpcHandler struct {
 	pb.UnimplementedHotelServiceServer
 }
 
+func NewRoomGrpcHandler(service *service.RoomService) *RoomGrpcHandler {
+	return &RoomGrpcHandler{service: service}
+}
+
 func (s *RoomGrpcHandler) GetRoom(_ context.Context, req *pb.GetRoomRequest) (*pb.GetRoomResponse, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {

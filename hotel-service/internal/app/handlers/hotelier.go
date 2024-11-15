@@ -23,8 +23,8 @@ func NewHotelierHandler(service *service.HotelierService) HotelierHandler {
 // @Summary Get a hotelier by ID
 // @Accept json
 // @Produce json
-// @Param id path uuid.UUID true "Hotelier ID"
-// @Success 200 {object} HotelierDto
+// @Param id path string true "Hotelier ID"
+// @Success 200 {object} dto.HotelierDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /hotelier/{id} [get]
@@ -49,7 +49,7 @@ func (handler *HotelierHandler) FindHotelierById(w http.ResponseWriter, r *http.
 // @Summary Create a new hotelier
 // @Accept json
 // @Produce json
-// @Param hotel body HotelierModifyDto true "Hotelier data"
+// @Param hotel body dto.HotelierModifyDto true "Hotelier data"
 // @Success 201 {object} uuid.UUID
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -78,8 +78,8 @@ func (handler *HotelierHandler) CreateHotelier(w http.ResponseWriter, r *http.Re
 // @Summary Update a hotelier
 // @Accept json
 // @Produce json
-// @Param id path uuid.UUID true "Hotelier ID"
-// @Param hotel body HotelModifyDto true "Hotelier data"
+// @Param id path string true "Hotelier ID"
+// @Param hotel body dto.HotelModifyDto true "Hotelier data"
 // @Success 200 "No Content"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -108,7 +108,7 @@ func (handler *HotelierHandler) UpdateHotelier(w http.ResponseWriter, r *http.Re
 // @Summary Delete a hotelier
 // @Accept json
 // @Produce json
-// @Param id path uuid.UUID true "Hotelier ID"
+// @Param id path string true "Hotelier ID"
 // @Success 204 "No Content"
 // @Failure 400 {object} string
 // @Failure 500 {object} string

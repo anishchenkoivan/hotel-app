@@ -30,7 +30,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/handlers.HotelDto"
+                                "$ref": "#/definitions/dto.HotelDto"
                             }
                         }
                     },
@@ -63,7 +63,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelModifyDto"
+                            "$ref": "#/definitions/dto.HotelModifyDto"
                         }
                     }
                 ],
@@ -98,11 +98,20 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Get a hotel by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hotel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelDto"
+                            "$ref": "#/definitions/dto.HotelDto"
                         }
                     },
                     "400": {
@@ -129,12 +138,19 @@ const docTemplate = `{
                 "summary": "Update a hotel",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Hotel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Hotel data",
                         "name": "hotel",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelModifyDto"
+                            "$ref": "#/definitions/dto.HotelModifyDto"
                         }
                     }
                 ],
@@ -164,6 +180,15 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Delete a hotel",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hotel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
@@ -199,7 +224,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelierModifyDto"
+                            "$ref": "#/definitions/dto.HotelierModifyDto"
                         }
                     }
                 ],
@@ -234,11 +259,20 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Get a hotelier by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hotelier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelierDto"
+                            "$ref": "#/definitions/dto.HotelierDto"
                         }
                     },
                     "400": {
@@ -265,12 +299,19 @@ const docTemplate = `{
                 "summary": "Update a hotelier",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Hotelier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Hotelier data",
                         "name": "hotel",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelModifyDto"
+                            "$ref": "#/definitions/dto.HotelModifyDto"
                         }
                     }
                 ],
@@ -300,6 +341,15 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Delete a hotelier",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hotelier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
@@ -334,7 +384,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/handlers.RoomDto"
+                                "$ref": "#/definitions/dto.RoomDto"
                             }
                         }
                     },
@@ -367,7 +417,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.RoomModifyDto"
+                            "$ref": "#/definitions/dto.RoomModifyDto"
                         }
                     }
                 ],
@@ -402,11 +452,20 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Get a room by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Room ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handlers.RoomDto"
+                            "$ref": "#/definitions/dto.RoomDto"
                         }
                     },
                     "400": {
@@ -433,12 +492,19 @@ const docTemplate = `{
                 "summary": "Update a room",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Room ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Room data",
                         "name": "hotel",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.RoomModifyDto"
+                            "$ref": "#/definitions/dto.RoomModifyDto"
                         }
                     }
                 ],
@@ -468,6 +534,15 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "summary": "Delete a room",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Room ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
@@ -489,7 +564,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handlers.HotelDto": {
+        "dto.HotelDto": {
             "type": "object",
             "properties": {
                 "description": {
@@ -509,7 +584,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.HotelModifyDto": {
+        "dto.HotelModifyDto": {
             "type": "object",
             "properties": {
                 "description": {
@@ -526,7 +601,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.HotelierDto": {
+        "dto.HotelierDto": {
             "type": "object",
             "properties": {
                 "id": {
@@ -537,7 +612,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.HotelierModifyDto": {
+        "dto.HotelierModifyDto": {
             "type": "object",
             "properties": {
                 "name": {
@@ -545,7 +620,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.RoomDto": {
+        "dto.RoomDto": {
             "type": "object",
             "properties": {
                 "capacity": {
@@ -568,7 +643,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.RoomModifyDto": {
+        "dto.RoomModifyDto": {
             "type": "object",
             "properties": {
                 "capacity": {
@@ -593,11 +668,11 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
+	Version:          "1.0",
+	Host:             "localhost:8081",
+	BasePath:         "/hotel-service/api",
 	Schemes:          []string{},
-	Title:            "",
+	Title:            "Hotel Service API",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

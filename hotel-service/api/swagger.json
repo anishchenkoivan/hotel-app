@@ -1,8 +1,12 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "title": "Hotel Service API",
+        "contact": {},
+        "version": "1.0"
     },
+    "host": "localhost:8081",
+    "basePath": "/hotel-service/api",
     "paths": {
         "/hotel": {
             "get": {
@@ -19,7 +23,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/handlers.HotelDto"
+                                "$ref": "#/definitions/dto.HotelDto"
                             }
                         }
                     },
@@ -52,7 +56,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelModifyDto"
+                            "$ref": "#/definitions/dto.HotelModifyDto"
                         }
                     }
                 ],
@@ -87,11 +91,20 @@
                     "application/json"
                 ],
                 "summary": "Get a hotel by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hotel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelDto"
+                            "$ref": "#/definitions/dto.HotelDto"
                         }
                     },
                     "400": {
@@ -118,12 +131,19 @@
                 "summary": "Update a hotel",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Hotel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Hotel data",
                         "name": "hotel",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelModifyDto"
+                            "$ref": "#/definitions/dto.HotelModifyDto"
                         }
                     }
                 ],
@@ -153,6 +173,15 @@
                     "application/json"
                 ],
                 "summary": "Delete a hotel",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hotel ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
@@ -188,7 +217,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelierModifyDto"
+                            "$ref": "#/definitions/dto.HotelierModifyDto"
                         }
                     }
                 ],
@@ -223,11 +252,20 @@
                     "application/json"
                 ],
                 "summary": "Get a hotelier by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hotelier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelierDto"
+                            "$ref": "#/definitions/dto.HotelierDto"
                         }
                     },
                     "400": {
@@ -254,12 +292,19 @@
                 "summary": "Update a hotelier",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Hotelier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Hotelier data",
                         "name": "hotel",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.HotelModifyDto"
+                            "$ref": "#/definitions/dto.HotelModifyDto"
                         }
                     }
                 ],
@@ -289,6 +334,15 @@
                     "application/json"
                 ],
                 "summary": "Delete a hotelier",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hotelier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
@@ -323,7 +377,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/handlers.RoomDto"
+                                "$ref": "#/definitions/dto.RoomDto"
                             }
                         }
                     },
@@ -356,7 +410,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.RoomModifyDto"
+                            "$ref": "#/definitions/dto.RoomModifyDto"
                         }
                     }
                 ],
@@ -391,11 +445,20 @@
                     "application/json"
                 ],
                 "summary": "Get a room by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Room ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handlers.RoomDto"
+                            "$ref": "#/definitions/dto.RoomDto"
                         }
                     },
                     "400": {
@@ -422,12 +485,19 @@
                 "summary": "Update a room",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Room ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Room data",
                         "name": "hotel",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.RoomModifyDto"
+                            "$ref": "#/definitions/dto.RoomModifyDto"
                         }
                     }
                 ],
@@ -457,6 +527,15 @@
                     "application/json"
                 ],
                 "summary": "Delete a room",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Room ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
@@ -478,7 +557,7 @@
         }
     },
     "definitions": {
-        "handlers.HotelDto": {
+        "dto.HotelDto": {
             "type": "object",
             "properties": {
                 "description": {
@@ -498,7 +577,7 @@
                 }
             }
         },
-        "handlers.HotelModifyDto": {
+        "dto.HotelModifyDto": {
             "type": "object",
             "properties": {
                 "description": {
@@ -515,7 +594,7 @@
                 }
             }
         },
-        "handlers.HotelierDto": {
+        "dto.HotelierDto": {
             "type": "object",
             "properties": {
                 "id": {
@@ -526,7 +605,7 @@
                 }
             }
         },
-        "handlers.HotelierModifyDto": {
+        "dto.HotelierModifyDto": {
             "type": "object",
             "properties": {
                 "name": {
@@ -534,7 +613,7 @@
                 }
             }
         },
-        "handlers.RoomDto": {
+        "dto.RoomDto": {
             "type": "object",
             "properties": {
                 "capacity": {
@@ -557,7 +636,7 @@
                 }
             }
         },
-        "handlers.RoomModifyDto": {
+        "dto.RoomModifyDto": {
             "type": "object",
             "properties": {
                 "capacity": {

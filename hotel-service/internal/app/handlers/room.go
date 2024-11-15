@@ -23,7 +23,7 @@ func NewRoomHandler(service *service.RoomService) RoomHandler {
 // @Summary Create a new room
 // @Accept json
 // @Produce json
-// @Param hotel body RoomModifyDto true "Room data"
+// @Param hotel body dto.RoomModifyDto true "Room data"
 // @Success 201 {object} uuid.UUID
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -52,8 +52,8 @@ func (handler *RoomHandler) CreateRoom(w http.ResponseWriter, r *http.Request) {
 // @Summary Update a room
 // @Accept json
 // @Produce json
-// @Param id path uuid.UUID true "Room ID"
-// @Param hotel body RoomModifyDto true "Room data"
+// @Param id path string true "Room ID"
+// @Param hotel body dto.RoomModifyDto true "Room data"
 // @Success 200 "No Content"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -81,8 +81,8 @@ func (handler *RoomHandler) UpdateRoom(w http.ResponseWriter, r *http.Request) {
 // @Summary Get a room by ID
 // @Accept json
 // @Produce json
-// @Param id path uuid.UUID true "Room ID"
-// @Success 200 {object} RoomDto
+// @Param id path string true "Room ID"
+// @Success 200 {object} dto.RoomDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /room/{id} [get]
@@ -107,7 +107,7 @@ func (handler *RoomHandler) FindRoomById(w http.ResponseWriter, r *http.Request)
 // @Summary	Get a list of all rooms
 // @Accept json
 // @Produce json
-// @Success 200 {object} []RoomDto
+// @Success 200 {object} []dto.RoomDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /room [get]
@@ -127,7 +127,7 @@ func (handler *RoomHandler) FindAllRooms(w http.ResponseWriter, r *http.Request)
 // @Summary Delete a room
 // @Accept json
 // @Produce json
-// @Param id path uuid.UUID true "Room ID"
+// @Param id path string true "Room ID"
 // @Success 204 "No Content"
 // @Failure 400 {object} string
 // @Failure 500 {object} string

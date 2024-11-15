@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/anishchenkoivan/hotel-app/hotel-service/api/apiv1pb"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/config"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
@@ -24,8 +25,8 @@ import (
 )
 
 type HotelServiceApp struct {
-	server     http.Server
-	grpcServer grpc.Server
+	server     *http.Server
+	grpcServer *grpc.Server
 	config     config.Config
 }
 
@@ -33,11 +34,11 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 	router := mux.NewRouter().PathPrefix("/hotel-service/api").Subrouter()
 
 	hotelApp := HotelServiceApp{
-		http.Server{
+		&http.Server{
 			Addr:    config.ServerHost + ":" + config.ServerPort,
 			Handler: router,
 		},
-		grpc.Server{},
+		grpc.NewServer(),
 		config,
 	}
 
@@ -81,6 +82,8 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 	router.HandleFunc("/room/{id}", roomHandler.FindRoomById).Methods("GET")
 	router.HandleFunc("/room/{id}", roomHandler.DeleteRoom).Methods("DELETE")
 
+	roomGrpcHandler := handlers.NewRoomGrpcHandler(roomService)
+	apiv1pb.RegisterHotelServiceServer(hotelApp.grpcServer, roomGrpcHandler)
 	return &hotelApp
 }
 
