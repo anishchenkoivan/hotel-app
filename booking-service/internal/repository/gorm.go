@@ -13,7 +13,6 @@ type GormRepository struct {
 }
 
 func NewGormRepository(db *gorm.DB, cfg config.Config) GormRepository {
-	db.AutoMigrate(&model.Reservation{})
   return GormRepository{db: db, config: cfg}
 }
 
