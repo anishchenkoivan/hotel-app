@@ -30,7 +30,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Hotel"
+                                "$ref": "#/definitions/handlers.HotelDto"
                             }
                         }
                     },
@@ -63,7 +63,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.HotelData"
+                            "$ref": "#/definitions/handlers.HotelModifyDto"
                         }
                     }
                 ],
@@ -102,7 +102,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Hotel"
+                            "$ref": "#/definitions/handlers.HotelDto"
                         }
                     },
                     "400": {
@@ -134,7 +134,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.HotelData"
+                            "$ref": "#/definitions/handlers.HotelModifyDto"
                         }
                     }
                 ],
@@ -199,7 +199,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.HotelierData"
+                            "$ref": "#/definitions/handlers.HotelierModifyDto"
                         }
                     }
                 ],
@@ -238,7 +238,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Hotelier"
+                            "$ref": "#/definitions/handlers.HotelierDto"
                         }
                     },
                     "400": {
@@ -270,7 +270,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.HotelierData"
+                            "$ref": "#/definitions/handlers.HotelModifyDto"
                         }
                     }
                 ],
@@ -334,7 +334,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Room"
+                                "$ref": "#/definitions/handlers.RoomDto"
                             }
                         }
                     },
@@ -367,7 +367,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.RoomData"
+                            "$ref": "#/definitions/handlers.RoomModifyDto"
                         }
                     }
                 ],
@@ -406,7 +406,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Room"
+                            "$ref": "#/definitions/handlers.RoomDto"
                         }
                     },
                     "400": {
@@ -438,7 +438,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.RoomData"
+                            "$ref": "#/definitions/handlers.RoomModifyDto"
                         }
                     }
                 ],
@@ -489,16 +489,13 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.Hotel": {
+        "handlers.HotelDto": {
             "type": "object",
             "properties": {
                 "description": {
                     "type": "string"
                 },
-                "hotelier": {
-                    "$ref": "#/definitions/model.Hotelier"
-                },
-                "hotelierID": {
+                "hotelierId": {
                     "type": "string"
                 },
                 "id": {
@@ -512,16 +509,13 @@ const docTemplate = `{
                 }
             }
         },
-        "model.HotelData": {
+        "handlers.HotelModifyDto": {
             "type": "object",
             "properties": {
                 "description": {
                     "type": "string"
                 },
-                "hotelier": {
-                    "$ref": "#/definitions/model.Hotelier"
-                },
-                "hotelierID": {
+                "hotelierId": {
                     "type": "string"
                 },
                 "location": {
@@ -532,7 +526,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Hotelier": {
+        "handlers.HotelierDto": {
             "type": "object",
             "properties": {
                 "id": {
@@ -543,15 +537,15 @@ const docTemplate = `{
                 }
             }
         },
-        "model.HotelierData": {
+        "handlers.HotelierModifyDto": {
             "type": "object",
             "properties": {
-                "username": {
+                "name": {
                     "type": "string"
                 }
             }
         },
-        "model.Room": {
+        "handlers.RoomDto": {
             "type": "object",
             "properties": {
                 "capacity": {
@@ -560,27 +554,21 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
-                "hotel": {
-                    "$ref": "#/definitions/model.Hotel"
-                },
-                "hotelID": {
+                "hotelId": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
-                "isAvailable": {
-                    "type": "boolean"
-                },
                 "name": {
                     "type": "string"
                 },
                 "pricePerDay": {
-                    "type": "number"
+                    "type": "integer"
                 }
             }
         },
-        "model.RoomData": {
+        "handlers.RoomModifyDto": {
             "type": "object",
             "properties": {
                 "capacity": {
@@ -589,20 +577,14 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
-                "hotel": {
-                    "$ref": "#/definitions/model.Hotel"
-                },
-                "hotelID": {
+                "hotelId": {
                     "type": "string"
-                },
-                "isAvailable": {
-                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"
                 },
                 "pricePerDay": {
-                    "type": "number"
+                    "type": "integer"
                 }
             }
         }

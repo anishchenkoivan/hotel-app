@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/apperrors"
-	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
 	service "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/room"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -23,19 +22,19 @@ func NewRoomHandler(service *service.RoomService) RoomHandler {
 // @Summary Create a new room
 // @Accept json
 // @Produce json
-// @Param hotel body model.RoomData true "Room data"
+// @Param hotel body RoomModifyDto true "Room data"
 // @Success 201 {object} uuid.UUID
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /room [post]
 func (handler *RoomHandler) CreateRoom(w http.ResponseWriter, r *http.Request) {
-	var roomData model.RoomData
-	err := json.NewDecoder(r.Body).Decode(&roomData)
+	var roomModifyDto RoomModifyDto
+	err := json.NewDecoder(r.Body).Decode(&roomModifyDto)
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("CreateRoom: "+err.Error()), w)
 	}
 
-	id, err := handler.service.CreateRoom(roomData)
+	id, err := handler.service.CreateRoom(roomModifyDto)
 	if err != nil {
 		handler.handleError(err, w)
 	}
@@ -53,7 +52,7 @@ func (handler *RoomHandler) CreateRoom(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param id path uuid.UUID true "Room ID"
-// @Param hotel body model.RoomData true "Room data"
+// @Param hotel body RoomModifyDto true "Room data"
 // @Success 200 "No Content"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -63,13 +62,13 @@ func (handler *RoomHandler) UpdateRoom(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("UpdateRoom: "+err.Error()), w)
 	}
-	var roomData model.RoomData
-	err = json.NewDecoder(r.Body).Decode(&roomData)
+	var roomModifyDto RoomModifyDto
+	err = json.NewDecoder(r.Body).Decode(&roomModifyDto)
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("UpdateRoom: "+err.Error()), w)
 	}
 
-	err = handler.service.UpdateRoom(roomId, roomData)
+	err = handler.service.UpdateRoom(roomId, roomModifyDto)
 	if err != nil {
 		handler.handleError(err, w)
 	}
@@ -82,7 +81,7 @@ func (handler *RoomHandler) UpdateRoom(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param id path uuid.UUID true "Room ID"
-// @Success 200 {object} model.Room
+// @Success 200 {object} RoomDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /room/{id} [get]
@@ -107,7 +106,7 @@ func (handler *RoomHandler) FindRoomById(w http.ResponseWriter, r *http.Request)
 // @Summary	Get a list of all rooms
 // @Accept json
 // @Produce json
-// @Success 200 {object} []model.Room
+// @Success 200 {object} []RoomDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /room [get]

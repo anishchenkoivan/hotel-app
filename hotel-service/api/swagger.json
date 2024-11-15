@@ -19,7 +19,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Hotel"
+                                "$ref": "#/definitions/handlers.HotelDto"
                             }
                         }
                     },
@@ -52,7 +52,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.HotelData"
+                            "$ref": "#/definitions/handlers.HotelModifyDto"
                         }
                     }
                 ],
@@ -91,7 +91,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Hotel"
+                            "$ref": "#/definitions/handlers.HotelDto"
                         }
                     },
                     "400": {
@@ -123,7 +123,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.HotelData"
+                            "$ref": "#/definitions/handlers.HotelModifyDto"
                         }
                     }
                 ],
@@ -188,7 +188,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.HotelierData"
+                            "$ref": "#/definitions/handlers.HotelierModifyDto"
                         }
                     }
                 ],
@@ -227,7 +227,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Hotelier"
+                            "$ref": "#/definitions/handlers.HotelierDto"
                         }
                     },
                     "400": {
@@ -259,7 +259,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.HotelierData"
+                            "$ref": "#/definitions/handlers.HotelModifyDto"
                         }
                     }
                 ],
@@ -323,7 +323,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Room"
+                                "$ref": "#/definitions/handlers.RoomDto"
                             }
                         }
                     },
@@ -356,7 +356,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.RoomData"
+                            "$ref": "#/definitions/handlers.RoomModifyDto"
                         }
                     }
                 ],
@@ -395,7 +395,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Room"
+                            "$ref": "#/definitions/handlers.RoomDto"
                         }
                     },
                     "400": {
@@ -427,7 +427,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.RoomData"
+                            "$ref": "#/definitions/handlers.RoomModifyDto"
                         }
                     }
                 ],
@@ -478,16 +478,13 @@
         }
     },
     "definitions": {
-        "model.Hotel": {
+        "handlers.HotelDto": {
             "type": "object",
             "properties": {
                 "description": {
                     "type": "string"
                 },
-                "hotelier": {
-                    "$ref": "#/definitions/model.Hotelier"
-                },
-                "hotelierID": {
+                "hotelierId": {
                     "type": "string"
                 },
                 "id": {
@@ -501,16 +498,13 @@
                 }
             }
         },
-        "model.HotelData": {
+        "handlers.HotelModifyDto": {
             "type": "object",
             "properties": {
                 "description": {
                     "type": "string"
                 },
-                "hotelier": {
-                    "$ref": "#/definitions/model.Hotelier"
-                },
-                "hotelierID": {
+                "hotelierId": {
                     "type": "string"
                 },
                 "location": {
@@ -521,7 +515,7 @@
                 }
             }
         },
-        "model.Hotelier": {
+        "handlers.HotelierDto": {
             "type": "object",
             "properties": {
                 "id": {
@@ -532,15 +526,15 @@
                 }
             }
         },
-        "model.HotelierData": {
+        "handlers.HotelierModifyDto": {
             "type": "object",
             "properties": {
-                "username": {
+                "name": {
                     "type": "string"
                 }
             }
         },
-        "model.Room": {
+        "handlers.RoomDto": {
             "type": "object",
             "properties": {
                 "capacity": {
@@ -549,27 +543,21 @@
                 "description": {
                     "type": "string"
                 },
-                "hotel": {
-                    "$ref": "#/definitions/model.Hotel"
-                },
-                "hotelID": {
+                "hotelId": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
-                "isAvailable": {
-                    "type": "boolean"
-                },
                 "name": {
                     "type": "string"
                 },
                 "pricePerDay": {
-                    "type": "number"
+                    "type": "integer"
                 }
             }
         },
-        "model.RoomData": {
+        "handlers.RoomModifyDto": {
             "type": "object",
             "properties": {
                 "capacity": {
@@ -578,20 +566,14 @@
                 "description": {
                     "type": "string"
                 },
-                "hotel": {
-                    "$ref": "#/definitions/model.Hotel"
-                },
-                "hotelID": {
+                "hotelId": {
                     "type": "string"
-                },
-                "isAvailable": {
-                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"
                 },
                 "pricePerDay": {
-                    "type": "number"
+                    "type": "integer"
                 }
             }
         }

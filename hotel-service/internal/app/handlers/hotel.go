@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/apperrors"
-	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
 	service "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/hotel"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -23,19 +22,19 @@ func NewHotelHandler(service *service.HotelService) HotelHandler {
 // @Summary Create a new hotel
 // @Accept json
 // @Produce json
-// @Param hotel body model.HotelData true "Hotel data"
+// @Param hotel body HotelModifyDto true "Hotel data"
 // @Success 201 {object} uuid.UUID
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /hotel [post]
 func (handler *HotelHandler) CreateHotel(w http.ResponseWriter, r *http.Request) {
-	var hotelData model.HotelData
-	err := json.NewDecoder(r.Body).Decode(&hotelData)
+	var hotelDto HotelModifyDto
+	err := json.NewDecoder(r.Body).Decode(&hotelDto)
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("CreateHotel: "+err.Error()), w)
 	}
 
-	hotelId, err := handler.service.CreateHotel(hotelData)
+	hotelId, err := handler.service.CreateHotel(hotelDto)
 	if err != nil {
 		handler.handleError(err, w)
 	}
@@ -75,7 +74,7 @@ func (handler *HotelHandler) DeleteHotel(w http.ResponseWriter, r *http.Request)
 // @Accept json
 // @Produce json
 // @Param id path uuid.UUID true "Hotel ID"
-// @Param hotel body model.HotelData true "Hotel data"
+// @Param hotel body HotelModifyDto true "Hotel data"
 // @Success 200 "No Content"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -85,13 +84,13 @@ func (handler *HotelHandler) UpdateHotel(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("DeleteHotel: "+err.Error()), w)
 	}
-	var hotelData model.HotelData
-	err = json.NewDecoder(r.Body).Decode(&hotelData)
+	var hotelModifyDto HotelModifyDto
+	err = json.NewDecoder(r.Body).Decode(&hotelModifyDto)
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("DeleteHotel: "+err.Error()), w)
 	}
 
-	err = handler.service.UpdateHotel(hotelId, hotelData)
+	err = handler.service.UpdateHotel(hotelId, hotelModifyDto)
 	if err != nil {
 		handler.handleError(err, w)
 	}
@@ -104,7 +103,7 @@ func (handler *HotelHandler) UpdateHotel(w http.ResponseWriter, r *http.Request)
 // @Accept json
 // @Produce json
 // @Param id path uuid.UUID true "Hotel ID"
-// @Success 200 {object} model.Hotel
+// @Success 200 {object} HotelDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /hotel/{id} [get]
@@ -130,7 +129,7 @@ func (handler *HotelHandler) FindHotelById(w http.ResponseWriter, r *http.Reques
 // @Summary	Get a list of all hotels
 // @Accept json
 // @Produce json
-// @Success 200 {object} []model.Hotel
+// @Success 200 {object} []HotelDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /hotel [get]

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package proto.api.v1;
+
+service HotelService {
+  rpc GetRoom (GetRoomRequest) returns (GetRoomResponse);
+}
+
+message GetItemRequest {
+  string id = 1;
+}
+
+message GetItemResponse {
+  string name = 1;
+  string description = 2;
+}
+
+message GetRoomRequest {
+  string id = 1;
+}
+
+message GetRoomResponse {
+  int64 price = 1;
+}

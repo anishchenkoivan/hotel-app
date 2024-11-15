@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/apperrors"
-	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
 	service "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/hotelier"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -24,7 +23,7 @@ func NewHotelierHandler(service *service.HotelierService) HotelierHandler {
 // @Accept json
 // @Produce json
 // @Param id path uuid.UUID true "Hotelier ID"
-// @Success 200 {object} model.Hotelier
+// @Success 200 {object} HotelierDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /hotelier/{id} [get]
@@ -49,19 +48,19 @@ func (handler *HotelierHandler) FindHotelierById(w http.ResponseWriter, r *http.
 // @Summary Create a new hotelier
 // @Accept json
 // @Produce json
-// @Param hotel body model.HotelierData true "Hotelier data"
+// @Param hotel body HotelierModifyDto true "Hotelier data"
 // @Success 201 {object} uuid.UUID
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /hotelier [post]
 func (handler *HotelierHandler) CreateHotelier(w http.ResponseWriter, r *http.Request) {
-	var hotelierData model.HotelierData
-	err := json.NewDecoder(r.Body).Decode(&hotelierData)
+	var hotelierDto HotelierModifyDto
+	err := json.NewDecoder(r.Body).Decode(&hotelierDto)
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("CreateHotelier: "+err.Error()), w)
 	}
 
-	hotelierId, err := handler.service.CreateHotelier(hotelierData)
+	hotelierId, err := handler.service.CreateHotelier(hotelierDto)
 	if err != nil {
 		handler.handleError(err, w)
 	}
@@ -79,7 +78,7 @@ func (handler *HotelierHandler) CreateHotelier(w http.ResponseWriter, r *http.Re
 // @Accept json
 // @Produce json
 // @Param id path uuid.UUID true "Hotelier ID"
-// @Param hotel body model.HotelierData true "Hotelier data"
+// @Param hotel body HotelModifyDto true "Hotelier data"
 // @Success 200 "No Content"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -90,13 +89,13 @@ func (handler *HotelierHandler) UpdateHotelier(w http.ResponseWriter, r *http.Re
 		handler.handleError(apperrors.NewParsingError("UpdateHotelier: "+err.Error()), w)
 	}
 
-	var hotelierData model.HotelierData
-	err = json.NewDecoder(r.Body).Decode(&hotelierData)
+	var hotelierModifyDto HotelierModifyDto
+	err = json.NewDecoder(r.Body).Decode(&hotelierModifyDto)
 	if err != nil {
 		handler.handleError(apperrors.NewParsingError("UpdateHotelier: "+err.Error()), w)
 	}
 
-	err = handler.service.UpdateHotelier(hotelierId, hotelierData)
+	err = handler.service.UpdateHotelier(hotelierId, hotelierModifyDto)
 	if err != nil {
 		handler.handleError(err, w)
 	}
