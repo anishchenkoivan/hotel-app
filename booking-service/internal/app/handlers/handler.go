@@ -29,7 +29,6 @@ func NewlHandler(repo service.Repository) Handler {
 // @Failure 500 {object} string
 // @Router /get-by-id/{id} [get]
 func (handler *Handler) GetById(w http.ResponseWriter, r *http.Request) {
-  fmt.Println("jopa")
 	id, err := uuid.Parse(mux.Vars(r)["id"])
 
 	if err != nil {
@@ -106,18 +105,25 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 	data, err := ReservationDataFromDto(query)
 
 	if err != nil {
+    fmt.Println(err.Error())
 		http.Error(w, "Failed to parse request", http.StatusBadRequest)
 		return
 	}
 
-	uuid, err := handler.service.AddReservation(data)
+	id, serr := handler.service.AddReservation(data)
 
-	if err != nil {
-		http.Error(w, "Failed to insert", http.StatusInternalServerError)
+	if serr != nil {
+		if serr.ErrType == service.RepositoryError {
+			http.Error(w, "Failed to insert", http.StatusInternalServerError)
+		} else if serr.ErrType == service.ReservationAlreadyExists {
+			http.Error(w, "Room is reserved on selected time range", http.StatusBadRequest)
+		} else {
+			http.Error(w, "Unknown server error", http.StatusInternalServerError)
+		}
 		return
 	}
 
-	resp := AddReservationResponse{uuid}
+	resp := AddReservationResponse{id}
 	err = encoder.Encode(resp)
 
 	if err != nil {

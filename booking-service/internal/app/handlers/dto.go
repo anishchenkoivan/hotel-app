@@ -7,6 +7,8 @@ import (
 	"github.com/google/uuid"
 )
 
+const timeLayout = "02.01.2006"
+
 type ReservationDto struct {
 	ClientName    string
 	ClientSurname string
@@ -33,8 +35,8 @@ func ReservationDtoFromModel(data model.Reservation) ReservationDto {
 		ClientPhone:   data.Client.Phone,
 		ClientEmail:   data.Client.Email,
 		RoomId:        data.RoomId.String(),
-		InTime:        data.InTime.String(),
-		OutTime:       data.OutTime.String(),
+		InTime:        data.InTime.Format("02.01.2006"),
+		OutTime:       data.OutTime.Format("02.01.2006"),
 		Cost:          data.Cost,
 	}
 }
@@ -49,8 +51,8 @@ func ReservationsArrayDtoFromModelsArray(data []model.Reservation) ReservationsA
 			ClientPhone:   data[i].Client.Phone,
 			ClientEmail:   data[i].Client.Email,
 			RoomId:        data[i].RoomId.String(),
-			InTime:        data[i].InTime.String(),
-			OutTime:       data[i].OutTime.String(),
+			InTime:        data[i].InTime.Format("02.01.2006"),
+			OutTime:       data[i].OutTime.Format("02.01.2006"),
 			Cost:          data[i].Cost,
 		}
 	}
@@ -65,13 +67,13 @@ func ReservationDataFromDto(dto ReservationDto) (model.ReservationData, error) {
 		return model.ReservationData{}, err
 	}
 
-	inTime, err := time.Parse(time.Layout, dto.InTime)
+	inTime, err := time.Parse(timeLayout, dto.InTime)
 
 	if err != nil {
 		return model.ReservationData{}, err
 	}
 
-	outTime, err := time.Parse(time.Layout, dto.OutTime)
+	outTime, err := time.Parse(timeLayout, dto.OutTime)
 
 	if err != nil {
 		return model.ReservationData{}, err

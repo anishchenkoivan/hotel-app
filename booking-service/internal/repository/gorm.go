@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/anishchenkoivan/hotel-app/booking-service/config"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
 	"github.com/google/uuid"
@@ -26,6 +28,12 @@ func (p GormRepository) SearchByPhone(phone string) ([]model.Reservation, error)
 	var found []model.Reservation
 	res := p.db.Model(&model.Reservation{}).Find(&found, model.Reservation{ReservationData: model.ReservationData{Client: model.Client{Phone: phone}}})
 	return found, res.Error
+}
+
+func (p GormRepository) IsAvailible(roomId uuid.UUID, inTime time.Time, outTime time.Time) bool {
+  var count int64
+  p.db.Model(&model.Reservation{}).Where("in_time BETWEEN ? AND ?", inTime, outTime).Where("out_time BETWEEN ? AND ?", inTime, outTime).Count(&count)
+  return count == 0
 }
 
 func (p GormRepository) Put(data model.ReservationData) (uuid.UUID, error) {

@@ -18,14 +18,14 @@ import (
 // @title           Booking Service
 // @version         1.0.0
 func main() {
-	cfg, err := config.NewConfig()
+	conf, err := config.NewConfig()
 
 	if err != nil {
 		log.Fatal("Unable to create config: ", err)
 	}
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s",
-		cfg.DbHost, cfg.DbUser, cfg.DbPassword, cfg.DbName, cfg.DbPort)
+		conf.DbHost, conf.DbUser, conf.DbPassword, conf.DbName, conf.DbPort)
 	gorm_cfg := gorm.Config{}
 	db, err := gorm.Open(postgres.Open(dsn), &gorm_cfg)
 
@@ -35,7 +35,7 @@ func main() {
 
 	db.AutoMigrate(&model.Reservation{})
 
-	repo, err := repository.NewGormRepository(db, cfg), err
+	repo, err := repository.NewGormRepository(db, conf), err
 
 	if err != nil {
 		log.Fatal("Unable to create postgres repository: ", err)
@@ -44,6 +44,6 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	app := app.NewBookingServiceApp(repo, cfg)
+	app := app.NewBookingServiceApp(repo, conf)
 	app.Start(ctx)
 }

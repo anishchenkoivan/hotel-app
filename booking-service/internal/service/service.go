@@ -21,6 +21,17 @@ func (s Service) SearchByPhone(phone string) ([]model.Reservation, error) {
 	return s.repository.SearchByPhone(phone)
 }
 
-func (s Service) AddReservation(data model.ReservationData) (uuid.UUID, error) {
-	return s.repository.Put(data)
+func (s Service) AddReservation(data model.ReservationData) (uuid.UUID, *ServiceError) {
+	if !s.repository.IsAvailible(data.RoomId, data.InTime, data.OutTime) {
+		err := NewReservationAlreadyExistsError()
+		return uuid.UUID{}, err
+	}
+
+  id, err := s.repository.Put(data)
+
+  if err != nil {
+    return id, &ServiceError{error: err, ErrType: RepositoryError}
+  }
+
+  return id, nil
 }
