@@ -15,7 +15,7 @@ type GormRepository struct {
 }
 
 func NewGormRepository(db *gorm.DB, cfg config.Config) GormRepository {
-  return GormRepository{db: db, config: cfg}
+	return GormRepository{db: db, config: cfg}
 }
 
 func (p GormRepository) GetById(id uuid.UUID) (model.Reservation, error) {
@@ -30,10 +30,10 @@ func (p GormRepository) SearchByPhone(phone string) ([]model.Reservation, error)
 	return found, res.Error
 }
 
-func (p GormRepository) IsAvailible(roomId uuid.UUID, inTime time.Time, outTime time.Time) bool {
-  var count int64
-  p.db.Model(&model.Reservation{}).Where("in_time BETWEEN ? AND ?", inTime, outTime).Where("out_time BETWEEN ? AND ?", inTime, outTime).Count(&count)
-  return count == 0
+func (p GormRepository) IsAvailible(roomId uuid.UUID, inTime time.Time, outTime time.Time) (bool, error) {
+	var count int64
+	res := p.db.Model(&model.Reservation{}).Where("room_id = ?", roomId).Where("in_time BETWEEN ? AND ?", inTime, outTime).Where("out_time BETWEEN ? AND ?", inTime, outTime).Count(&count)
+	return count == 0, res.Error
 }
 
 func (p GormRepository) Put(data model.ReservationData) (uuid.UUID, error) {

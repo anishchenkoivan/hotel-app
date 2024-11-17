@@ -11,5 +11,5 @@ type Repository interface {
 	GetById(id uuid.UUID) (model.Reservation, error)
 	SearchByPhone(phone string) ([]model.Reservation, error)
 	Put(reserv model.ReservationData) (uuid.UUID, error)
-  IsAvailible(roomId uuid.UUID, inTime time.Time, outTime time.Time) bool
+  IsAvailible(roomId uuid.UUID, inTime time.Time, outTime time.Time) (bool, error)
 }
