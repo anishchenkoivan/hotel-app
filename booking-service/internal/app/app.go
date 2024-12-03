@@ -26,6 +26,7 @@ func NewBookingServiceApp(repo service.Repository, cfg config.Config) *BookingSe
 	router.HandleFunc("/add-reservation", handler.AddReservation).Methods("POST")
 	router.HandleFunc("/get-by-id/{id}", handler.GetById).Methods("GET")
 	router.HandleFunc("/search-by-phone/{phone}", handler.SearchByPhone).Methods("GET")
+	router.HandleFunc("/get-room-reservations/{room_id}", handler.SearchByPhone).Methods("GET")
 
 	httpServer := http.Server{
 		Addr:    cfg.ServerHost + ":" + cfg.ServerPort,

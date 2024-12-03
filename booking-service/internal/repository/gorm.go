@@ -26,13 +26,18 @@ func (p GormRepository) GetById(id uuid.UUID) (model.Reservation, error) {
 
 func (p GormRepository) SearchByPhone(phone string) ([]model.Reservation, error) {
 	var found []model.Reservation
-	res := p.db.Model(&model.Reservation{}).Find(&found, model.Reservation{ReservationData: model.ReservationData{Client: model.Client{Phone: phone}}})
+	res := p.db.Model(&model.Reservation{}).
+		Find(&found, model.Reservation{ReservationData: model.ReservationData{Client: model.Client{Phone: phone}}})
 	return found, res.Error
 }
 
 func (p GormRepository) IsAvailible(roomId uuid.UUID, inTime time.Time, outTime time.Time) (bool, error) {
 	var count int64
-	res := p.db.Model(&model.Reservation{}).Where("room_id = ?", roomId).Where("in_time BETWEEN ? AND ?", inTime, outTime).Where("out_time BETWEEN ? AND ?", inTime, outTime).Count(&count)
+	res := p.db.Model(&model.Reservation{}).
+		Where("room_id = ?", roomId).
+		Where("in_time BETWEEN ? AND ?", inTime, outTime).
+		Where("out_time BETWEEN ? AND ?", inTime, outTime).
+		Count(&count)
 	return count == 0, res.Error
 }
 
@@ -41,4 +46,15 @@ func (p GormRepository) Put(data model.ReservationData) (uuid.UUID, error) {
 	reserv := model.Reservation{Id: id, ReservationData: data}
 	res := p.db.Model(&model.Reservation{}).Create(reserv)
 	return id, res.Error
+}
+
+func (p GormRepository) GetReservedDates(roomId uuid.UUID) ([]time.Time, error) {
+	var reservs []model.Reservation
+	res := p.db.Model(&model.Reservation{}).Where("room_id = ?", roomId).Find(&reservs)
+
+	return []time.Time{}, res.Error
+}
+
+func (p GormRepository) GetRoomReservations(roomId uuid.UUID) ([]model.Reservation, error) {
+	return make([]model.Reservation, 0), nil
 }

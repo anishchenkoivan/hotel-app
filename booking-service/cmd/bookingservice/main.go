@@ -15,8 +15,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// @title           Booking Service
-// @version         1.0.0
 func main() {
 	conf, err := config.NewConfig()
 

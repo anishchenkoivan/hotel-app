@@ -3,7 +3,7 @@
     "info": {
         "title": "Booking Service",
         "contact": {},
-        "version": "1.0.0"
+        "version": "0.2.0"
     },
     "paths": {
         "/add-reservation": {
@@ -99,6 +99,43 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/handlers.ReservationDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/get-room-reservations/{room_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Search reservation by room id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Room id",
+                        "name": "room_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ReservationsArrayDto"
                         }
                     },
                     "400": {

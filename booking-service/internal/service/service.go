@@ -21,11 +21,11 @@ func (s Service) SearchByPhone(phone string) ([]model.Reservation, error) {
 	return s.repository.SearchByPhone(phone)
 }
 
-func (s Service) AddReservation(data model.ReservationData) (uuid.UUID, *ServiceError) {
+func (s Service) AddReservation(data model.ReservationData) (uuid.UUID, *BookErr) {
 	free, err := s.repository.IsAvailible(data.RoomId, data.InTime, data.OutTime)
 
 	if err != nil {
-		return uuid.UUID{}, &ServiceError{error: err, ErrType: RepositoryError}
+		return uuid.UUID{}, &BookErr{error: err, ErrType: RepositoryError}
 	}
 
 	if !free {
@@ -36,8 +36,13 @@ func (s Service) AddReservation(data model.ReservationData) (uuid.UUID, *Service
 	id, err := s.repository.Put(data)
 
 	if err != nil {
-		return id, &ServiceError{error: err, ErrType: RepositoryError}
+		return uuid.UUID{}, &BookErr{error: err, ErrType: RepositoryError}
 	}
 
 	return id, nil
+}
+
+func (s Service) GetRoomReservations(roomId uuid.UUID) ([]model.Reservation, error) {
+	res, err := s.repository.GetRoomReservations(roomId)
+	return res, &BookErr{error: err, ErrType: RepositoryError}
 }

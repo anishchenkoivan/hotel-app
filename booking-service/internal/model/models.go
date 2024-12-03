@@ -14,11 +14,11 @@ type Client struct {
 }
 
 type ReservationData struct {
-	Client  Client `gorm:"embedded;embeddedPrefix:cliend_"`
-	RoomId  uuid.UUID
+	Client           Client `gorm:"embedded;embeddedPrefix:cliend_"`
+	RoomId           uuid.UUID
+	Cost             uint64
 	InTime  time.Time
 	OutTime time.Time
-	Cost    uint64
 }
 
 type Reservation struct {

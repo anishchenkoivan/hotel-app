@@ -12,4 +12,5 @@ type Repository interface {
 	SearchByPhone(phone string) ([]model.Reservation, error)
 	Put(reserv model.ReservationData) (uuid.UUID, error)
   IsAvailible(roomId uuid.UUID, inTime time.Time, outTime time.Time) (bool, error)
+  GetRoomReservations(roomId uuid.UUID) ([]model.Reservation, error)
 }

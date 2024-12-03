@@ -24,8 +24,12 @@ type ReservationsArrayDto struct {
 	Reservations []ReservationDto
 }
 
-type AddReservationResponse struct {
+type ReservationIdDto struct {
 	Id uuid.UUID
+}
+
+type RoomIdDto struct {
+  Id uuid.UUID
 }
 
 func ReservationDtoFromModel(data model.Reservation) ReservationDto {

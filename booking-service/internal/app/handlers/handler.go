@@ -80,6 +80,41 @@ func (handler *Handler) SearchByPhone(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GetRoomReservations
+// @Summary Search reservation by room id
+// @Produce json
+// @Param room_id path string true "Room id"
+// @Success 200 {object} ReservationsArrayDto
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /get-room-reservations/{room_id} [get]
+func (handler *Handler) GetRoomReservations(w http.ResponseWriter, r *http.Request) {
+	roomIdString := mux.Vars(r)["room_id"]
+	roomIdBytes := []byte(roomIdString)
+	roomId, err := uuid.FromBytes(roomIdBytes)
+
+	if err != nil {
+		http.Error(w, "Failed to decode room id", http.StatusBadRequest)
+		return
+	}
+
+	reservs, err := handler.service.GetRoomReservations(roomId)
+
+	if err != nil {
+		http.Error(w, "Failed to search", http.StatusInternalServerError)
+		return
+	}
+
+	resp := ReservationsArrayDtoFromModelsArray(reservs)
+	encoder := json.NewEncoder(w)
+	err = encoder.Encode(resp)
+
+	if err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
+}
+
 // AddReservation
 // @Summary Add reservation
 // @Accept json
@@ -105,7 +140,7 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 	data, err := ReservationDataFromDto(query)
 
 	if err != nil {
-    fmt.Println(err.Error())
+		fmt.Println(err.Error())
 		http.Error(w, "Failed to parse request", http.StatusBadRequest)
 		return
 	}
@@ -123,7 +158,7 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := AddReservationResponse{id}
+	resp := ReservationIdDto{id}
 	err = encoder.Encode(resp)
 
 	if err != nil {

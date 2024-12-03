@@ -28,7 +28,7 @@ definitions:
 info:
   contact: {}
   title: Booking Service
-  version: 1.0.0
+  version: 0.2.0
 paths:
   /add-reservation:
     post:
@@ -99,6 +99,30 @@ paths:
           schema:
             type: string
       summary: Get reservation by ID
+  /get-room-reservations/{room_id}:
+    get:
+      parameters:
+      - description: Room id
+        in: path
+        name: room_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.ReservationsArrayDto'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Search reservation by room id
   /search-by-phone/{phone}:
     get:
       parameters:

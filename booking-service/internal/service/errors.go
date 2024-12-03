@@ -2,20 +2,20 @@ package service
 
 import "errors"
 
-type ServiceErrorType int
+type BookErrType int
 
 const (
-	RepositoryError          ServiceErrorType = 0
-	ReservationAlreadyExists ServiceErrorType = 1
+	RepositoryError          BookErrType = 0
+	ReservationAlreadyExists BookErrType = 1
 )
 
-type ServiceError struct {
+type BookErr struct {
 	error
-	ErrType ServiceErrorType
+	ErrType BookErrType
 }
 
-func NewReservationAlreadyExistsError() *ServiceError {
+func NewReservationAlreadyExistsError() *BookErr {
   msg := "Reservation already exists"
   err := errors.New(msg)
-  return &ServiceError{error: err, ErrType: ReservationAlreadyExists}
+  return &BookErr{error: err, ErrType: ReservationAlreadyExists}
 }

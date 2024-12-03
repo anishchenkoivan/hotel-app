@@ -125,6 +125,43 @@ const docTemplate = `{
                 }
             }
         },
+        "/get-room-reservations/{room_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Search reservation by room id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Room id",
+                        "name": "room_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ReservationsArrayDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/search-by-phone/{phone}": {
             "get": {
                 "produces": [
@@ -209,7 +246,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0.0",
+	Version:          "0.2.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
