@@ -34,5 +34,6 @@ require (
 	golang.org/x/net v0.26.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/tools v0.22.0 // indirect
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.5.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
