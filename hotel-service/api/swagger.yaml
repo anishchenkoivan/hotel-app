@@ -1,0 +1,430 @@
+basePath: /hotel-service/api
+definitions:
+  dto.HotelDto:
+    properties:
+      description:
+        type: string
+      hotelierId:
+        type: string
+      id:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.HotelModifyDto:
+    properties:
+      description:
+        type: string
+      hotelierId:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.HotelierDto:
+    properties:
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.HotelierModifyDto:
+    properties:
+      name:
+        type: string
+    type: object
+  dto.RoomDto:
+    properties:
+      capacity:
+        type: integer
+      description:
+        type: string
+      hotelId:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      pricePerDay:
+        type: integer
+    type: object
+  dto.RoomModifyDto:
+    properties:
+      capacity:
+        type: integer
+      description:
+        type: string
+      hotelId:
+        type: string
+      name:
+        type: string
+      pricePerDay:
+        type: integer
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  title: Hotel Service API
+  version: "1.0"
+paths:
+  /hotel:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.HotelDto'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get a list of all hotels
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotel data
+        in: body
+        name: hotel
+        required: true
+        schema:
+          $ref: '#/definitions/dto.HotelModifyDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create a new hotel
+  /hotel/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotel ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a hotel
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotel ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.HotelDto'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get a hotel by ID
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotel ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Hotel data
+        in: body
+        name: hotel
+        required: true
+        schema:
+          $ref: '#/definitions/dto.HotelModifyDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update a hotel
+  /hotelier:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotelier data
+        in: body
+        name: hotel
+        required: true
+        schema:
+          $ref: '#/definitions/dto.HotelierModifyDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create a new hotelier
+  /hotelier/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotelier ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a hotelier
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotelier ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.HotelierDto'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get a hotelier by ID
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotelier ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Hotelier data
+        in: body
+        name: hotel
+        required: true
+        schema:
+          $ref: '#/definitions/dto.HotelModifyDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update a hotelier
+  /room:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.RoomDto'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get a list of all rooms
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Room data
+        in: body
+        name: hotel
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RoomModifyDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create a new room
+  /room/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete a room
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RoomDto'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get a room by ID
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Room data
+        in: body
+        name: hotel
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RoomModifyDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update a room
+swagger: "2.0"
