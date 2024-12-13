@@ -26,7 +26,7 @@ type Config struct {
 func getTimeout(timeoutString string) time.Duration {
 	timeout, err := time.ParseDuration(timeoutString)
 	if err != nil {
-		log.Fatal("Error parsing timeout string")
+		log.Fatal("Error parsing timeout string", err)
 	}
 	return timeout
 }
@@ -34,7 +34,7 @@ func getTimeout(timeoutString string) time.Duration {
 func NewConfig() *Config {
 	err := godotenv.Load("config/config.env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file", err)
 		return nil
 	}
 
