@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "./code/bookingservice";
+
+service BookingService {
+  rpc ConfirmPayment(ConfirmPaymentRequest) returns (Empty);
+}
+
+message ConfirmPaymentRequest {
+  string booking_id = 1;
+  bool is_confirmed = 2;
+}
+
+message Empty {
+}
