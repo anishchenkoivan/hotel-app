@@ -7,6 +7,7 @@ import (
 	"github.com/anishchenkoivan/hotel-app/payment-system/api/api_v1pb"
 	"github.com/anishchenkoivan/hotel-app/payment-system/config"
 	"github.com/anishchenkoivan/hotel-app/payment-system/internal/app/handlers"
+	"github.com/anishchenkoivan/hotel-app/payment-system/internal/model"
 	"github.com/gorilla/mux"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -14,18 +15,20 @@ import (
 	"net"
 	"net/http"
 	"os/signal"
+	"sync"
 	"syscall"
 )
 
 type PaymentSystemApp struct {
-	server     *http.Server
-	grpcServer *grpc.Server
-	config     config.Config
+	server              *http.Server
+	grpcServer          *grpc.Server
+	config              config.Config
+	bookingEntityByHash map[string]model.BookingEntity
+	mu                  *sync.Mutex
 }
 
 func NewPaymentSystemApp(config config.Config) *PaymentSystemApp {
 	router := mux.NewRouter().PathPrefix("/payment-system/api").Subrouter()
-
 	paymentSystemApp := PaymentSystemApp{
 		&http.Server{
 			Addr:    config.ServerHost + ":" + config.ServerPort,
@@ -33,9 +36,14 @@ func NewPaymentSystemApp(config config.Config) *PaymentSystemApp {
 		},
 		grpc.NewServer(),
 		config,
-	} // http server for future when user will make post requests to pay, now it's unused
+		make(map[string]model.BookingEntity),
+		&sync.Mutex{},
+	}
 
-	addPaymentGrpcHandler := handlers.NewAddPaymentGrpcHandler(config.CallbackTimeout)
+	paymentHandler := handlers.NewHTTPPaymentHandler(config, paymentSystemApp.mu, paymentSystemApp.bookingEntityByHash)
+	router.HandleFunc("/pay/{token}", paymentHandler.PaymentHandle)
+
+	addPaymentGrpcHandler := handlers.NewAddPaymentGrpcHandler(config, paymentSystemApp.mu, paymentSystemApp.bookingEntityByHash)
 	api_v1pb.RegisterPaymentSystemServer(paymentSystemApp.grpcServer, addPaymentGrpcHandler)
 	return &paymentSystemApp
 }
@@ -84,7 +92,9 @@ func (app *PaymentSystemApp) Stop() error {
 	if err := app.server.Shutdown(shutdownCtx); err != nil {
 		return err
 	}
-
+	log.Println("Payment System http server shutted down, waiting for grpc graceful shutdown")
+	app.grpcServer.GracefulStop()
+	log.Println("Payment System grpc server shutted down")
 	log.Println("Payment System stopped")
 	return nil
 }

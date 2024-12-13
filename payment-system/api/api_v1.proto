@@ -1,3 +1,6 @@
+// command to generate (run from payment-system dir)
+// protoc --go_out=. --go-grpc_out=. api/api_v1.proto
+
 syntax = "proto3";
 
 package api_v1;
@@ -10,9 +13,9 @@ service PaymentSystem {
 
 message AddPaymentRequest {
   string booking_id = 1;
-  int64 booking_cost = 2;
+  float booking_cost = 2;
 }
 
 message AddPaymentResponse {
-  bool url_for_pay = 1;
+  string url_for_pay = 1;
 }

@@ -1,8 +1,9 @@
 module github.com/anishchenkoivan/hotel-app/payment-system
 
-go 1.23.1
+go 1.23.4
 
 require (
+	github.com/anishchenkoivan/hotel-app/api v0.0.0-20241213173232-70d3cc70b083
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
 	golang.org/x/sync v0.10.0

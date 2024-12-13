@@ -15,7 +15,10 @@ type Config struct {
 	ServerGrpcPort string
 
 	AppShutdownTimeout time.Duration
-	CallbackTimeout    time.Duration
+	PaymentTimeout     time.Duration
+
+	BookingServiceHost string
+	BookingServicePort string
 }
 
 func getTimeout(timeoutString string) time.Duration {
@@ -41,6 +44,9 @@ func NewConfig() *Config {
 		ServerGrpcPort: os.Getenv("PAYMENT_SYSTEM_GRPC_PORT"),
 
 		AppShutdownTimeout: getTimeout(os.Getenv("PAYMENT_SYSTEM_APP_SHUTDOWN_TIMEOUT")),
-		CallbackTimeout:    getTimeout(os.Getenv("PAYMENT_SYSTEM_CALLBACK_TIMEOUT")),
+		PaymentTimeout:     getTimeout(os.Getenv("PAYMENT_SYSTEM_PAYMENT_TIMEOUT")),
+
+		BookingServiceHost: os.Getenv("BOOKING_SERVICE_HOST"),
+		BookingServicePort: os.Getenv("BOOKING_SERVICE_PORT"),
 	}
 }
