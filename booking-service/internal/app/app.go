@@ -3,24 +3,32 @@ package app
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/anishchenkoivan/hotel-app/booking-service/config"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/app/handlers"
+	"github.com/anishchenkoivan/hotel-app/booking-service/internal/repository"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/service"
 	"github.com/gorilla/mux"
 	"golang.org/x/sync/errgroup"
 )
 
 type BookingServiceApp struct {
-	httpServer   *http.Server
-	config       config.Config
+	httpServer *http.Server
+	config     config.Config
 }
 
-func NewBookingServiceApp(repo service.Repository, cfg config.Config) *BookingServiceApp {
-	handler := handlers.NewlHandler(repo)
+func NewBookingServiceApp(conf config.Config) (*BookingServiceApp, error) {
+	repo, err := repository.NewPostgresRepository(conf.Db)
 
+	if err != nil {
+		return &BookingServiceApp{}, fmt.Errorf("Unable to create repository: %w", err)
+	}
+
+	service := service.NewService(repo)
+	handler := handlers.NewlHandler(service)
 	router := mux.NewRouter().PathPrefix("/booking-service/api").Subrouter()
 
 	router.HandleFunc("/add-reservation", handler.AddReservation).Methods("POST")
@@ -29,11 +37,11 @@ func NewBookingServiceApp(repo service.Repository, cfg config.Config) *BookingSe
 	router.HandleFunc("/get-room-reservations/{room_id}", handler.SearchByPhone).Methods("GET")
 
 	httpServer := http.Server{
-		Addr:    cfg.Server.Host + ":" + cfg.Server.Port,
+		Addr:    conf.Server.Host + ":" + conf.Server.Port,
 		Handler: router,
 	}
 
-	return &BookingServiceApp{&httpServer, cfg}
+	return &BookingServiceApp{&httpServer, conf}, nil
 }
 
 func (app *BookingServiceApp) Start(ctx context.Context) error {

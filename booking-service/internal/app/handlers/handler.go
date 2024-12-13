@@ -15,8 +15,7 @@ type Handler struct {
 	service service.Service
 }
 
-func NewlHandler(repo service.Repository) Handler {
-	service := service.NewService(repo)
+func NewlHandler(service service.Service) Handler {
 	return Handler{service: service}
 }
 
