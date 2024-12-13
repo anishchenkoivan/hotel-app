@@ -3,7 +3,6 @@ package repository
 import (
 	"time"
 
-	"github.com/anishchenkoivan/hotel-app/booking-service/config"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -11,11 +10,10 @@ import (
 
 type GormRepository struct {
 	db     *gorm.DB
-	config config.Config
 }
 
-func NewGormRepository(db *gorm.DB, cfg config.Config) GormRepository {
-	return GormRepository{db: db, config: cfg}
+func NewGormRepository(db *gorm.DB) GormRepository {
+	return GormRepository{db: db}
 }
 
 func (p GormRepository) GetById(id uuid.UUID) (model.Reservation, error) {

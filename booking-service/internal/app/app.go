@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-//   "github.com/anishchenkoivan/hotel-app/api/code/bookingservice_api"
 	"github.com/anishchenkoivan/hotel-app/booking-service/config"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/app/handlers"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/service"
@@ -15,8 +14,8 @@ import (
 )
 
 type BookingServiceApp struct {
-	httpServer *http.Server
-	config     config.Config
+	httpServer   *http.Server
+	config       config.Config
 }
 
 func NewBookingServiceApp(repo service.Repository, cfg config.Config) *BookingServiceApp {
