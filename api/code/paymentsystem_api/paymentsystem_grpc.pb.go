@@ -4,7 +4,7 @@
 // - protoc             v3.19.6
 // source: proto/paymentsystem.proto
 
-package paymentsystem
+package paymentsystem_api
 
 import (
 	context "context"

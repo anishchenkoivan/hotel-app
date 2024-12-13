@@ -4,7 +4,7 @@
 // - protoc             v3.19.6
 // source: proto/hotelservice.proto
 
-package hotelservice
+package hotelservice_api
 
 import (
 	context "context"

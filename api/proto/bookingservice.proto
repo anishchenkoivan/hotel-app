@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api;
 
-option go_package = "./code/bookingservice";
+option go_package = "./code/bookingservice_api";
 
 service BookingService {
   rpc ConfirmPayment(ConfirmPaymentRequest) returns (Empty);

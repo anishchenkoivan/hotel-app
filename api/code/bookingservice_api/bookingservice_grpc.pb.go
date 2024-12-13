@@ -4,7 +4,7 @@
 // - protoc             v3.19.6
 // source: proto/bookingservice.proto
 
-package bookingservice
+package bookingservice_api
 
 import (
 	context "context"
