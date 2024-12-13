@@ -23,7 +23,7 @@ func main() {
 	}
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s",
-		conf.DbHost, conf.DbUser, conf.DbPassword, conf.DbName, conf.DbPort)
+		conf.Db.Host, conf.Db.User, conf.Db.Password, conf.Db.Name, conf.Db.Port)
 	gorm_cfg := gorm.Config{}
 	db, err := gorm.Open(postgres.Open(dsn), &gorm_cfg)
 

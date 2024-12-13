@@ -6,21 +6,44 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
+type ServerConfig struct {
+	Host string `envconfig:"HOST"`
+	Port string `envconfig:"PORT"`
+}
+
+type DbConfig struct {
+	Host     string `envconfig:"HOST"`
+	Port     string `envconfig:"PORT"`
+	Name     string `envconfig:"NAME"`
+	User     string `envconfig:"USER"`
+	Password string `envconfig:"PASSWORD"`
+}
+
+type AppConfig struct {
+	ShutdownTimeout time.Duration `envconfig:"APP_SHUTDOWN_TIMEOUT"`
+}
+
 type Config struct {
-	ServerHost         string        `envconfig:"SERVER_HOST"`
-	ServerPort         string        `envconfig:"SERVER_PORT"`
-
-	DbHost             string        `envconfig:"DB_HOST"`
-	DbPort             string        `envconfig:"DB_PORT"`
-	DbName             string        `envconfig:"DB_NAME"`
-	DbUser             string        `envconfig:"DB_USER"`
-	DbPassword         string        `envconfig:"DB_PASSWORD"`
-
-	AppShutdownTimeout time.Duration `envconfig:"APP_SHUTDOWN_TIMEOUT"`
+	App    AppConfig
+	Server ServerConfig
+	Db     DbConfig
 }
 
 func NewConfig() (Config, error) {
 	cfg := Config{}
-	err := envconfig.Process("BOOKING_SERVICE", &cfg)
+	err := envconfig.Process("BOOKING_SERVICE_SERVER", &cfg.Server)
+
+	if err != nil {
+		return cfg, err
+	}
+
+	err = envconfig.Process("BOOKING_SERVICE_DB", &cfg.Db)
+
+	if err != nil {
+		return cfg, err
+	}
+
+	err = envconfig.Process("BOOKING_SERVICE_APP", &cfg.App)
+
 	return cfg, err
 }

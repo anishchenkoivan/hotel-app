@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+//   "github.com/anishchenkoivan/hotel-app/api/code/bookingservice_api"
 	"github.com/anishchenkoivan/hotel-app/booking-service/config"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/app/handlers"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/service"
@@ -29,7 +30,7 @@ func NewBookingServiceApp(repo service.Repository, cfg config.Config) *BookingSe
 	router.HandleFunc("/get-room-reservations/{room_id}", handler.SearchByPhone).Methods("GET")
 
 	httpServer := http.Server{
-		Addr:    cfg.ServerHost + ":" + cfg.ServerPort,
+		Addr:    cfg.Server.Host + ":" + cfg.Server.Port,
 		Handler: router,
 	}
 
@@ -57,7 +58,7 @@ func (app *BookingServiceApp) Start(ctx context.Context) error {
 }
 
 func (app *BookingServiceApp) Shutdown() error {
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), app.config.AppShutdownTimeout*time.Second)
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), app.config.App.ShutdownTimeout*time.Second)
 	defer cancel()
 	err := app.httpServer.Shutdown(shutdownCtx)
 	return err
