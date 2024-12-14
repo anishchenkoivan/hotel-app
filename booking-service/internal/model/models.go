@@ -7,8 +7,8 @@ import (
 )
 
 type Client struct {
-	Name    string
-	Surname string
+	FirstName    string
+	LastName string
 	Phone   string
 	Email   string
 }

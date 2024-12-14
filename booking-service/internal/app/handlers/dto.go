@@ -10,8 +10,8 @@ import (
 const timeLayout = "02.01.2006"
 
 type CreateReservationDto struct {
-	ClientName    string
-	ClientSurname string
+	ClientFirstName    string
+	ClientLastName string
 	ClientPhone   string
 	ClientEmail   string
 	RoomId        string
@@ -20,8 +20,8 @@ type CreateReservationDto struct {
 }
 
 type ReservationDto struct {
-	ClientName    string
-	ClientSurname string
+	ClientFirstName    string
+	ClientLastName string
 	ClientPhone   string
 	ClientEmail   string
 	RoomId        string
@@ -44,8 +44,8 @@ type RoomIdDto struct {
 
 func ReservationDtoFromModel(data model.ReservationModel) ReservationDto {
 	return ReservationDto{
-		ClientName:    data.Client.Name,
-		ClientSurname: data.Client.Surname,
+		ClientFirstName:    data.Client.FirstName,
+		ClientLastName: data.Client.LastName,
 		ClientPhone:   data.Client.Phone,
 		ClientEmail:   data.Client.Email,
 		RoomId:        data.RoomId.String(),
@@ -60,8 +60,8 @@ func ReservationsArrayDtoFromModelsArray(data []model.ReservationModel) Reservat
 
 	for i := range data {
 		reservs[i] = ReservationDto{
-			ClientName:    data[i].Client.Name,
-			ClientSurname: data[i].Client.Surname,
+			ClientFirstName:    data[i].Client.FirstName,
+			ClientLastName: data[i].Client.LastName,
 			ClientPhone:   data[i].Client.Phone,
 			ClientEmail:   data[i].Client.Email,
 			RoomId:        data[i].RoomId.String(),
@@ -95,8 +95,8 @@ func ReservationFromDto(dto CreateReservationDto) (model.Reservation, error) {
 
 	return model.Reservation{
 		Client: model.Client{
-			Name:    dto.ClientName,
-			Surname: dto.ClientSurname,
+			FirstName:    dto.ClientFirstName,
+			LastName: dto.ClientLastName,
 			Phone:   dto.ClientPhone,
 			Email:   dto.ClientEmail,
 		},
