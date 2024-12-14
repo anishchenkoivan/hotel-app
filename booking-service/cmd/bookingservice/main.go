@@ -14,7 +14,7 @@ func main() {
 	conf, err := config.NewConfig()
 
 	if err != nil {
-		log.Fatal("Can't to create config: ", err)
+		log.Fatal("Can't create config: ", err)
 	}
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -23,7 +23,7 @@ func main() {
 	app, err := app.NewBookingServiceApp(conf)
 
   if err != nil {
-    log.Fatal("Can't to create app: ", err)
+    log.Fatal("Can't create app: ", err)
   }
 
 	app.Start(ctx)
