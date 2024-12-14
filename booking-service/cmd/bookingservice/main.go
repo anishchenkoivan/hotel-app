@@ -22,9 +22,13 @@ func main() {
 
 	app, err := app.NewBookingServiceApp(conf)
 
-  if err != nil {
-    log.Fatal("Can't create app: ", err)
-  }
+	if err != nil {
+		log.Fatal("Can't initialize app: ", err)
+	}
 
-	app.Start(ctx)
+  err = app.Start(ctx)
+
+  if err != nil {
+		log.Fatal("Can't start app: ", err)
+  }
 }

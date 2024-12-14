@@ -129,9 +129,15 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	encoder := json.NewEncoder(w)
 
-	r.ParseForm()
+  err := r.ParseForm()
+
+  if err != nil {
+		http.Error(w, "Failed to parse request", http.StatusBadRequest)
+		return
+	}
+
 	query := CreateReservationDto{}
-	err := decoder.Decode(&query)
+	err = decoder.Decode(&query)
 
 	if err != nil {
 		http.Error(w, "Failed to parse request", http.StatusBadRequest)

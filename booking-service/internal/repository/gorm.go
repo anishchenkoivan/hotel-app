@@ -18,18 +18,18 @@ func NewGormRepository(db *gorm.DB) GormRepository {
 }
 
 func (p GormRepository) Migrate(path string) error {
-  p.db.AutoMigrate(&model.ReservationModel{})
-  migration, err := os.ReadFile(path)
+  _ = p.db.AutoMigrate(&model.ReservationModel{})
+	migration, err := os.ReadFile(path)
 
-  if err != nil {
+	if err != nil {
 		return err
 	}
 
-  if err := p.db.Exec(string(migration)).Error; err != nil {
+	if err := p.db.Exec(string(migration)).Error; err != nil {
 		return err
 	}
 
-  return nil
+	return nil
 }
 
 func (p GormRepository) GetById(id uuid.UUID) (model.ReservationModel, error) {
@@ -72,13 +72,13 @@ func (p GormRepository) GetRoomReservations(roomId uuid.UUID) ([]model.Reservati
 }
 
 func (p GormRepository) ConfirmPayment(id uuid.UUID) error {
-  res := p.db.Model(&model.ReservationModel{}).
+	res := p.db.Model(&model.ReservationModel{}).
 		Where("id = ?", id).
 		Update("is_paid", "TRUE")
-  return res.Error
+	return res.Error
 }
 
 func (p GormRepository) RemoveReservation(id uuid.UUID) error {
-  res := p.db.Model(&model.ReservationModel{}).Delete("id = ?", id)
-  return res.Error
+	res := p.db.Model(&model.ReservationModel{}).Delete("id = ?", id)
+	return res.Error
 }

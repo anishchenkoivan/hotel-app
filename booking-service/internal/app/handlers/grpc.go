@@ -25,10 +25,10 @@ func (s HotelServiceGrpcHandler) ConfirmPayment(_ context.Context, req *bookings
 	}
 
 	if req.IsConfirmed {
-		s.service.ConfirmPayment(id)
-		return &bookingservice_api.Empty{}, nil
+    err = s.service.ConfirmPayment(id)
+		return &bookingservice_api.Empty{}, err
 	}
 
-  s.service.CancelReservation(id)
-	return &bookingservice_api.Empty{}, nil
+  err = s.service.CancelReservation(id)
+	return &bookingservice_api.Empty{}, err
 }
