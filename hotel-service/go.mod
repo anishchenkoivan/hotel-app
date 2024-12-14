@@ -1,6 +1,6 @@
 module github.com/anishchenkoivan/hotel-app/hotel-service
 
-go 1.23
+go 1.23.4
 
 require (
 	github.com/anishchenkoivan/hotel-app/api v0.0.0-20241213222711-d7164939d726
