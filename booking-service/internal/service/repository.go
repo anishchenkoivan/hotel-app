@@ -8,9 +8,9 @@ import (
 )
 
 type Repository interface {
-	GetById(id uuid.UUID) (model.Reservation, error)
-	SearchByPhone(phone string) ([]model.Reservation, error)
-	Put(reserv model.ReservationData) (uuid.UUID, error)
+	GetById(id uuid.UUID) (model.ReservationModel, error)
+	SearchByPhone(phone string) ([]model.ReservationModel, error)
+	Put(reserv model.Reservation) (uuid.UUID, error)
   IsAvailible(roomId uuid.UUID, inTime time.Time, outTime time.Time) (bool, error)
-  GetRoomReservations(roomId uuid.UUID) ([]model.Reservation, error)
+  GetRoomReservations(roomId uuid.UUID) ([]model.ReservationModel, error)
 }

@@ -26,44 +26,13 @@ const docTemplate = `{
                 "summary": "Add reservation",
                 "parameters": [
                     {
-                        "type": "string",
-                        "name": "clientEmail",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "name": "clientName",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "name": "clientPhone",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "name": "clientSurname",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "name": "cost",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "name": "inTime",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "name": "outTime",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "name": "roomId",
-                        "in": "query"
+                        "description": "Reservation parametres",
+                        "name": "Reservation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CreateReservationDto"
+                        }
                     }
                 ],
                 "responses": {
@@ -201,6 +170,32 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "handlers.CreateReservationDto": {
+            "type": "object",
+            "properties": {
+                "clientEmail": {
+                    "type": "string"
+                },
+                "clientName": {
+                    "type": "string"
+                },
+                "clientPhone": {
+                    "type": "string"
+                },
+                "clientSurname": {
+                    "type": "string"
+                },
+                "inTime": {
+                    "type": "string"
+                },
+                "outTime": {
+                    "type": "string"
+                },
+                "roomId": {
+                    "type": "string"
+                }
+            }
+        },
         "handlers.ReservationDto": {
             "type": "object",
             "properties": {

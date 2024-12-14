@@ -1,21 +1,10 @@
 package service
 
-import "errors"
-
-type BookErrType int
+type ErrType int
 
 const (
-	RepositoryError          BookErrType = 0
-	ReservationAlreadyExists BookErrType = 1
+  NoError                  ErrType = 0
+	RepositoryError          ErrType = 1
+	ReservationAlreadyExists ErrType = 2
+  GrpcError                ErrType = 3
 )
-
-type BookErr struct {
-	error
-	ErrType BookErrType
-}
-
-func NewReservationAlreadyExistsError() *BookErr {
-  msg := "Reservation already exists"
-  err := errors.New(msg)
-  return &BookErr{error: err, ErrType: ReservationAlreadyExists}
-}

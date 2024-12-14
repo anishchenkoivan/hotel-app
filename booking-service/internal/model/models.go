@@ -13,15 +13,16 @@ type Client struct {
 	Email   string
 }
 
-type ReservationData struct {
-	Client           Client `gorm:"embedded;embeddedPrefix:cliend_"`
-	RoomId           uuid.UUID
-	Cost             uint64
+type Reservation struct {
+	Client  Client `gorm:"embedded;embeddedPrefix:cliend_"`
+	RoomId  uuid.UUID
 	InTime  time.Time
 	OutTime time.Time
+	Cost    int64
+	IsPaid  bool
 }
 
-type Reservation struct {
-	Id              uuid.UUID `gorm:"primaryKey"`
-	ReservationData `gorm:"embedded"`
+type ReservationModel struct {
+	Id          uuid.UUID `gorm:"primaryKey"`
+	Reservation `gorm:"embedded"`
 }

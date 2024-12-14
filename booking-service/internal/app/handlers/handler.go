@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -118,7 +119,7 @@ func (handler *Handler) GetRoomReservations(w http.ResponseWriter, r *http.Reque
 // @Summary Add reservation
 // @Accept json
 // @Produce json
-// @Param phone query ReservationDto true "Reservation parametres"
+// @Param Reservation body CreateReservationDto true "Reservation parametres"
 // @Success 200 {object} uuid.UUID
 // @Failure 400 {object} string
 // @Failure 500 {object} string
@@ -128,7 +129,7 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 
 	r.ParseForm()
-	query := ReservationDto{}
+	query := CreateReservationDto{}
 	err := decoder.Decode(&query)
 
 	if err != nil {
@@ -136,7 +137,7 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := ReservationDataFromDto(query)
+	data, err := ReservationFromDto(query)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -144,13 +145,17 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, serr := handler.service.AddReservation(data)
+	id, err, err_type := handler.service.AddReservation(data)
 
-	if serr != nil {
-		if serr.ErrType == service.RepositoryError {
+	if err != nil {
+		if err_type == service.RepositoryError {
+      log.Printf("Failed to insert: %v", err)
 			http.Error(w, "Failed to insert", http.StatusInternalServerError)
-		} else if serr.ErrType == service.ReservationAlreadyExists {
+		} else if err_type == service.ReservationAlreadyExists {
 			http.Error(w, "Room is reserved on selected time range", http.StatusBadRequest)
+		} else if err_type == service.GrpcError {
+      log.Printf("Failed to get room price: %v", err)
+			http.Error(w, "Failed to get room price", http.StatusBadRequest)
 		} else {
 			http.Error(w, "Unknown server error", http.StatusInternalServerError)
 		}

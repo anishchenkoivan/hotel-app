@@ -9,29 +9,29 @@ import (
 )
 
 type GormRepository struct {
-	db     *gorm.DB
+	db *gorm.DB
 }
 
 func NewGormRepository(db *gorm.DB) GormRepository {
 	return GormRepository{db: db}
 }
 
-func (p GormRepository) GetById(id uuid.UUID) (model.Reservation, error) {
-	reserv := model.Reservation{}
-	res := p.db.Model(&model.Reservation{}).First(&reserv, id)
+func (p GormRepository) GetById(id uuid.UUID) (model.ReservationModel, error) {
+	reserv := model.ReservationModel{}
+	res := p.db.Model(&model.ReservationModel{}).First(&reserv, id)
 	return reserv, res.Error
 }
 
-func (p GormRepository) SearchByPhone(phone string) ([]model.Reservation, error) {
-	var found []model.Reservation
-	res := p.db.Model(&model.Reservation{}).
-		Find(&found, model.Reservation{ReservationData: model.ReservationData{Client: model.Client{Phone: phone}}})
+func (p GormRepository) SearchByPhone(phone string) ([]model.ReservationModel, error) {
+	var found []model.ReservationModel
+	res := p.db.Model(&model.ReservationModel{}).
+		Find(&found, model.ReservationModel{Reservation: model.Reservation{Client: model.Client{Phone: phone}}})
 	return found, res.Error
 }
 
 func (p GormRepository) IsAvailible(roomId uuid.UUID, inTime time.Time, outTime time.Time) (bool, error) {
 	var count int64
-	res := p.db.Model(&model.Reservation{}).
+	res := p.db.Model(&model.ReservationModel{}).
 		Where("room_id = ?", roomId).
 		Where("in_time BETWEEN ? AND ?", inTime, outTime).
 		Where("out_time BETWEEN ? AND ?", inTime, outTime).
@@ -39,20 +39,20 @@ func (p GormRepository) IsAvailible(roomId uuid.UUID, inTime time.Time, outTime 
 	return count == 0, res.Error
 }
 
-func (p GormRepository) Put(data model.ReservationData) (uuid.UUID, error) {
+func (p GormRepository) Put(data model.Reservation) (uuid.UUID, error) {
 	id := uuid.New()
-	reserv := model.Reservation{Id: id, ReservationData: data}
-	res := p.db.Model(&model.Reservation{}).Create(reserv)
+	reserv := model.ReservationModel{Id: id, Reservation: data}
+	res := p.db.Model(&model.ReservationModel{}).Create(&reserv)
 	return id, res.Error
 }
 
 func (p GormRepository) GetReservedDates(roomId uuid.UUID) ([]time.Time, error) {
-	var reservs []model.Reservation
-	res := p.db.Model(&model.Reservation{}).Where("room_id = ?", roomId).Find(&reservs)
+	var reservs []model.ReservationModel
+	res := p.db.Model(&model.ReservationModel{}).Where("room_id = ?", roomId).Find(&reservs)
 
 	return []time.Time{}, res.Error
 }
 
-func (p GormRepository) GetRoomReservations(roomId uuid.UUID) ([]model.Reservation, error) {
-	return make([]model.Reservation, 0), nil
+func (p GormRepository) GetRoomReservations(roomId uuid.UUID) ([]model.ReservationModel, error) {
+	return make([]model.ReservationModel, 0), nil
 }

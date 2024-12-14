@@ -1,48 +1,56 @@
 package service
 
 import (
+	"errors"
+
+	"github.com/anishchenkoivan/hotel-app/booking-service/internal/clients"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
 	"github.com/google/uuid"
 )
 
 type Service struct {
 	repository   Repository
+	hotelService clients.HotelService
 }
 
-func NewService(repo Repository) Service {
-	return Service{repo}
+func NewService(repo Repository, hotel clients.HotelService) Service {
+	return Service{repo, hotel}
 }
 
-func (s Service) GetById(id uuid.UUID) (model.Reservation, error) {
+func (s Service) GetById(id uuid.UUID) (model.ReservationModel, error) {
 	return s.repository.GetById(id)
 }
 
-func (s Service) SearchByPhone(phone string) ([]model.Reservation, error) {
+func (s Service) SearchByPhone(phone string) ([]model.ReservationModel, error) {
 	return s.repository.SearchByPhone(phone)
 }
 
-func (s Service) AddReservation(data model.ReservationData) (uuid.UUID, *BookErr) {
+func (s Service) AddReservation(data model.Reservation) (uuid.UUID, error, ErrType) {
 	free, err := s.repository.IsAvailible(data.RoomId, data.InTime, data.OutTime)
 
 	if err != nil {
-		return uuid.UUID{}, &BookErr{error: err, ErrType: RepositoryError}
+		return uuid.UUID{}, err, RepositoryError
 	}
 
 	if !free {
-		err := NewReservationAlreadyExistsError()
-		return uuid.UUID{}, err
+		return uuid.UUID{}, errors.New("Reservation already exists"), ReservationAlreadyExists
+	}
+
+	data.Cost, err = s.hotelService.GetPrice(data.RoomId)
+
+  if err != nil {
+		return uuid.UUID{}, err, GrpcError
 	}
 
 	id, err := s.repository.Put(data)
 
 	if err != nil {
-		return uuid.UUID{}, &BookErr{error: err, ErrType: RepositoryError}
+		return uuid.UUID{}, err, RepositoryError
 	}
 
-	return id, nil
+	return id, nil, NoError
 }
 
-func (s Service) GetRoomReservations(roomId uuid.UUID) ([]model.Reservation, error) {
-	res, err := s.repository.GetRoomReservations(roomId)
-	return res, &BookErr{error: err, ErrType: RepositoryError}
+func (s Service) GetRoomReservations(roomId uuid.UUID) ([]model.ReservationModel, error) {
+	return s.repository.GetRoomReservations(roomId)
 }

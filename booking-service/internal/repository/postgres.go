@@ -18,7 +18,7 @@ func NewPostgresRepository(conf config.DbConfig) (GormRepository, error) {
 		return GormRepository{}, err
 	}
 
-	db.AutoMigrate(&model.Reservation{})
+	db.AutoMigrate(&model.ReservationModel{})
 
 	repo := NewGormRepository(db)
 

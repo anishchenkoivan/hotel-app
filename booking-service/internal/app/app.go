@@ -9,6 +9,7 @@ import (
 
 	"github.com/anishchenkoivan/hotel-app/booking-service/config"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/app/handlers"
+	"github.com/anishchenkoivan/hotel-app/booking-service/internal/clients"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/repository"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/service"
 	"github.com/gorilla/mux"
@@ -24,10 +25,16 @@ func NewBookingServiceApp(conf config.Config) (*BookingServiceApp, error) {
 	repo, err := repository.NewPostgresRepository(conf.Db)
 
 	if err != nil {
-		return &BookingServiceApp{}, fmt.Errorf("Unable to create repository: %w", err)
+		return &BookingServiceApp{}, fmt.Errorf("Can't create repository: %v", err)
 	}
 
-	service := service.NewService(repo)
+	hs_client, err := clients.NewHotelService(conf.HotelService)
+
+	if err != nil {
+		return &BookingServiceApp{}, fmt.Errorf("Can't connect to hotel-service: %v", err)
+	}
+
+	service := service.NewService(repo, hs_client)
 	handler := handlers.NewlHandler(service)
 	router := mux.NewRouter().PathPrefix("/booking-service/api").Subrouter()
 

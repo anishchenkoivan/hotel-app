@@ -9,6 +9,16 @@ import (
 
 const timeLayout = "02.01.2006"
 
+type CreateReservationDto struct {
+	ClientName    string
+	ClientSurname string
+	ClientPhone   string
+	ClientEmail   string
+	RoomId        string
+	InTime        string
+	OutTime       string
+}
+
 type ReservationDto struct {
 	ClientName    string
 	ClientSurname string
@@ -17,7 +27,7 @@ type ReservationDto struct {
 	RoomId        string
 	InTime        string
 	OutTime       string
-	Cost          uint64
+	Cost          int64
 }
 
 type ReservationsArrayDto struct {
@@ -29,10 +39,10 @@ type ReservationIdDto struct {
 }
 
 type RoomIdDto struct {
-  Id uuid.UUID
+	Id uuid.UUID
 }
 
-func ReservationDtoFromModel(data model.Reservation) ReservationDto {
+func ReservationDtoFromModel(data model.ReservationModel) ReservationDto {
 	return ReservationDto{
 		ClientName:    data.Client.Name,
 		ClientSurname: data.Client.Surname,
@@ -45,7 +55,7 @@ func ReservationDtoFromModel(data model.Reservation) ReservationDto {
 	}
 }
 
-func ReservationsArrayDtoFromModelsArray(data []model.Reservation) ReservationsArrayDto {
+func ReservationsArrayDtoFromModelsArray(data []model.ReservationModel) ReservationsArrayDto {
 	reservs := make([]ReservationDto, len(data))
 
 	for i := range data {
@@ -64,26 +74,26 @@ func ReservationsArrayDtoFromModelsArray(data []model.Reservation) ReservationsA
 	return ReservationsArrayDto{Reservations: reservs}
 }
 
-func ReservationDataFromDto(dto ReservationDto) (model.ReservationData, error) {
+func ReservationFromDto(dto CreateReservationDto) (model.Reservation, error) {
 	uuid, err := uuid.Parse(dto.RoomId)
 
 	if err != nil {
-		return model.ReservationData{}, err
+		return model.Reservation{}, err
 	}
 
 	inTime, err := time.Parse(timeLayout, dto.InTime)
 
 	if err != nil {
-		return model.ReservationData{}, err
+		return model.Reservation{}, err
 	}
 
 	outTime, err := time.Parse(timeLayout, dto.OutTime)
 
 	if err != nil {
-		return model.ReservationData{}, err
+		return model.Reservation{}, err
 	}
 
-	return model.ReservationData{
+	return model.Reservation{
 		Client: model.Client{
 			Name:    dto.ClientName,
 			Surname: dto.ClientSurname,

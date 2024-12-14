@@ -27,6 +27,8 @@ type Config struct {
 	App    AppConfig
 	Server ServerConfig
 	Db     DbConfig
+
+	HotelService ServerConfig
 }
 
 func NewConfig() (Config, error) {
@@ -44,6 +46,12 @@ func NewConfig() (Config, error) {
 	}
 
 	err = envconfig.Process("BOOKING_SERVICE_APP", &cfg.App)
+
+  if err != nil {
+		return cfg, err
+	}
+
+	err = envconfig.Process("HOTEL_SERVICE_SERVER", &cfg.HotelService)
 
 	return cfg, err
 }

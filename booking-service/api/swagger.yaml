@@ -1,4 +1,21 @@
 definitions:
+  handlers.CreateReservationDto:
+    properties:
+      clientEmail:
+        type: string
+      clientName:
+        type: string
+      clientPhone:
+        type: string
+      clientSurname:
+        type: string
+      inTime:
+        type: string
+      outTime:
+        type: string
+      roomId:
+        type: string
+    type: object
   handlers.ReservationDto:
     properties:
       clientEmail:
@@ -35,30 +52,12 @@ paths:
       consumes:
       - application/json
       parameters:
-      - in: query
-        name: clientEmail
-        type: string
-      - in: query
-        name: clientName
-        type: string
-      - in: query
-        name: clientPhone
-        type: string
-      - in: query
-        name: clientSurname
-        type: string
-      - in: query
-        name: cost
-        type: integer
-      - in: query
-        name: inTime
-        type: string
-      - in: query
-        name: outTime
-        type: string
-      - in: query
-        name: roomId
-        type: string
+      - description: Reservation parametres
+        in: body
+        name: Reservation
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateReservationDto'
       produces:
       - application/json
       responses:
