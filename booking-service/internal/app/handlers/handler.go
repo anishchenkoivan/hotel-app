@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -145,17 +146,17 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err, err_type := handler.service.AddReservation(data)
+	id, err := handler.service.AddReservation(data)
 
 	if err != nil {
-		if err_type == service.RepositoryError {
+		if errors.Is(err, service.RepositoryError) {
       log.Printf("Failed to insert: %v", err)
 			http.Error(w, "Failed to insert", http.StatusInternalServerError)
-		} else if err_type == service.ReservationAlreadyExists {
+		} else if errors.Is(err, service.ReservationAlreadyExists) {
 			http.Error(w, "Room is reserved on selected time range", http.StatusBadRequest)
-		} else if err_type == service.BadReservation {
+		} else if errors.Is(err, service.InvalidReservation) {
 			http.Error(w, "Invalid reservation", http.StatusBadRequest)
-		} else if err_type == service.GrpcError {
+		} else if errors.Is(err, service.GrpcError) {
       log.Printf("Failed to get room price: %v", err)
 			http.Error(w, "Failed to get room price", http.StatusBadRequest)
 		} else {

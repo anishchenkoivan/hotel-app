@@ -1,7 +1,7 @@
 package service
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/clients"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
@@ -25,34 +25,34 @@ func (s Service) SearchByPhone(phone string) ([]model.ReservationModel, error) {
 	return s.repository.SearchByPhone(phone)
 }
 
-func (s Service) AddReservation(data model.Reservation) (uuid.UUID, error, ErrType) {
-  if !data.InTime.Before(data.OutTime) {
-    return uuid.UUID{}, errors.New("Invalid reservation"), BadReservation
-  }
+func (s Service) AddReservation(data model.Reservation) (uuid.UUID, error) {
+	if !data.InTime.Before(data.OutTime) {
+		return uuid.UUID{}, InvalidReservation
+	}
 
 	free, err := s.repository.IsAvailible(data.RoomId, data.InTime, data.OutTime)
 
 	if err != nil {
-		return uuid.UUID{}, err, RepositoryError
+		return uuid.UUID{}, fmt.Errorf("%w: %w", RepositoryError, err)
 	}
 
 	if !free {
-		return uuid.UUID{}, errors.New("Reservation already exists"), ReservationAlreadyExists
+		return uuid.UUID{}, ReservationAlreadyExists
 	}
 
 	data.Cost, err = s.hotelService.GetPrice(data.RoomId)
 
-  if err != nil {
-		return uuid.UUID{}, err, GrpcError
+	if err != nil {
+		return uuid.UUID{}, fmt.Errorf("%w: %w", GrpcError, err)
 	}
 
 	id, err := s.repository.Put(data)
 
 	if err != nil {
-		return uuid.UUID{}, err, RepositoryError
+		return uuid.UUID{}, fmt.Errorf("%w: %w", RepositoryError, err)
 	}
 
-	return id, nil, NoError
+	return id, nil
 }
 
 func (s Service) GetRoomReservations(roomId uuid.UUID) ([]model.ReservationModel, error) {

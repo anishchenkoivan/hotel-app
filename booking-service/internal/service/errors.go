@@ -1,11 +1,10 @@
 package service
 
-type ErrType int
+import "errors"
 
-const (
-  NoError                  ErrType = 0
-	RepositoryError          ErrType = 1
-	ReservationAlreadyExists ErrType = 2
-  GrpcError                ErrType = 3
-  BadReservation           ErrType = 4
+var (
+	RepositoryError          error = errors.New("Repository error")
+	ReservationAlreadyExists error = errors.New("Reservation already exists")
+	GrpcError                error = errors.New("Grpc Error")
+	InvalidReservation       error = errors.New("Invalid reservation")
 )
