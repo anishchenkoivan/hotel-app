@@ -49,8 +49,7 @@ func (p GormRepository) IsAvailible(roomId uuid.UUID, inTime time.Time, outTime 
 	var count int64
 	res := p.db.Model(&model.ReservationModel{}).
 		Where("room_id = ?", roomId).
-		Where("in_time BETWEEN ? AND ?", inTime, outTime).
-		Where("out_time BETWEEN ? AND ?", inTime, outTime).
+		Where("out_time >= ? and ? >= in_time", inTime, outTime).
 		Count(&count)
 	return count == 0, res.Error
 }
