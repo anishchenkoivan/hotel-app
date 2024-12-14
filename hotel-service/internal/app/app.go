@@ -75,9 +75,9 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 	hotelierRepository := repository.NewPostgresHotelierRepository(db)
 	roomRepository := repository.NewPostgresRoomRepository(db)
 
-	hotelService := hotelservice.NewHotelService(hotelRepository)
+	hotelService := hotelservice.NewHotelService(hotelRepository, hotelierRepository)
 	hotelierService := hotelierservice.NewHotelierService(hotelierRepository)
-	roomService := roomservice.NewRoomService(roomRepository)
+	roomService := roomservice.NewRoomService(roomRepository, hotelRepository)
 
 	hotelHandler := handlers.NewHotelHandler(hotelService)
 	hotelierHandler := handlers.NewHotelierHandler(hotelierService)
