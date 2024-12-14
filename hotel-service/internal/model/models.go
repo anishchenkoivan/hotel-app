@@ -5,7 +5,7 @@ import (
 )
 
 type Hotel struct {
-	ID          uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
+	ID          uuid.UUID `gorm:"primary_key;type:uuid;default:gen_random_uuid()"`
 	Name        string
 	Description string
 	Location    string
@@ -14,12 +14,12 @@ type Hotel struct {
 }
 
 type Hotelier struct {
-	ID       uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
+	ID       uuid.UUID `gorm:"primary_key;type:uuid;default:gen_random_uuid()"`
 	Username string
 }
 
 type Room struct {
-	ID          uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
+	ID          uuid.UUID `gorm:"primary_key;type:uuid;default:gen_random_uuid()"`
 	Name        string
 	Description string
 	HotelID     uuid.UUID `gorm:"type:uuid"`
