@@ -1,15 +1,15 @@
 module github.com/anishchenkoivan/hotel-app/hotel-service
 
-go 1.23
+go 1.23.4
 
 require (
+	github.com/anishchenkoivan/hotel-app/api v0.0.0-20241213222711-d7164939d726
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
 	github.com/swaggo/swag v1.16.4
 	golang.org/x/sync v0.9.0
 	google.golang.org/grpc v1.68.0
-	google.golang.org/protobuf v1.35.2
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.12
 )
@@ -37,5 +37,6 @@ require (
 	golang.org/x/text v0.18.0 // indirect
 	golang.org/x/tools v0.22.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240903143218-8af14fe29dc1 // indirect
+	google.golang.org/protobuf v1.35.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

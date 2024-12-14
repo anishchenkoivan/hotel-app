@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/anishchenkoivan/hotel-app/hotel-service/api/apiv1pb"
+	"github.com/anishchenkoivan/hotel-app/api/code/hotelservice_api"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/config"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
@@ -83,7 +83,7 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 	router.HandleFunc("/room/{id}", roomHandler.DeleteRoom).Methods("DELETE")
 
 	roomGrpcHandler := handlers.NewRoomGrpcHandler(roomService)
-	apiv1pb.RegisterHotelServiceServer(hotelApp.grpcServer, roomGrpcHandler)
+	hotelservice_api.RegisterHotelServiceServer(hotelApp.grpcServer, roomGrpcHandler)
 	return &hotelApp
 }
 
