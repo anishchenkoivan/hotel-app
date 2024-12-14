@@ -20,6 +20,8 @@ type Config struct {
 	DbUser     string
 	DbPassword string
 
+	DbMigrationsPath string
+
 	AppShutdownTimeout time.Duration
 }
 
@@ -45,11 +47,12 @@ func NewConfig() *Config {
 		ServerGrpcHost: os.Getenv("HOTEL_SERVICE_SERVER_GRPC_HOST"),
 		ServerGrpcPort: os.Getenv("HOTEL_SERVICE_SERVER_GRPC_PORT"),
 
-		DbHost:     os.Getenv("HOTEL_SERVICE_DB_HOST"),
-		DbPort:     os.Getenv("HOTEL_SERVICE_DB_PORT"),
-		DbName:     os.Getenv("HOTEL_SERVICE_DB_NAME"),
-		DbUser:     os.Getenv("HOTEL_SERVICE_DB_USER"),
-		DbPassword: os.Getenv("HOTEL_SERVICE_DB_PASSWORD"),
+		DbHost:           os.Getenv("HOTEL_SERVICE_DB_HOST"),
+		DbPort:           os.Getenv("HOTEL_SERVICE_DB_PORT"),
+		DbName:           os.Getenv("HOTEL_SERVICE_DB_NAME"),
+		DbUser:           os.Getenv("HOTEL_SERVICE_DB_USER"),
+		DbPassword:       os.Getenv("HOTEL_SERVICE_DB_PASSWORD"),
+		DbMigrationsPath: os.Getenv("HOTEL_SERVICE_DB_MIGRATIONS_PATH"),
 
 		AppShutdownTimeout: getTimeout(os.Getenv("HOTEL_SERVICE_APP_SHUTDOWN_TIMEOUT")),
 	}

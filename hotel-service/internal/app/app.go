@@ -20,6 +20,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"os/signal"
 	"syscall"
 )
@@ -28,6 +29,20 @@ type HotelServiceApp struct {
 	server     *http.Server
 	grpcServer *grpc.Server
 	config     config.Config
+}
+
+func applyCustomMigrations(config config.Config, db *gorm.DB) error {
+	migration, err := os.ReadFile(config.DbMigrationsPath)
+	if err != nil {
+		return err
+	}
+
+	if err := db.Exec(string(migration)).Error; err != nil {
+		return err
+	}
+
+	log.Println("Database custom migration succeeded")
+	return nil
 }
 
 func NewHotelServiceApp(config config.Config) *HotelServiceApp {
@@ -47,6 +62,9 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 		config.DbHost, config.DbUser, config.DbPassword, config.DbName, config.DbPort)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
+		log.Fatal(err)
+	}
+	if err := applyCustomMigrations(config, db); err != nil {
 		log.Fatal(err)
 	}
 	if err = db.AutoMigrate(&model.Hotel{}, &model.Hotelier{}, &model.Room{}); err != nil {
@@ -115,7 +133,7 @@ func (app *HotelServiceApp) Start() error {
 		return app.Stop()
 	})
 
-	log.Println("Hotel Service started on port 8080")
+	log.Println("Hotel Service started on port " + app.config.ServerPort)
 
 	if err := group.Wait(); err != nil {
 		return err
@@ -128,10 +146,46 @@ func (app *HotelServiceApp) Stop() error {
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), app.config.AppShutdownTimeout)
 	defer cancel()
 
-	if err := app.server.Shutdown(shutdownCtx); err != nil {
+	done := make(chan error)
+
+	go func() {
+		done <- app.stopHttpServer(shutdownCtx)
+	}()
+
+	go func() {
+		app.stopGrpcServer(shutdownCtx)
+	}()
+
+	if err := <-done; err != nil {
 		return err
 	}
 
 	log.Println("Hotel Service stopped")
 	return nil
+}
+
+func (app *HotelServiceApp) stopHttpServer(ctx context.Context) error {
+	if err := app.server.Shutdown(ctx); err != nil {
+		return err
+	}
+
+	log.Println("HTTP server has stopped")
+	return nil
+}
+
+func (app *HotelServiceApp) stopGrpcServer(ctx context.Context) {
+	done := make(chan struct{})
+
+	go func() {
+		app.grpcServer.GracefulStop()
+		close(done)
+	}()
+
+	select {
+	case <-done:
+		log.Println("gRPC server has stopped")
+	case <-ctx.Done():
+		app.grpcServer.Stop()
+		log.Println("gRPC server has reached stop timeout and has been stopped forcefully")
+	}
 }
