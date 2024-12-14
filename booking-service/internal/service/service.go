@@ -10,10 +10,10 @@ import (
 
 type Service struct {
 	repository   Repository
-	hotelService clients.HotelService
+	hotelService *clients.HotelService
 }
 
-func NewService(repo Repository, hotel clients.HotelService) Service {
+func NewService(repo Repository, hotel *clients.HotelService) Service {
 	return Service{repo, hotel}
 }
 
@@ -57,4 +57,12 @@ func (s Service) AddReservation(data model.Reservation) (uuid.UUID, error) {
 
 func (s Service) GetRoomReservations(roomId uuid.UUID) ([]model.ReservationModel, error) {
 	return s.repository.GetRoomReservations(roomId)
+}
+
+func (s Service) ConfirmPayment(id uuid.UUID) error {
+	return s.repository.ConfirmPayment(id)
+}
+
+func (s Service) CancelReservation(id uuid.UUID) error {
+	return s.repository.RemoveReservation(id)
 }
