@@ -45,7 +45,7 @@ func (p GormRepository) SearchByPhone(phone string) ([]model.ReservationModel, e
 	return found, res.Error
 }
 
-func (p GormRepository) IsAvailible(roomId uuid.UUID, inTime time.Time, outTime time.Time) (bool, error) {
+func (p GormRepository) IsAvailable(roomId uuid.UUID, inTime time.Time, outTime time.Time) (bool, error) {
 	var count int64
 	res := p.db.Model(&model.ReservationModel{}).
 		Where("room_id = ?", roomId).

@@ -30,7 +30,7 @@ func (s Service) AddReservation(data model.Reservation) (uuid.UUID, error) {
 		return uuid.UUID{}, InvalidReservation
 	}
 
-	free, err := s.repository.IsAvailible(data.RoomId, data.InTime, data.OutTime)
+	free, err := s.repository.IsAvailable(data.RoomId, data.InTime, data.OutTime)
 
 	if err != nil {
 		return uuid.UUID{}, fmt.Errorf("%w: %w", RepositoryError, err)
