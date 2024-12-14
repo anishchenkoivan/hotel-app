@@ -3,7 +3,6 @@ package repository
 import (
 	"fmt"
 	"github.com/anishchenkoivan/hotel-app/booking-service/config"
-	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -17,8 +16,6 @@ func NewPostgresRepository(conf config.DbConfig) (GormRepository, error) {
 	if err != nil {
 		return GormRepository{}, err
 	}
-
-	db.AutoMigrate(&model.ReservationModel{})
 
 	repo := NewGormRepository(db)
 

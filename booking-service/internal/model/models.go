@@ -23,6 +23,6 @@ type Reservation struct {
 }
 
 type ReservationModel struct {
-	Id          uuid.UUID `gorm:"primaryKey"`
+	ID          uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
 	Reservation `gorm:"embedded"`
 }

@@ -12,11 +12,12 @@ type ServerConfig struct {
 }
 
 type DbConfig struct {
-	Host     string `envconfig:"HOST"`
-	Port     string `envconfig:"PORT"`
-	Name     string `envconfig:"NAME"`
-	User     string `envconfig:"USER"`
-	Password string `envconfig:"PASSWORD"`
+	Host       string `envconfig:"HOST"`
+	Port       string `envconfig:"PORT"`
+	Name       string `envconfig:"NAME"`
+	User       string `envconfig:"USER"`
+	Password   string `envconfig:"PASSWORD"`
+	Migrations string `envconfig:"MIGRATIONS"`
 }
 
 type AppConfig struct {
@@ -47,7 +48,7 @@ func NewConfig() (Config, error) {
 
 	err = envconfig.Process("BOOKING_SERVICE_APP", &cfg.App)
 
-  if err != nil {
+	if err != nil {
 		return cfg, err
 	}
 

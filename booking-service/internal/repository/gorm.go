@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"os"
 	"time"
 
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
@@ -14,6 +15,21 @@ type GormRepository struct {
 
 func NewGormRepository(db *gorm.DB) GormRepository {
 	return GormRepository{db: db}
+}
+
+func (p GormRepository) Migrate(path string) error {
+  p.db.AutoMigrate(&model.ReservationModel{})
+  migration, err := os.ReadFile(path)
+
+  if err != nil {
+		return err
+	}
+
+  if err := p.db.Exec(string(migration)).Error; err != nil {
+		return err
+	}
+
+  return nil
 }
 
 func (p GormRepository) GetById(id uuid.UUID) (model.ReservationModel, error) {
@@ -40,10 +56,9 @@ func (p GormRepository) IsAvailible(roomId uuid.UUID, inTime time.Time, outTime 
 }
 
 func (p GormRepository) Put(data model.Reservation) (uuid.UUID, error) {
-	id := uuid.New()
-	reserv := model.ReservationModel{Id: id, Reservation: data}
+	reserv := model.ReservationModel{Reservation: data}
 	res := p.db.Model(&model.ReservationModel{}).Create(&reserv)
-	return id, res.Error
+	return reserv.ID, res.Error
 }
 
 func (p GormRepository) GetReservedDates(roomId uuid.UUID) ([]time.Time, error) {

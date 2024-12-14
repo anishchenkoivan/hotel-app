@@ -25,13 +25,19 @@ func NewBookingServiceApp(conf config.Config) (*BookingServiceApp, error) {
 	repo, err := repository.NewPostgresRepository(conf.Db)
 
 	if err != nil {
-		return &BookingServiceApp{}, fmt.Errorf("Can't create repository: %v", err)
+		return nil, fmt.Errorf("Can't create repository: %v", err)
 	}
+
+  err = repo.Migrate(conf.Db.Migrations)
+
+  if err != nil {
+    return nil, fmt.Errorf("Can't migrate db: %v", err)
+  }
 
 	hs_client, err := clients.NewHotelService(conf.HotelService)
 
 	if err != nil {
-		return &BookingServiceApp{}, fmt.Errorf("Can't connect to hotel-service: %v", err)
+		return nil, fmt.Errorf("Can't connect to hotel-service: %v", err)
 	}
 
 	service := service.NewService(repo, hs_client)
