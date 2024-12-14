@@ -21,7 +21,7 @@ type DbConfig struct {
 }
 
 type AppConfig struct {
-	ShutdownTimeout time.Duration `envconfig:"APP_SHUTDOWN_TIMEOUT"`
+	ShutdownTimeout time.Duration `envconfig:"SHUTDOWN_TIMEOUT"`
 }
 
 type Config struct {
@@ -29,7 +29,8 @@ type Config struct {
 	Server ServerConfig
 	Db     DbConfig
 
-	HotelService ServerConfig
+	BookingService ServerConfig
+	HotelService   ServerConfig
 }
 
 func NewConfig() (Config, error) {
@@ -53,6 +54,12 @@ func NewConfig() (Config, error) {
 	}
 
 	err = envconfig.Process("HOTEL_SERVICE_SERVER", &cfg.HotelService)
+
+	if err != nil {
+		return cfg, err
+	}
+
+	err = envconfig.Process("BOOKING_SERVICE_GRPC", &cfg.BookingService)
 
 	return cfg, err
 }

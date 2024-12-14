@@ -16,11 +16,11 @@ type HotelService struct {
 	conf    config.ServerConfig
 }
 
-func NewHotelService(conf config.ServerConfig) (HotelService, error) {
+func NewHotelService(conf config.ServerConfig) (*HotelService, error) {
 	conn, err := grpc.NewClient(fmt.Sprintf("%s:%s", conf.Host, conf.Port), grpc.WithInsecure())
 
 	if err != nil {
-		return HotelService{}, fmt.Errorf("Can't connect: %v", err)
+		return nil, fmt.Errorf("Can't connect: %v", err)
 	}
 
 	defer func(conn *grpc.ClientConn) {
@@ -30,7 +30,7 @@ func NewHotelService(conf config.ServerConfig) (HotelService, error) {
 		}
 	}(conn)
 
-	return HotelService{hotelservice_api.NewHotelServiceClient(conn), conf}, nil
+	return &HotelService{hotelservice_api.NewHotelServiceClient(conn), conf}, nil
 }
 
 func (s HotelService) GetPrice(id uuid.UUID) (int64, error) {

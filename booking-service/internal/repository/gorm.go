@@ -70,3 +70,15 @@ func (p GormRepository) GetReservedDates(roomId uuid.UUID) ([]time.Time, error) 
 func (p GormRepository) GetRoomReservations(roomId uuid.UUID) ([]model.ReservationModel, error) {
 	return make([]model.ReservationModel, 0), nil
 }
+
+func (p GormRepository) ConfirmPayment(id uuid.UUID) error {
+  res := p.db.Model(&model.ReservationModel{}).
+		Where("id = ?", id).
+		Update("is_paid", "TRUE")
+  return res.Error
+}
+
+func (p GormRepository) RemoveReservation(id uuid.UUID) error {
+  res := p.db.Model(&model.ReservationModel{}).Delete("id = ?", id)
+  return res.Error
+}

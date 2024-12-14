@@ -14,10 +14,10 @@ import (
 )
 
 type Handler struct {
-	service service.Service
+	service *service.Service
 }
 
-func NewlHandler(service service.Service) Handler {
+func NewlHandler(service *service.Service) Handler {
 	return Handler{service: service}
 }
 
@@ -150,16 +150,17 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if errors.Is(err, service.RepositoryError) {
-      log.Printf("Failed to insert: %v", err)
+      log.Printf("BookingService: Failed to insert: %v", err)
 			http.Error(w, "Failed to insert", http.StatusInternalServerError)
 		} else if errors.Is(err, service.ReservationAlreadyExists) {
 			http.Error(w, "Room is reserved on selected time range", http.StatusBadRequest)
 		} else if errors.Is(err, service.InvalidReservation) {
 			http.Error(w, "Invalid reservation", http.StatusBadRequest)
 		} else if errors.Is(err, service.GrpcError) {
-      log.Printf("Failed to get room price: %v", err)
+      log.Printf("BookingService: Failed to get room price: %v", err)
 			http.Error(w, "Failed to get room price", http.StatusBadRequest)
 		} else {
+      log.Printf("BookingService: Unknown server error: %v", err)
 			http.Error(w, "Unknown server error", http.StatusInternalServerError)
 		}
 		return
