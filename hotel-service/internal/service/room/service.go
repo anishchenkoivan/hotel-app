@@ -13,8 +13,8 @@ type RoomService struct {
 	hotelRepository hotelrepository.HotelRepository
 }
 
-func NewRoomService(repository RoomRepository) *RoomService {
-	return &RoomService{roomRepository: repository}
+func NewRoomService(roomRepository RoomRepository, hotelRepository hotelrepository.HotelRepository) *RoomService {
+	return &RoomService{roomRepository: roomRepository, hotelRepository: hotelRepository}
 }
 
 func (service *RoomService) GetRoomById(id uuid.UUID) (*dto.RoomDto, error) {

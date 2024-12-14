@@ -20,13 +20,15 @@ type Config struct {
 	DbUser     string
 	DbPassword string
 
+	DbMigrationsPath string
+
 	AppShutdownTimeout time.Duration
 }
 
 func getTimeout(timeoutString string) time.Duration {
 	timeout, err := time.ParseDuration(timeoutString)
 	if err != nil {
-		log.Fatal("Error parsing timeout string")
+		log.Fatal("Error parsing timeout string", err)
 	}
 	return timeout
 }
@@ -34,7 +36,7 @@ func getTimeout(timeoutString string) time.Duration {
 func NewConfig() *Config {
 	err := godotenv.Load("config/config.env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file", err)
 		return nil
 	}
 
@@ -45,11 +47,12 @@ func NewConfig() *Config {
 		ServerGrpcHost: os.Getenv("HOTEL_SERVICE_SERVER_GRPC_HOST"),
 		ServerGrpcPort: os.Getenv("HOTEL_SERVICE_SERVER_GRPC_PORT"),
 
-		DbHost:     os.Getenv("HOTEL_SERVICE_DB_HOST"),
-		DbPort:     os.Getenv("HOTEL_SERVICE_DB_PORT"),
-		DbName:     os.Getenv("HOTEL_SERVICE_DB_NAME"),
-		DbUser:     os.Getenv("HOTEL_SERVICE_DB_USER"),
-		DbPassword: os.Getenv("HOTEL_SERVICE_DB_PASSWORD"),
+		DbHost:           os.Getenv("HOTEL_SERVICE_DB_HOST"),
+		DbPort:           os.Getenv("HOTEL_SERVICE_DB_PORT"),
+		DbName:           os.Getenv("HOTEL_SERVICE_DB_NAME"),
+		DbUser:           os.Getenv("HOTEL_SERVICE_DB_USER"),
+		DbPassword:       os.Getenv("HOTEL_SERVICE_DB_PASSWORD"),
+		DbMigrationsPath: os.Getenv("HOTEL_SERVICE_DB_MIGRATIONS_PATH"),
 
 		AppShutdownTimeout: getTimeout(os.Getenv("HOTEL_SERVICE_APP_SHUTDOWN_TIMEOUT")),
 	}

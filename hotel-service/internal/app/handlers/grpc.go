@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	pb "github.com/anishchenkoivan/hotel-app/hotel-service/api/apiv1pb"
+	pb "github.com/anishchenkoivan/hotel-app/api/code/hotelservice_api"
 	service "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/room"
 	"github.com/google/uuid"
 )

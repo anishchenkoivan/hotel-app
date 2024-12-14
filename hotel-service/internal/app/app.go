@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/anishchenkoivan/hotel-app/hotel-service/api/apiv1pb"
+	"github.com/anishchenkoivan/hotel-app/api/code/hotelservice_api"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/config"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
@@ -20,6 +20,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"os/signal"
 	"syscall"
 )
@@ -28,6 +29,20 @@ type HotelServiceApp struct {
 	server     *http.Server
 	grpcServer *grpc.Server
 	config     config.Config
+}
+
+func applyCustomMigrations(config config.Config, db *gorm.DB) error {
+	migration, err := os.ReadFile(config.DbMigrationsPath)
+	if err != nil {
+		return err
+	}
+
+	if err := db.Exec(string(migration)).Error; err != nil {
+		return err
+	}
+
+	log.Println("Database custom migration succeeded")
+	return nil
 }
 
 func NewHotelServiceApp(config config.Config) *HotelServiceApp {
@@ -49,6 +64,9 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if err := applyCustomMigrations(config, db); err != nil {
+		log.Fatal(err)
+	}
 	if err = db.AutoMigrate(&model.Hotel{}, &model.Hotelier{}, &model.Room{}); err != nil {
 		log.Fatal(err)
 	}
@@ -57,9 +75,9 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 	hotelierRepository := repository.NewPostgresHotelierRepository(db)
 	roomRepository := repository.NewPostgresRoomRepository(db)
 
-	hotelService := hotelservice.NewHotelService(hotelRepository)
+	hotelService := hotelservice.NewHotelService(hotelRepository, hotelierRepository)
 	hotelierService := hotelierservice.NewHotelierService(hotelierRepository)
-	roomService := roomservice.NewRoomService(roomRepository)
+	roomService := roomservice.NewRoomService(roomRepository, hotelRepository)
 
 	hotelHandler := handlers.NewHotelHandler(hotelService)
 	hotelierHandler := handlers.NewHotelierHandler(hotelierService)
@@ -83,7 +101,7 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 	router.HandleFunc("/room/{id}", roomHandler.DeleteRoom).Methods("DELETE")
 
 	roomGrpcHandler := handlers.NewRoomGrpcHandler(roomService)
-	apiv1pb.RegisterHotelServiceServer(hotelApp.grpcServer, roomGrpcHandler)
+	hotelservice_api.RegisterHotelServiceServer(hotelApp.grpcServer, roomGrpcHandler)
 	return &hotelApp
 }
 
@@ -115,7 +133,7 @@ func (app *HotelServiceApp) Start() error {
 		return app.Stop()
 	})
 
-	log.Println("Hotel Service started on port 8080")
+	log.Println("Hotel Service started on port " + app.config.ServerPort)
 
 	if err := group.Wait(); err != nil {
 		return err
@@ -128,10 +146,46 @@ func (app *HotelServiceApp) Stop() error {
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), app.config.AppShutdownTimeout)
 	defer cancel()
 
-	if err := app.server.Shutdown(shutdownCtx); err != nil {
+	done := make(chan error)
+
+	go func() {
+		done <- app.stopHttpServer(shutdownCtx)
+	}()
+
+	go func() {
+		app.stopGrpcServer(shutdownCtx)
+	}()
+
+	if err := <-done; err != nil {
 		return err
 	}
 
 	log.Println("Hotel Service stopped")
 	return nil
+}
+
+func (app *HotelServiceApp) stopHttpServer(ctx context.Context) error {
+	if err := app.server.Shutdown(ctx); err != nil {
+		return err
+	}
+
+	log.Println("HTTP server has stopped")
+	return nil
+}
+
+func (app *HotelServiceApp) stopGrpcServer(ctx context.Context) {
+	done := make(chan struct{})
+
+	go func() {
+		app.grpcServer.GracefulStop()
+		close(done)
+	}()
+
+	select {
+	case <-done:
+		log.Println("gRPC server has stopped")
+	case <-ctx.Done():
+		app.grpcServer.Stop()
+		log.Println("gRPC server has reached stop timeout and has been stopped forcefully")
+	}
 }

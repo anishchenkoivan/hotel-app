@@ -1,4 +1,3 @@
-basePath: /hotel-service/api
 definitions:
   dto.HotelDto:
     properties:
@@ -33,7 +32,7 @@ definitions:
     type: object
   dto.HotelierModifyDto:
     properties:
-      name:
+      username:
         type: string
     type: object
   dto.RoomDto:
@@ -64,11 +63,8 @@ definitions:
       pricePerDay:
         type: integer
     type: object
-host: localhost:8081
 info:
   contact: {}
-  title: Hotel Service API
-  version: "1.0"
 paths:
   /hotel:
     get:

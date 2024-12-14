@@ -43,7 +43,7 @@ type HotelierDto struct {
 }
 
 type HotelierModifyDto struct {
-	Username string `json:"name"`
+	Username string `json:"username"`
 }
 
 func HotelDtoFromEntity(hotel *model.Hotel) *HotelDto {

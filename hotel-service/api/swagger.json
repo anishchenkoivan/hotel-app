@@ -1,12 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Hotel Service API",
-        "contact": {},
-        "version": "1.0"
+        "contact": {}
     },
-    "host": "localhost:8081",
-    "basePath": "/hotel-service/api",
     "paths": {
         "/hotel": {
             "get": {
@@ -608,7 +604,7 @@
         "dto.HotelierModifyDto": {
             "type": "object",
             "properties": {
-                "name": {
+                "username": {
                     "type": "string"
                 }
             }

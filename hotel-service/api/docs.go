@@ -615,7 +615,7 @@ const docTemplate = `{
         "dto.HotelierModifyDto": {
             "type": "object",
             "properties": {
-                "name": {
+                "username": {
                     "type": "string"
                 }
             }

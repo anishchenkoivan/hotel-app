@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "./code/paymentsystem";
+
+service PaymentSystem {
+  rpc AddPayment(AddPaymentRequest) returns (AddPaymentResponse);
+}
+
+message AddPaymentRequest {
+  string booking_id = 1;
+  int64 booking_cost = 2;
+}
+
+message AddPaymentResponse {
+  bool url_for_pay = 1;
+}
