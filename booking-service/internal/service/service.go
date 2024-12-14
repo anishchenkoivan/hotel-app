@@ -26,6 +26,10 @@ func (s Service) SearchByPhone(phone string) ([]model.ReservationModel, error) {
 }
 
 func (s Service) AddReservation(data model.Reservation) (uuid.UUID, error, ErrType) {
+  if !data.InTime.Before(data.OutTime) {
+    return uuid.UUID{}, errors.New("Invalid reservation"), BadReservation
+  }
+
 	free, err := s.repository.IsAvailible(data.RoomId, data.InTime, data.OutTime)
 
 	if err != nil {

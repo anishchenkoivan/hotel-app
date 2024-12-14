@@ -7,4 +7,5 @@ const (
 	RepositoryError          ErrType = 1
 	ReservationAlreadyExists ErrType = 2
   GrpcError                ErrType = 3
+  BadReservation           ErrType = 4
 )

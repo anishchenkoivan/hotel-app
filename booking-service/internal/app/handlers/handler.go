@@ -153,6 +153,8 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to insert", http.StatusInternalServerError)
 		} else if err_type == service.ReservationAlreadyExists {
 			http.Error(w, "Room is reserved on selected time range", http.StatusBadRequest)
+		} else if err_type == service.BadReservation {
+			http.Error(w, "Invalid reservation", http.StatusBadRequest)
 		} else if err_type == service.GrpcError {
       log.Printf("Failed to get room price: %v", err)
 			http.Error(w, "Failed to get room price", http.StatusBadRequest)
