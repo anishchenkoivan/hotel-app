@@ -20,16 +20,13 @@ app = FastAPI()
 
 @bot.message_handler(commands=['start'])
 def start_handler(message: types.Message):
-    markup = types.InlineKeyboardMarkup()
-    btn1 = types.InlineKeyboardButton(text='Наш сайт', url='https://habr.com/ru/all/')
-    markup.add(btn1)
-    bot.send_message(message.from_user.id, f"Привет, чтобы забронировать отель введи /book", reply_markup=markup)
+    bot.send_message(message.from_user.id, f"Привет, чтобы забронировать отель введи /book")
 
 
 user_data = {}
 
 
-@bot.message_handler(commands=['/book'])
+@bot.message_handler(commands=['book'])
 def book_room_handler(message):
     user_data[message.from_user.id] = {}
     types.InlineKeyboardMarkup()
