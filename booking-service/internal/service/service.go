@@ -13,8 +13,8 @@ type Service struct {
 	paymentSystem PaymentSystem
 }
 
-func NewService(repo Repository, hotel HotelService, payment PaymentSystem) Service {
-	return Service{repo, hotel, payment}
+func NewService(repo Repository, hotel HotelService, payment PaymentSystem) *Service {
+	return &Service{repo, hotel, payment}
 }
 
 func (s Service) GetById(id uuid.UUID) (model.ReservationModel, error) {

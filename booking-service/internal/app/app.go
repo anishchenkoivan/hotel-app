@@ -47,8 +47,12 @@ func NewBookingServiceApp(conf config.Config) (*BookingServiceApp, error) {
 
   ps_client, err := clients.NewPayementSystem(conf.PaymentSystem)
 
+	if err != nil {
+		return nil, fmt.Errorf("Can't connect to payemnt system: %v", err)
+	}
+
 	service := service.NewService(repo, hs_client, ps_client)
-	handler := handlers.NewlHandler(&service)
+	handler := handlers.NewlHandler(service)
 	router := mux.NewRouter().PathPrefix("/booking-service/api").Subrouter()
 
 	router.HandleFunc("/add-reservation", handler.AddReservation).Methods("POST")
@@ -62,7 +66,7 @@ func NewBookingServiceApp(conf config.Config) (*BookingServiceApp, error) {
 	}
 
 	grpcServer := grpc.NewServer()
-	grpcHandler := handlers.NewHotelServiceGrpcHandler(&service)
+	grpcHandler := handlers.NewHotelServiceGrpcHandler(service)
 	bookingservice_api.RegisterBookingServiceServer(grpcServer, grpcHandler)
 
 	return &BookingServiceApp{&httpServer, grpcServer, conf}, nil
