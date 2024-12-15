@@ -7,7 +7,8 @@ import (
 	"github.com/anishchenkoivan/hotel-app/payment-system/api/api_v1pb"
 	"github.com/anishchenkoivan/hotel-app/payment-system/config"
 	"github.com/anishchenkoivan/hotel-app/payment-system/internal/app/handlers"
-	"github.com/anishchenkoivan/hotel-app/payment-system/internal/model"
+	"github.com/anishchenkoivan/hotel-app/payment-system/internal/clients"
+	"github.com/anishchenkoivan/hotel-app/payment-system/internal/service"
 	"github.com/gorilla/mux"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -15,16 +16,13 @@ import (
 	"net"
 	"net/http"
 	"os/signal"
-	"sync"
 	"syscall"
 )
 
 type PaymentSystemApp struct {
-	server              *http.Server
-	grpcServer          *grpc.Server
-	config              config.Config
-	bookingEntityByHash map[string]model.BookingEntity
-	mu                  *sync.Mutex
+	server     *http.Server
+	grpcServer *grpc.Server
+	config     config.Config
 }
 
 func NewPaymentSystemApp(config config.Config) *PaymentSystemApp {
@@ -36,14 +34,14 @@ func NewPaymentSystemApp(config config.Config) *PaymentSystemApp {
 		},
 		grpc.NewServer(),
 		config,
-		make(map[string]model.BookingEntity),
-		&sync.Mutex{},
 	}
 
-	paymentHandler := handlers.NewHTTPPaymentHandler(config, paymentSystemApp.mu, paymentSystemApp.bookingEntityByHash)
+	bookingServiceClient := clients.NewBookingService(paymentSystemApp.config)
+	paymentSystemService := service.NewPaymentSystemService(paymentSystemApp.config, bookingServiceClient)
+	paymentHandler := handlers.NewHTTPPaymentHandler(paymentSystemService)
 	router.HandleFunc("/pay/{token}", paymentHandler.PaymentHandle)
 
-	addPaymentGrpcHandler := handlers.NewAddPaymentGrpcHandler(config, paymentSystemApp.mu, paymentSystemApp.bookingEntityByHash)
+	addPaymentGrpcHandler := handlers.NewAddPaymentGrpcHandler(paymentSystemService)
 	api_v1pb.RegisterPaymentSystemServer(paymentSystemApp.grpcServer, addPaymentGrpcHandler)
 	return &paymentSystemApp
 }
