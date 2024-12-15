@@ -89,12 +89,45 @@ func (app *PaymentSystemApp) Stop() error {
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), app.config.AppShutdownTimeout)
 	defer cancel()
 
-	if err := app.server.Shutdown(shutdownCtx); err != nil {
+	done := make(chan error)
+
+	go func() {
+		done <- app.stopHttpServer(shutdownCtx)
+	}()
+
+	go func() {
+		app.stopGrpcServer(shutdownCtx)
+	}()
+
+	if err := <-done; err != nil {
 		return err
 	}
-	log.Println("Payment System http server shutted down, waiting for grpc graceful shutdown")
-	app.grpcServer.GracefulStop()
-	log.Println("Payment System grpc server shutted down")
-	log.Println("Payment System stopped")
+
 	return nil
+}
+
+func (app *PaymentSystemApp) stopHttpServer(ctx context.Context) error {
+	if err := app.server.Shutdown(ctx); err != nil {
+		return err
+	}
+
+	log.Println("Payment System HTTP server has stopped")
+	return nil
+}
+
+func (app *PaymentSystemApp) stopGrpcServer(ctx context.Context) {
+	done := make(chan struct{})
+
+	go func() {
+		app.grpcServer.GracefulStop()
+		close(done)
+	}()
+
+	select {
+	case <-done:
+		log.Println("Payment System gRPC server has stopped gracefully")
+	case <-ctx.Done():
+		app.grpcServer.Stop()
+		log.Println("Payment System gRPC server has reached stop timeout and has been stopped forcefully")
+	}
 }
