@@ -3,18 +3,21 @@ package service
 import (
 	"fmt"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers/dto"
+	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/apperrors"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
 	hotelrepository "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/hotel"
+	hotelierrepository "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/hotelier"
 	"github.com/google/uuid"
 )
 
 type RoomService struct {
-	roomRepository  RoomRepository
-	hotelRepository hotelrepository.HotelRepository
+	roomRepository     RoomRepository
+	hotelRepository    hotelrepository.HotelRepository
+	hotelierRepository hotelierrepository.HotelierRepository
 }
 
-func NewRoomService(roomRepository RoomRepository, hotelRepository hotelrepository.HotelRepository) *RoomService {
-	return &RoomService{roomRepository: roomRepository, hotelRepository: hotelRepository}
+func NewRoomService(roomRepository RoomRepository, hotelRepository hotelrepository.HotelRepository, hotelierRepository hotelierrepository.HotelierRepository) *RoomService {
+	return &RoomService{roomRepository: roomRepository, hotelRepository: hotelRepository, hotelierRepository: hotelierRepository}
 }
 
 func (service *RoomService) GetRoomById(id uuid.UUID) (*dto.RoomDto, error) {
@@ -43,6 +46,15 @@ func (service *RoomService) CreateRoom(roomData dto.RoomModifyDto) (uuid.UUID, e
 		return uuid.Nil, fmt.Errorf("CreateRoom %w", err)
 	}
 
+	hotelier, err := service.hotelierRepository.Get(hotel.HotelierID)
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("CreateRoom %w", err)
+	}
+
+	if hotelier.TelegramID != roomData.TelegramId {
+		return uuid.Nil, apperrors.NewAccessDeniedError("Telegram ID does not match")
+	}
+
 	room := model.Room{
 		ID:          uuid.Nil,
 		Name:        roomData.Name,
@@ -65,6 +77,21 @@ func (service *RoomService) UpdateRoom(id uuid.UUID, roomData dto.RoomModifyDto)
 	if err != nil {
 		return fmt.Errorf("UpdateRoom: %w", err)
 	}
+
+	currentHotel, err := service.hotelRepository.Get(room.HotelID)
+	if err != nil {
+		return fmt.Errorf("UpdateRoom %w", err)
+	}
+
+	hotelier, err := service.hotelierRepository.Get(currentHotel.HotelierID)
+	if err != nil {
+		return fmt.Errorf("UpdateRoom %w", err)
+	}
+
+	if hotelier.TelegramID != roomData.TelegramId {
+		return apperrors.NewAccessDeniedError("Telegram ID doesn't match")
+	}
+
 	hotel, err := service.hotelRepository.Get(roomData.HotelId)
 	if err != nil {
 		return fmt.Errorf("UpdateRoom %w", err)

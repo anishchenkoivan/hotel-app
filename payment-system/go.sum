@@ -1,5 +1,5 @@
-github.com/anishchenkoivan/hotel-app/api v0.0.0-20241213173232-70d3cc70b083 h1:KXHkQGaGAi8Yq0mFndbgltcHg9yTxRpJwoCozfIOAMc=
-github.com/anishchenkoivan/hotel-app/api v0.0.0-20241213173232-70d3cc70b083/go.mod h1:W0Kgqsg9zLbZQemv8faHJ1Y/TnAkvzAY+YWTgpuAR5E=
+github.com/anishchenkoivan/hotel-app/api v0.0.0-20241215164027-1fd910044b9f h1:AC0ynOhNvyRoUrkI0Ww9ils7hzWicuE3J56DWar3A2g=
+github.com/anishchenkoivan/hotel-app/api v0.0.0-20241215164027-1fd910044b9f/go.mod h1:W0Kgqsg9zLbZQemv8faHJ1Y/TnAkvzAY+YWTgpuAR5E=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/gorilla/mux v1.8.1 h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY=

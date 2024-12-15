@@ -250,6 +250,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/hotelier/telegram/{telegram-id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a hotelier by Telegram ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Hotelier ID",
+                        "name": "telegram-id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.HotelierDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/hotelier/{id}": {
             "get": {
                 "consumes": [
@@ -593,6 +633,9 @@ const docTemplate = `{
                 "hotelierId": {
                     "type": "string"
                 },
+                "hotelierTelegramId": {
+                    "type": "string"
+                },
                 "location": {
                     "type": "string"
                 },
@@ -607,6 +650,9 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "telegramId": {
+                    "type": "string"
+                },
                 "username": {
                     "type": "string"
                 }
@@ -615,6 +661,9 @@ const docTemplate = `{
         "dto.HotelierModifyDto": {
             "type": "object",
             "properties": {
+                "telegramId": {
+                    "type": "string"
+                },
                 "username": {
                     "type": "string"
                 }
@@ -660,6 +709,9 @@ const docTemplate = `{
                 },
                 "pricePerDay": {
                     "type": "integer"
+                },
+                "telegramId": {
+                    "type": "string"
                 }
             }
         }

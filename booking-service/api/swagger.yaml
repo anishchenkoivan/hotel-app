@@ -18,6 +18,13 @@ definitions:
       roomId:
         type: string
     type: object
+  handlers.NewReservationDto:
+    properties:
+      id:
+        type: string
+      paymentUrl:
+        type: string
+    type: object
   handlers.ReservationDto:
     properties:
       clientEmail:
@@ -68,7 +75,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/handlers.NewReservationDto'
         "400":
           description: Bad Request
           schema:

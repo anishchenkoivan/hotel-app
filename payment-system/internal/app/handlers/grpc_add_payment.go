@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	pb "github.com/anishchenkoivan/hotel-app/payment-system/api/api_v1pb"
+	pb "github.com/anishchenkoivan/hotel-app/api/code/paymentsystem_api"
 	"github.com/anishchenkoivan/hotel-app/payment-system/internal/service"
 )
 

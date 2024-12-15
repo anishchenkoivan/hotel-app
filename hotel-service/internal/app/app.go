@@ -77,7 +77,7 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 
 	hotelService := hotelservice.NewHotelService(hotelRepository, hotelierRepository)
 	hotelierService := hotelierservice.NewHotelierService(hotelierRepository)
-	roomService := roomservice.NewRoomService(roomRepository, hotelRepository)
+	roomService := roomservice.NewRoomService(roomRepository, hotelRepository, hotelierRepository)
 
 	hotelHandler := handlers.NewHotelHandler(hotelService)
 	hotelierHandler := handlers.NewHotelierHandler(hotelierService)
@@ -91,10 +91,11 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 
 	router.HandleFunc("/hotelier", hotelierHandler.CreateHotelier).Methods("POST")
 	router.HandleFunc("/hotelier/{id}", hotelierHandler.FindHotelierById).Methods("GET")
+	router.HandleFunc("/hotelier/telegram/{telegram-id}", hotelierHandler.FindHotelierByTelegramId).Methods("GET")
 	router.HandleFunc("/hotelier/{id}", hotelierHandler.UpdateHotelier).Methods("PUT")
 	router.HandleFunc("/hotelier/{id}", hotelierHandler.DeleteHotelier).Methods("DELETE")
 
-	router.HandleFunc("/room", roomHandler.FindAllRooms).Methods("POST")
+	router.HandleFunc("/room", roomHandler.CreateRoom).Methods("POST")
 	router.HandleFunc("/room", roomHandler.FindAllRooms).Methods("GET")
 	router.HandleFunc("/room/{id}", roomHandler.UpdateRoom).Methods("PUT")
 	router.HandleFunc("/room/{id}", roomHandler.FindRoomById).Methods("GET")

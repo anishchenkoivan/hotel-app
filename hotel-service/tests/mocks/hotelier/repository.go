@@ -6,12 +6,16 @@ import (
 )
 
 type MockHotelierRepository struct {
-  GetReturnValue *model.Hotelier
-  GetReturnError error
+	GetReturnValue *model.Hotelier
+	GetReturnError error
 }
 
 func (p *MockHotelierRepository) Get(id uuid.UUID) (*model.Hotelier, error) {
 	return p.GetReturnValue, p.GetReturnError
+}
+
+func (p *MockHotelierRepository) GetByTelegramId(telegramId string) (*model.Hotelier, error) {
+	return nil, nil
 }
 
 func (p *MockHotelierRepository) GetAll() ([]*model.Hotelier, error) {

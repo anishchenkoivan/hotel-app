@@ -40,6 +40,11 @@ type ReservationIdDto struct {
 	Id uuid.UUID
 }
 
+type NewReservationDto struct {
+	Id         uuid.UUID
+	PaymentUrl string
+}
+
 type RoomIdDto struct {
 	Id uuid.UUID
 }

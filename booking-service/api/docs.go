@@ -39,7 +39,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handlers.NewReservationDto"
                         }
                     },
                     "400": {
@@ -195,6 +195,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "roomId": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.NewReservationDto": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "paymentUrl": {
                     "type": "string"
                 }
             }
