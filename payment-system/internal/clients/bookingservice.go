@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
 
-	bookingpb "github.com/anishchenkoivan/hotel-app/api/generated/bookingservice"
+	bookingpb "github.com/anishchenkoivan/hotel-app/api/code/bookingservice_api"
 	"github.com/anishchenkoivan/hotel-app/payment-system/config"
 	"google.golang.org/grpc"
 )

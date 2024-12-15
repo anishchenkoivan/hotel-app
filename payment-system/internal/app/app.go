@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/anishchenkoivan/hotel-app/payment-system/api/api_v1pb"
+	"github.com/anishchenkoivan/hotel-app/api/code/paymentsystem_api"
 	"github.com/anishchenkoivan/hotel-app/payment-system/config"
 	"github.com/anishchenkoivan/hotel-app/payment-system/internal/app/handlers"
 	"github.com/anishchenkoivan/hotel-app/payment-system/internal/clients"
@@ -42,7 +42,7 @@ func NewPaymentSystemApp(config config.Config) *PaymentSystemApp {
 	router.HandleFunc("/pay/{token}", paymentHandler.PaymentHandle)
 
 	addPaymentGrpcHandler := handlers.NewAddPaymentGrpcHandler(paymentSystemService)
-	api_v1pb.RegisterPaymentSystemServer(paymentSystemApp.grpcServer, addPaymentGrpcHandler)
+	paymentsystem_api.RegisterPaymentSystemServer(paymentSystemApp.grpcServer, addPaymentGrpcHandler)
 	return &paymentSystemApp
 }
 
