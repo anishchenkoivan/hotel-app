@@ -39,7 +39,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handlers.NewReservationDto"
                         }
                     },
                     "400": {
@@ -176,13 +176,16 @@ const docTemplate = `{
                 "clientEmail": {
                     "type": "string"
                 },
-                "clientName": {
+                "clientFirstName": {
+                    "type": "string"
+                },
+                "clientLastName": {
                     "type": "string"
                 },
                 "clientPhone": {
                     "type": "string"
                 },
-                "clientSurname": {
+                "clientTelegramId": {
                     "type": "string"
                 },
                 "inTime": {
@@ -196,19 +199,33 @@ const docTemplate = `{
                 }
             }
         },
+        "handlers.NewReservationDto": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "paymentUrl": {
+                    "type": "string"
+                }
+            }
+        },
         "handlers.ReservationDto": {
             "type": "object",
             "properties": {
                 "clientEmail": {
                     "type": "string"
                 },
-                "clientName": {
+                "clientFirstName": {
+                    "type": "string"
+                },
+                "clientLastName": {
                     "type": "string"
                 },
                 "clientPhone": {
                     "type": "string"
                 },
-                "clientSurname": {
+                "clientTelegramId": {
                     "type": "string"
                 },
                 "cost": {

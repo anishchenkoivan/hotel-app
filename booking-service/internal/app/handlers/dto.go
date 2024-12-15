@@ -10,24 +10,26 @@ import (
 const timeLayout = "02.01.2006"
 
 type CreateReservationDto struct {
-	ClientFirstName    string
-	ClientLastName string
-	ClientPhone   string
-	ClientEmail   string
-	RoomId        string
-	InTime        string
-	OutTime       string
+	ClientFirstName  string
+	ClientLastName   string
+	ClientPhone      string
+	ClientEmail      string
+	ClientTelegramId string
+	RoomId           string
+	InTime           string
+	OutTime          string
 }
 
 type ReservationDto struct {
-	ClientFirstName    string
-	ClientLastName string
-	ClientPhone   string
-	ClientEmail   string
-	RoomId        string
-	InTime        string
-	OutTime       string
-	Cost          int64
+	ClientFirstName  string
+	ClientLastName   string
+	ClientPhone      string
+	ClientEmail      string
+	ClientTelegramId string
+	RoomId           string
+	InTime           string
+	OutTime          string
+	Cost             int64
 }
 
 type ReservationsArrayDto struct {
@@ -38,20 +40,26 @@ type ReservationIdDto struct {
 	Id uuid.UUID
 }
 
+type NewReservationDto struct {
+	Id         uuid.UUID
+	PaymentUrl string
+}
+
 type RoomIdDto struct {
 	Id uuid.UUID
 }
 
 func ReservationDtoFromModel(data model.ReservationModel) ReservationDto {
 	return ReservationDto{
-		ClientFirstName:    data.Client.FirstName,
-		ClientLastName: data.Client.LastName,
-		ClientPhone:   data.Client.Phone,
-		ClientEmail:   data.Client.Email,
-		RoomId:        data.RoomId.String(),
-		InTime:        data.InTime.Format("02.01.2006"),
-		OutTime:       data.OutTime.Format("02.01.2006"),
-		Cost:          data.Cost,
+		ClientFirstName:  data.Client.FirstName,
+		ClientLastName:   data.Client.LastName,
+		ClientPhone:      data.Client.Phone,
+		ClientEmail:      data.Client.Email,
+		ClientTelegramId: data.Client.TelegramId,
+		RoomId:           data.RoomId.String(),
+		InTime:           data.InTime.Format("02.01.2006"),
+		OutTime:          data.OutTime.Format("02.01.2006"),
+		Cost:             data.Cost,
 	}
 }
 
@@ -60,14 +68,15 @@ func ReservationsArrayDtoFromModelsArray(data []model.ReservationModel) Reservat
 
 	for i := range data {
 		reservs[i] = ReservationDto{
-			ClientFirstName:    data[i].Client.FirstName,
-			ClientLastName: data[i].Client.LastName,
-			ClientPhone:   data[i].Client.Phone,
-			ClientEmail:   data[i].Client.Email,
-			RoomId:        data[i].RoomId.String(),
-			InTime:        data[i].InTime.Format("02.01.2006"),
-			OutTime:       data[i].OutTime.Format("02.01.2006"),
-			Cost:          data[i].Cost,
+			ClientFirstName:  data[i].Client.FirstName,
+			ClientLastName:   data[i].Client.LastName,
+			ClientPhone:      data[i].Client.Phone,
+			ClientEmail:      data[i].Client.Email,
+			ClientTelegramId: data[i].Client.TelegramId,
+			RoomId:           data[i].RoomId.String(),
+			InTime:           data[i].InTime.Format("02.01.2006"),
+			OutTime:          data[i].OutTime.Format("02.01.2006"),
+			Cost:             data[i].Cost,
 		}
 	}
 
@@ -95,10 +104,11 @@ func ReservationFromDto(dto CreateReservationDto) (model.Reservation, error) {
 
 	return model.Reservation{
 		Client: model.Client{
-			FirstName:    dto.ClientFirstName,
-			LastName: dto.ClientLastName,
-			Phone:   dto.ClientPhone,
-			Email:   dto.ClientEmail,
+			FirstName:  dto.ClientFirstName,
+			LastName:   dto.ClientLastName,
+			Phone:      dto.ClientPhone,
+			Email:      dto.ClientEmail,
+			TelegramId: dto.ClientTelegramId,
 		},
 		RoomId:  uuid,
 		InTime:  inTime,

@@ -14,8 +14,9 @@ type Hotel struct {
 }
 
 type Hotelier struct {
-	ID       uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
-	Username string
+	ID         uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
+	TelegramID string
+	Username   string
 }
 
 type Room struct {

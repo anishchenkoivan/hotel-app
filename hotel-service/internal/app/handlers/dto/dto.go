@@ -14,10 +14,11 @@ type HotelDto struct {
 }
 
 type HotelModifyDto struct {
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Location    string    `json:"location"`
-	HotelierId  uuid.UUID `json:"hotelierId"`
+	Name               string    `json:"name"`
+	Description        string    `json:"description"`
+	Location           string    `json:"location"`
+	HotelierId         uuid.UUID `json:"hotelierId"`
+	HotelierTelegramId string    `json:"hotelierTelegramId"`
 }
 
 type RoomDto struct {
@@ -35,15 +36,18 @@ type RoomModifyDto struct {
 	HotelId     uuid.UUID `json:"hotelId"`
 	PricePerDay int64     `json:"pricePerDay"`
 	Capacity    int       `json:"capacity"`
+	TelegramId  string    `json:"telegramId"`
 }
 
 type HotelierDto struct {
-	ID       uuid.UUID `json:"id"`
-	Username string    `json:"username"`
+	ID         uuid.UUID `json:"id"`
+	TelegramID string    `json:"telegramId"`
+	Username   string    `json:"username"`
 }
 
 type HotelierModifyDto struct {
-	Username string `json:"username"`
+	Username   string `json:"username"`
+	TelegramID string `json:"telegramId"`
 }
 
 func HotelDtoFromEntity(hotel *model.Hotel) *HotelDto {

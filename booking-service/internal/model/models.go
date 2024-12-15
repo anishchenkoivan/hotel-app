@@ -7,10 +7,11 @@ import (
 )
 
 type Client struct {
-	FirstName    string
-	LastName string
-	Phone   string
-	Email   string
+	FirstName  string
+	LastName   string
+	Phone      string
+	Email      string
+	TelegramId string
 }
 
 type Reservation struct {

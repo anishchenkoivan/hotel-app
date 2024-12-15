@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers/dto"
+	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/apperrors"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
 	hotelierrepository "github.com/anishchenkoivan/hotel-app/hotel-service/internal/service/hotelier"
 	"github.com/google/uuid"
@@ -68,6 +69,10 @@ func (service *HotelService) UpdateHotel(id uuid.UUID, hotelData dto.HotelModify
 	hotelier, err := service.hotelierRepository.Get(hotelData.HotelierId)
 	if err != nil {
 		return fmt.Errorf("CreateHotel: %w", err)
+	}
+
+	if hotelier.TelegramID != hotelData.HotelierTelegramId {
+		return apperrors.NewAccessDeniedError("Telegram ID doesn't match")
 	}
 
 	hotel.Name = hotelData.Name

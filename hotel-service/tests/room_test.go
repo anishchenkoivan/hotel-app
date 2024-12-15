@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	hotelier_mocks "github.com/anishchenkoivan/hotel-app/hotel-service/tests/mocks/hotelier"
 	"testing"
 
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers/dto"
@@ -16,14 +17,15 @@ func TestGetRoomByIDNormal(t *testing.T) {
 	id := uuid.New()
 
 	expectedDto := dto.RoomDto{ID: id}
-  expectedModel := model.Room{ID: id}
+	expectedModel := model.Room{ID: id}
 
 	roomRepo := room_mocks.MockRoomRepository{
-    GetReturnValue: &expectedModel,
-  }
-  hotelRepo := hotel_mocks.MockHotelRepository{}
+		GetReturnValue: &expectedModel,
+	}
+	hotelRepo := hotel_mocks.MockHotelRepository{}
+	hotelierRepo := hotelier_mocks.MockHotelierRepository{}
 
-  serv := service.NewRoomService(&roomRepo, &hotelRepo)
+	serv := service.NewRoomService(&roomRepo, &hotelRepo, &hotelierRepo)
 	hotel, err := serv.GetRoomById(id)
 
 	if err != nil {
@@ -38,12 +40,13 @@ func TestGetRoomByIDRepositoryError(t *testing.T) {
 	expectedErr := errors.New("test error")
 	id := uuid.New()
 
-	hotelierRepo := room_mocks.MockRoomRepository{
-    GetReturnError: expectedErr,
-  }
-  hotelRepo := hotel_mocks.MockHotelRepository{}
+	roomRepo := room_mocks.MockRoomRepository{
+		GetReturnError: expectedErr,
+	}
+	hotelRepo := hotel_mocks.MockHotelRepository{}
+	hotelierRepo := hotelier_mocks.MockHotelierRepository{}
 
-	serv := service.NewRoomService(&hotelierRepo, &hotelRepo)
+	serv := service.NewRoomService(&roomRepo, &hotelRepo, &hotelierRepo)
 	hotel, err := serv.GetRoomById(id)
 
 	if err == nil {
@@ -63,13 +66,14 @@ func TestGetAllRoomsNormal(t *testing.T) {
 	expectedDto := []dto.RoomDto{{ID: id[0]}, {ID: id[1]}, {ID: id[2]}}
 	expectedModel := []*model.Room{{ID: id[0]}, {ID: id[1]}, {ID: id[2]}}
 
-	hotelRepo := room_mocks.MockRoomRepository{
+	roomRepo := room_mocks.MockRoomRepository{
 		GetAllReturnValue: expectedModel,
 		GetReturnError:    nil,
 	}
-	hotelierRepo := hotel_mocks.MockHotelRepository{}
+	hotelRepo := hotel_mocks.MockHotelRepository{}
+	hotelierRepo := hotelier_mocks.MockHotelierRepository{}
 
-	serv := service.NewRoomService(&hotelRepo, &hotelierRepo)
+	serv := service.NewRoomService(&roomRepo, &hotelRepo, &hotelierRepo)
 
 	hotels, err := serv.GetAllRooms()
 
@@ -89,12 +93,13 @@ func TestGetAllRoomsNormal(t *testing.T) {
 func TestGetAllRoomsRepositoryError(t *testing.T) {
 	expectedErr := errors.New("test error")
 
-	hotelRepo := room_mocks.MockRoomRepository{
+	roomRepo := room_mocks.MockRoomRepository{
 		GetAllReturnValue: nil,
 		GetAllReturnError: expectedErr,
 	}
-	hotelierRepo := hotel_mocks.MockHotelRepository{}
-	serv := service.NewRoomService(&hotelRepo, &hotelierRepo)
+	hotelRepo := hotel_mocks.MockHotelRepository{}
+	hotelierRepo := hotelier_mocks.MockHotelierRepository{}
+	serv := service.NewRoomService(&roomRepo, &hotelRepo, &hotelierRepo)
 	hotels, err := serv.GetAllRooms()
 
 	if err == nil {

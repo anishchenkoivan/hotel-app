@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/app/handlers/dto"
+	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/apperrors"
 	"github.com/anishchenkoivan/hotel-app/hotel-service/internal/model"
 	"github.com/google/uuid"
 )
@@ -23,6 +24,14 @@ func (service *HotelierService) GetHotelierById(id uuid.UUID) (*dto.HotelierDto,
 	return dto.HotelierDtoFromEntity(hotelier), nil
 }
 
+func (service *HotelierService) GetHotelierByTelegramId(telegramId string) (*dto.HotelierDto, error) {
+	hotelier, err := service.hotelierRepository.GetByTelegramId(telegramId)
+	if err != nil {
+		return nil, fmt.Errorf("GetHotelierByTelegramId: %w", err)
+	}
+	return dto.HotelierDtoFromEntity(hotelier), nil
+}
+
 func (service *HotelierService) GetAllHoteliers() ([]*dto.HotelierDto, error) {
 	hoteliers, err := service.hotelierRepository.GetAll()
 	if err != nil {
@@ -36,9 +45,15 @@ func (service *HotelierService) GetAllHoteliers() ([]*dto.HotelierDto, error) {
 }
 
 func (service *HotelierService) CreateHotelier(hotelierData dto.HotelierModifyDto) (uuid.UUID, error) {
+	existingHotelier, err := service.hotelierRepository.GetByTelegramId(hotelierData.TelegramID)
+	if err == nil {
+		return existingHotelier.ID, nil
+	}
+
 	hotelier := model.Hotelier{
-		ID:       uuid.Nil,
-		Username: hotelierData.Username,
+		ID:         uuid.Nil,
+		TelegramID: hotelierData.TelegramID,
+		Username:   hotelierData.Username,
 	}
 
 	id, err := service.hotelierRepository.Put(&hotelier)
@@ -53,6 +68,10 @@ func (service *HotelierService) UpdateHotelier(id uuid.UUID, hotelierData dto.Ho
 	hotelier, err := service.hotelierRepository.Get(id)
 	if err != nil {
 		return fmt.Errorf("UpdateHotelier: %w", err)
+	}
+
+	if hotelierData.TelegramID != hotelier.TelegramID {
+		return apperrors.NewAccessDeniedError("Telegram ID doesn't match")
 	}
 
 	hotelier.Username = hotelierData.Username
