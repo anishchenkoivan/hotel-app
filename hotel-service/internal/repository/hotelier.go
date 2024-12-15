@@ -27,6 +27,14 @@ func (p *PostgresHotelierRepository) Get(id uuid.UUID) (*model.Hotelier, error) 
 	return &hotelier, nil
 }
 
+func (p *PostgresHotelierRepository) GetByTelegramId(telegramId string) (*model.Hotelier, error) {
+	var hotelier model.Hotelier
+	if err := p.db.Where("telegram_id = ?", telegramId).First(&hotelier).Error; err != nil {
+		return nil, apperrors.NewNotFoundError("Failed to find hotel with telegramId=" + telegramId)
+	}
+	return &hotelier, nil
+}
+
 func (p *PostgresHotelierRepository) GetAll() ([]*model.Hotelier, error) {
 	var hoteliers []*model.Hotelier
 	if err := p.db.Find(&hoteliers).Error; err != nil {

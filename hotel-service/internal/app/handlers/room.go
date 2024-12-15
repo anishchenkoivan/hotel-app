@@ -150,6 +150,8 @@ func (handler *RoomHandler) handleError(err error, w http.ResponseWriter) {
 		http.Error(w, "Not found", http.StatusNotFound)
 	} else if errors.Is(err, apperrors.ParsingErrorInstance) {
 		http.Error(w, "Failed to parse", http.StatusBadRequest)
+	} else if errors.Is(err, apperrors.AccessDeniedErrorInstance) {
+		http.Error(w, "Access denied", http.StatusForbidden)
 	} else {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
