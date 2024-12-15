@@ -19,6 +19,8 @@ type Config struct {
 
 	BookingServiceHost string
 	BookingServicePort string
+
+	PaymentUrl string
 }
 
 func getTimeout(timeoutString string) time.Duration {
@@ -48,5 +50,7 @@ func NewConfig() *Config {
 
 		BookingServiceHost: os.Getenv("BOOKING_SERVICE_HOST"),
 		BookingServicePort: os.Getenv("BOOKING_SERVICE_PORT"),
+
+		PaymentUrl: os.Getenv("PAYMENT_URL"),
 	}
 }

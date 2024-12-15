@@ -64,7 +64,7 @@ func (s *PaymentSystemService) AddPayment(bookingId string, bookingCost float32)
 		_ = s.SendWebhook(bookingEntity.BookingId, false)
 	}()
 
-	return fmt.Sprintf("http://%s:%s/payment-system/api/pay/%s", s.config.ServerHost, s.config.ServerPort, token)
+	return fmt.Sprintf("http://%s/payment-system/api/pay/%s", s.config.PaymentUrl, token)
 }
 
 func (s *PaymentSystemService) SendWebhook(bookingId string, status bool) error {
