@@ -4,13 +4,15 @@ import logging
 from fastapi import FastAPI
 from telebot import TeleBot, types
 from telebot.apihelper import ApiTelegramException
-from multiprocessing import Process
+import multiprocessing
 import uvicorn
 import requests
 
 from models import NotifyRequestModel
 from config import TOKEN, BOT_HOST, BOT_PORT, BOOKING_SERVICE_HOST, BOOKING_SERVICE_PORT, HOTEL_SERVICE_HOST, \
     HOTEL_SERVICE_PORT
+
+multiprocessing.set_start_method('spawn', True)
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 logger = logging.getLogger(__name__)
@@ -116,8 +118,8 @@ def start_server():
 
 
 if __name__ == "__main__":
-    bot_process = Process(target=start_bot)
-    server_process = Process(target=start_server)
+    bot_process = multiprocessing.Process(target=start_bot)
+    server_process = multiprocessing.Process(target=start_server)
     bot_process.start()
     server_process.start()
     bot_process.join()
