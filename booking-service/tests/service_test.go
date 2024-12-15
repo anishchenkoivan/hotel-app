@@ -37,7 +37,7 @@ func TestAddReservation(t *testing.T) {
     t.Fatalf("AddReservation returns not nil err = %s", err)
   }
   if repo.LastPutted == nil {
-    t.Fatal("Data is not putted in repo")
+    t.Fatal("Data is not put in the repo")
   }
   if repo.LastPutted.Cost != hotel.GetPriceReturnValue {
     t.Fatalf("Putted cost does not match given from client. Expected %d, got %d", hotel.GetPriceReturnValue, repo.LastPutted.Cost)
@@ -68,7 +68,7 @@ func TestGrpcError(t *testing.T) {
 	_, err := serv.AddReservation(data)
 
   if repo.LastPutted != nil {
-    t.Errorf("Something is putted in the repo when unable to get cost")
+    t.Errorf("Something is put in the repo when unable to get cost")
   }
   if err == nil {
     t.Errorf("Returned err is nil")
