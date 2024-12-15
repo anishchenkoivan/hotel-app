@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/anishchenkoivan/hotel-app/booking-service/internal/clients"
 
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
 	"github.com/google/uuid"
@@ -11,10 +12,11 @@ type Service struct {
 	repository    Repository
 	hotelService  HotelService
 	paymentSystem PaymentSystem
+	notificationService clients.NotificationService
 }
 
-func NewService(repo Repository, hotel HotelService, payment PaymentSystem) *Service {
-	return &Service{repo, hotel, payment}
+func NewService(repo Repository, hotel HotelService, notification clients.NotificationService, payment PaymentSystem) Service {
+	return Service{repo, hotel, payment, notification}
 }
 
 func (s Service) GetById(id uuid.UUID) (model.ReservationModel, error) {
@@ -66,7 +68,30 @@ func (s Service) GetRoomReservations(roomId uuid.UUID) ([]model.ReservationModel
 }
 
 func (s Service) ConfirmPayment(id uuid.UUID) error {
-	return s.repository.ConfirmPayment(id)
+	err := s.repository.ConfirmPayment(id)
+	if err != nil {
+		return err
+	}
+
+	reservation, err := s.repository.GetById(id)
+	if err != nil {
+		return err
+	}
+
+	err = s.notificationService.SendNotification(clients.Message{
+		FirstName:     reservation.Client.FirstName,
+		LastName:      reservation.Client.LastName,
+		ReservationId: id,
+		RoomId:        reservation.RoomId,
+		InTime:        reservation.InTime,
+		OutTime:       reservation.OutTime,
+		Cost:          reservation.Cost,
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s Service) CancelReservation(id uuid.UUID) error {

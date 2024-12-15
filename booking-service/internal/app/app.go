@@ -39,20 +39,25 @@ func NewBookingServiceApp(conf config.Config) (*BookingServiceApp, error) {
 		return nil, fmt.Errorf("Can't migrate db: %v", err)
 	}
 
-	hs_client, err := clients.NewHotelService(conf.HotelService)
+	hsClient, err := clients.NewHotelService(conf.HotelService)
 
 	if err != nil {
 		return nil, fmt.Errorf("Can't connect to hotel-service: %v", err)
 	}
 
-  ps_client, err := clients.NewPayementSystem(conf.PaymentSystem)
+	notificationServiceClient, err := clients.NewNotificationService(conf.Kafka)
+	if err != nil {
+		return nil, fmt.Errorf("Can't connect to notification-service: %v", err)
+	}
+
+	ps_client, err := clients.NewPayementSystem(conf.PaymentSystem)
 
 	if err != nil {
 		return nil, fmt.Errorf("Can't connect to payemnt system: %v", err)
 	}
 
-	service := service.NewService(repo, hs_client, ps_client)
-	handler := handlers.NewlHandler(service)
+	service := service.NewService(repo, hsClient, *notificationServiceClient, ps_client)
+	handler := handlers.NewlHandler(&service)
 	router := mux.NewRouter().PathPrefix("/booking-service/api").Subrouter()
 
 	router.HandleFunc("/add-reservation", handler.AddReservation).Methods("POST")
@@ -76,7 +81,7 @@ func (app *BookingServiceApp) Start(ctx context.Context) error {
 	group, ctx := errgroup.WithContext(ctx)
 
 	group.Go(func() error {
-    log.Printf("BookingService: Starting http server on %s:%s", app.config.Server.Host, app.config.Server.Port)
+		log.Printf("BookingService: Starting http server on %s:%s", app.config.Server.Host, app.config.Server.Port)
 		if err := app.httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			return err
 		}
@@ -84,7 +89,7 @@ func (app *BookingServiceApp) Start(ctx context.Context) error {
 	})
 
 	group.Go(func() error {
-    log.Printf("BookingService: Starting grpc server on %s:%s", app.config.BookingService.Host, app.config.BookingService.Port)
+		log.Printf("BookingService: Starting grpc server on %s:%s", app.config.BookingService.Host, app.config.BookingService.Port)
 		listener, err := net.Listen("tcp", fmt.Sprintf("%s:%s", app.config.BookingService.Host, app.config.BookingService.Port))
 		if err != nil {
 			return err
@@ -105,7 +110,7 @@ func (app *BookingServiceApp) Start(ctx context.Context) error {
 func (app *BookingServiceApp) Shutdown() error {
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), app.config.App.ShutdownTimeout*time.Second)
 	defer cancel()
-  done := make(chan error)
+	done := make(chan error)
 
 	go func() {
 		done <- app.stopHttpServer(shutdownCtx)
@@ -127,7 +132,7 @@ func (app *BookingServiceApp) stopHttpServer(ctx context.Context) error {
 		return err
 	}
 
-  log.Println("BookingService: HTTP server has stopped")
+	log.Println("BookingService: HTTP server has stopped")
 	return nil
 }
 
@@ -141,9 +146,9 @@ func (app *BookingServiceApp) stopGrpcServer(ctx context.Context) {
 
 	select {
 	case <-done:
-    log.Println("BookingService: gRPC server has stopped")
+		log.Println("BookingService: gRPC server has stopped")
 	case <-ctx.Done():
 		app.grpcServer.Stop()
-    log.Println("BookingService: gRPC server has reached stop timeout and has been stopped forcefully")
+		log.Println("BookingService: gRPC server has reached stop timeout and has been stopped forcefully")
 	}
 }

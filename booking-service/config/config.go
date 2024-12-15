@@ -20,6 +20,13 @@ type DbConfig struct {
 	Migrations string `envconfig:"MIGRATIONS"`
 }
 
+type KafkaConfig struct {
+	Topic      string `envconfig:"PRODUCE_TOPIC"`
+	BrokerHost string `envconfig:"BROKER_HOST"`
+	BrokerPort string `envconfig:"BROKER_PORT"`
+	GroupId    string `envconfig:"CONSUMER_GROUP_ID"`
+}
+
 type AppConfig struct {
 	ShutdownTimeout time.Duration `envconfig:"SHUTDOWN_TIMEOUT"`
 }
@@ -31,6 +38,8 @@ type Config struct {
 
 	BookingService ServerConfig
 	HotelService   ServerConfig
+
+	Kafka KafkaConfig
 	PaymentSystem  ServerConfig
 }
 
@@ -67,6 +76,12 @@ func NewConfig() (Config, error) {
 	}
 
 	err = envconfig.Process("BOOKING_SERVICE_GRPC", &cfg.BookingService)
+
+	if err != nil {
+		return cfg, err
+	}
+
+	err = envconfig.Process("KAFKA", &cfg.Kafka)
 
 	return cfg, err
 }
