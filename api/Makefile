@@ -3,12 +3,12 @@ PROTODIR := proto
 PROTOC := protoc
 
 PROTO := $(shell find proto -type f -name '*.proto')
-TARGET := $(patsubst $(PROTODIR)/%, $(APIDIR)/%, $(PROTO:.proto=))
+TARGET := $(patsubst $(PROTODIR)/%, $(APIDIR)/%, $(PROTO:.proto=_api))
 
 all: $(TARGET)
 	@echo $(TARGET)
 
-$(APIDIR)/%: $(PROTODIR)/%.proto
+$(APIDIR)/%_api: $(PROTODIR)/%.proto
 	$(PROTOC) --go_out=. --go-grpc_out=. $<
 
 setup:

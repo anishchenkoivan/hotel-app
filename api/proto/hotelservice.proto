@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api;
 
-option go_package = "./code/hotelservice";
+option go_package = "./code/hotelservice_api";
 
 service HotelService {
   rpc GetRoom (GetRoomRequest) returns (GetRoomResponse);
