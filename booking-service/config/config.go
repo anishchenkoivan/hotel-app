@@ -31,6 +31,7 @@ type Config struct {
 
 	BookingService ServerConfig
 	HotelService   ServerConfig
+	PaymentSystem  ServerConfig
 }
 
 func NewConfig() (Config, error) {
@@ -53,7 +54,13 @@ func NewConfig() (Config, error) {
 		return cfg, err
 	}
 
-	err = envconfig.Process("HOTEL_SERVICE_SERVER", &cfg.HotelService)
+	err = envconfig.Process("HOTEL_SERVICE_GRPC", &cfg.HotelService)
+
+  if err != nil {
+		return cfg, err
+	}
+
+	err = envconfig.Process("PAYMENT_SYSTEM_GRPC", &cfg.HotelService)
 
 	if err != nil {
 		return cfg, err

@@ -45,7 +45,9 @@ func NewBookingServiceApp(conf config.Config) (*BookingServiceApp, error) {
 		return nil, fmt.Errorf("Can't connect to hotel-service: %v", err)
 	}
 
-	service := service.NewService(repo, hs_client)
+  ps_client, err := clients.NewPayementSystem(conf.PaymentSystem)
+
+	service := service.NewService(repo, hs_client, ps_client)
 	handler := handlers.NewlHandler(&service)
 	router := mux.NewRouter().PathPrefix("/booking-service/api").Subrouter()
 

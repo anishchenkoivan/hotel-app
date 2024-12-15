@@ -121,7 +121,7 @@ func (handler *Handler) GetRoomReservations(w http.ResponseWriter, r *http.Reque
 // @Accept json
 // @Produce json
 // @Param Reservation body CreateReservationDto true "Reservation parametres"
-// @Success 200 {object} uuid.UUID
+// @Success 200 {object} NewReservationDto
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Router /add-reservation [post]
@@ -129,9 +129,9 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	encoder := json.NewEncoder(w)
 
-  err := r.ParseForm()
+	err := r.ParseForm()
 
-  if err != nil {
+	if err != nil {
 		http.Error(w, "Failed to parse request", http.StatusBadRequest)
 		return
 	}
@@ -152,27 +152,30 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := handler.service.AddReservation(data)
+	id, paymentURL, err := handler.service.AddReservation(data)
 
 	if err != nil {
 		if errors.Is(err, service.RepositoryError) {
-      log.Printf("BookingService: Failed to insert: %v", err)
+			log.Printf("BookingService: Failed to insert: %v", err)
 			http.Error(w, "Failed to insert", http.StatusInternalServerError)
 		} else if errors.Is(err, service.ReservationAlreadyExists) {
 			http.Error(w, "Room is reserved on selected time range", http.StatusBadRequest)
 		} else if errors.Is(err, service.InvalidReservation) {
 			http.Error(w, "Invalid reservation", http.StatusBadRequest)
-		} else if errors.Is(err, service.GrpcError) {
-      log.Printf("BookingService: Failed to get room price: %v", err)
-			http.Error(w, "Failed to get room price", http.StatusBadRequest)
+		} else if errors.Is(err, service.HotelServiceError) {
+			log.Printf("BookingService: Failed to get room price: %v", err)
+			http.Error(w, "Failed to get room price", http.StatusInternalServerError)
+		} else if errors.Is(err, service.PayemntSystemError) {
+			log.Printf("BookingService: can't create payemnt webhook: %v", err)
+			http.Error(w, "Can't creaate payemnt webohook", http.StatusInternalServerError)
 		} else {
-      log.Printf("BookingService: Unknown server error: %v", err)
+			log.Printf("BookingService: Unknown server error: %v", err)
 			http.Error(w, "Unknown server error", http.StatusInternalServerError)
 		}
 		return
 	}
 
-	resp := ReservationIdDto{id}
+	resp := NewReservationDto{Id: id, PaymentUrl: paymentURL}
 	err = encoder.Encode(resp)
 
 	if err != nil {

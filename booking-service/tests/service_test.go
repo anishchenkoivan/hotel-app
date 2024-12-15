@@ -15,6 +15,7 @@ func TestAddReservation(t *testing.T) {
 	expectedId := uuid.New()
 
 	hotel := mocks.MockHotelService{GetPriceReturnValue: 10, GetPriceReturnError: nil}
+  payment := mocks.MockPaymentSystem{}
 	repo := mocks.MockRepository{
     IsAvailableReturnValue: true,
     IsAvailableReturnError: nil,
@@ -29,9 +30,9 @@ func TestAddReservation(t *testing.T) {
 		IsPaid: false,
 	}
 
-	serv := service.NewService(&repo, &hotel)
+	serv := service.NewService(&repo, &hotel, &payment)
 
-	id, err := serv.AddReservation(data)
+	id, _, err := serv.AddReservation(data)
 
   if err != nil {
     t.Fatalf("AddReservation returns not nil err = %s", err)
@@ -51,6 +52,7 @@ func TestGrpcError(t *testing.T) {
   expectedErr := errors.New("test error")
 
 	hotel := mocks.MockHotelService{GetPriceReturnValue: 10, GetPriceReturnError: expectedErr}
+  payment := mocks.MockPaymentSystem{}
 	repo := mocks.MockRepository{
     IsAvailableReturnValue: true,
     IsAvailableReturnError: nil,
@@ -63,9 +65,9 @@ func TestGrpcError(t *testing.T) {
     OutTime: time.Unix(3, 0),
   }
 
-	serv := service.NewService(&repo, &hotel)
+	serv := service.NewService(&repo, &hotel, &payment)
 
-	_, err := serv.AddReservation(data)
+	_, _, err := serv.AddReservation(data)
 
   if repo.LastPutted != nil {
     t.Errorf("Something is put in the repo when unable to get cost")
@@ -82,6 +84,7 @@ func TestAvailabilityCheckError(t *testing.T) {
   expectedErr := errors.New("test error")
 
 	hotel := mocks.MockHotelService{GetPriceReturnValue: 10, GetPriceReturnError: nil}
+  payment := mocks.MockPaymentSystem{}
 	repo := mocks.MockRepository{
     IsAvailableReturnValue: true,
     IsAvailableReturnError: expectedErr,
@@ -94,9 +97,9 @@ func TestAvailabilityCheckError(t *testing.T) {
     OutTime: time.Unix(3, 0),
   }
 
-	serv := service.NewService(&repo, &hotel)
+	serv := service.NewService(&repo, &hotel, &payment)
 
-	_, err := serv.AddReservation(data)
+	_, _, err := serv.AddReservation(data)
 
   if repo.LastPutted != nil {
     t.Errorf("Something is putted in the repo when unable to get cost")
@@ -113,6 +116,7 @@ func TestPutError(t *testing.T) {
   expectedErr := errors.New("test error")
 
 	hotel := mocks.MockHotelService{GetPriceReturnValue: 10, GetPriceReturnError: nil}
+  payment := mocks.MockPaymentSystem{}
 	repo := mocks.MockRepository{
     IsAvailableReturnValue: true,
     IsAvailableReturnError: nil,
@@ -125,9 +129,9 @@ func TestPutError(t *testing.T) {
     OutTime: time.Unix(3, 0),
   }
 
-	serv := service.NewService(&repo, &hotel)
+	serv := service.NewService(&repo, &hotel, &payment)
 
-	_, err := serv.AddReservation(data)
+	_, _, err := serv.AddReservation(data)
 
   if err == nil {
     t.Errorf("Returned err is nil")
@@ -139,6 +143,7 @@ func TestPutError(t *testing.T) {
 
 func TestIsNotAvailable(t *testing.T) {
 	hotel := mocks.MockHotelService{GetPriceReturnValue: 10, GetPriceReturnError: nil}
+  payment := mocks.MockPaymentSystem{}
 	repo := mocks.MockRepository{
     IsAvailableReturnValue: false,
     IsAvailableReturnError: nil,
@@ -151,9 +156,9 @@ func TestIsNotAvailable(t *testing.T) {
     OutTime: time.Unix(3, 0),
   }
 
-	serv := service.NewService(&repo, &hotel)
+	serv := service.NewService(&repo, &hotel, &payment)
 
-	_, err := serv.AddReservation(data)
+	_, _, err := serv.AddReservation(data)
 
   if err == nil {
     t.Errorf("Returned err is nil")
@@ -165,6 +170,7 @@ func TestIsNotAvailable(t *testing.T) {
 
 func TestInvalidReservation(t *testing.T) {
 	hotel := mocks.MockHotelService{GetPriceReturnValue: 10, GetPriceReturnError: nil}
+  payment := mocks.MockPaymentSystem{}
 	repo := mocks.MockRepository{
     IsAvailableReturnValue: true,
     IsAvailableReturnError: nil,
@@ -177,9 +183,9 @@ func TestInvalidReservation(t *testing.T) {
     OutTime: time.Unix(0, 0),
   }
 
-	serv := service.NewService(&repo, &hotel)
+	serv := service.NewService(&repo, &hotel, &payment)
 
-	_, err := serv.AddReservation(data)
+	_, _, err := serv.AddReservation(data)
 
   if err == nil {
     t.Errorf("Returned err is nil")
