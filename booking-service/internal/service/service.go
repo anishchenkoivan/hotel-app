@@ -3,17 +3,16 @@ package service
 import (
 	"fmt"
 
-	"github.com/anishchenkoivan/hotel-app/booking-service/internal/clients"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
 	"github.com/google/uuid"
 )
 
 type Service struct {
 	repository   Repository
-	hotelService *clients.HotelService
+	hotelService HotelService
 }
 
-func NewService(repo Repository, hotel *clients.HotelService) Service {
+func NewService(repo Repository, hotel HotelService) Service {
 	return Service{repo, hotel}
 }
 
