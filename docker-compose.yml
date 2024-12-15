@@ -41,8 +41,10 @@ services:
       BOOKING_SERVICE_GRPC_HOST: booking-service
       BOOKING_SERVICE_GRPC_PORT: 50051
       BOOKING_SERVICE_APP_SHUTDOWN_TIMEOUT: 5s
-      HOTEL_SERVICE_SERVER_HOST: hotel-service
-      HOTEL_SERVICE_SERVER_PORT: 50051
+      HOTEL_SERVICE_GRPC_HOST: hotel-service
+      HOTEL_SERVICE_GRPC_PORT: 50051
+      PAYMENT_SYSTEM_GRPC_HOST: payment-system
+      PAYMENT_SYSTEM_GRPC_PORT: 50051
     networks:
       - backend
     ports:
