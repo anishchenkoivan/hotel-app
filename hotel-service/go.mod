@@ -3,7 +3,7 @@ module github.com/anishchenkoivan/hotel-app/hotel-service
 go 1.23.4
 
 require (
-	github.com/anishchenkoivan/hotel-app/api v0.0.0-20241213222711-d7164939d726
+	github.com/anishchenkoivan/hotel-app/api v0.0.0-20241215164027-1fd910044b9f
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1

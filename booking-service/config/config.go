@@ -60,7 +60,7 @@ func NewConfig() (Config, error) {
 		return cfg, err
 	}
 
-	err = envconfig.Process("PAYMENT_SYSTEM_GRPC", &cfg.HotelService)
+	err = envconfig.Process("PAYMENT_SYSTEM_GRPC", &cfg.PaymentSystem)
 
 	if err != nil {
 		return cfg, err
