@@ -93,6 +93,7 @@ services:
       PAYMENT_SYSTEM_PAYMENT_TIMEOUT: 60s
       BOOKING_SERVICE_PORT: 50051
       BOOKING_SERVICE_HOST: booking-service
+      PAYMENT_URL: "localhost:8082"
     networks:
       - backend
     ports:
