@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"github.com/anishchenkoivan/hotel-app/booking-service/internal/clients"
 	"testing"
 	"time"
 
@@ -29,6 +30,7 @@ func TestAddReservation(t *testing.T) {
 		IsPaid:  false,
 	}
 
+	payment := mocks.MockPaymentSystem{}
 	serv := service.NewService(&repo, &hotel, clients.NotificationService{}, &payment)
 
 	id, _, err := serv.AddReservation(data)
@@ -63,8 +65,8 @@ func TestGrpcError(t *testing.T) {
 		OutTime: time.Unix(3, 0),
 	}
 
-	serv := service.NewService(&repo, &hotel, clients.NotificationService{})
-	serv := service.NewService(&repo, &hotel, &payment)
+	payment := mocks.MockPaymentSystem{}
+	serv := service.NewService(&repo, &hotel, clients.NotificationService{}, &payment)
 
 	_, _, err := serv.AddReservation(data)
 
@@ -83,7 +85,7 @@ func TestAvailabilityCheckError(t *testing.T) {
 	expectedErr := errors.New("test error")
 
 	hotel := mocks.MockHotelService{GetPriceReturnValue: 10, GetPriceReturnError: nil}
-  payment := mocks.MockPaymentSystem{}
+	payment := mocks.MockPaymentSystem{}
 	repo := mocks.MockRepository{
 		IsAvailableReturnValue: true,
 		IsAvailableReturnError: expectedErr,
@@ -115,7 +117,7 @@ func TestPutError(t *testing.T) {
 	expectedErr := errors.New("test error")
 
 	hotel := mocks.MockHotelService{GetPriceReturnValue: 10, GetPriceReturnError: nil}
-  payment := mocks.MockPaymentSystem{}
+	payment := mocks.MockPaymentSystem{}
 	repo := mocks.MockRepository{
 		IsAvailableReturnValue: true,
 		IsAvailableReturnError: nil,
@@ -128,7 +130,7 @@ func TestPutError(t *testing.T) {
 		OutTime: time.Unix(3, 0),
 	}
 
-	serv := service.NewService(&repo, &hotel, &payment)
+	serv := service.NewService(&repo, &hotel, clients.NotificationService{}, &payment)
 
 	_, _, err := serv.AddReservation(data)
 
@@ -142,7 +144,7 @@ func TestPutError(t *testing.T) {
 
 func TestIsNotAvailable(t *testing.T) {
 	hotel := mocks.MockHotelService{GetPriceReturnValue: 10, GetPriceReturnError: nil}
-  payment := mocks.MockPaymentSystem{}
+	payment := mocks.MockPaymentSystem{}
 	repo := mocks.MockRepository{
 		IsAvailableReturnValue: false,
 		IsAvailableReturnError: nil,
@@ -169,7 +171,7 @@ func TestIsNotAvailable(t *testing.T) {
 
 func TestInvalidReservation(t *testing.T) {
 	hotel := mocks.MockHotelService{GetPriceReturnValue: 10, GetPriceReturnError: nil}
-  payment := mocks.MockPaymentSystem{}
+	payment := mocks.MockPaymentSystem{}
 	repo := mocks.MockRepository{
 		IsAvailableReturnValue: true,
 		IsAvailableReturnError: nil,

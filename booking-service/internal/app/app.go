@@ -71,7 +71,7 @@ func NewBookingServiceApp(conf config.Config) (*BookingServiceApp, error) {
 	}
 
 	grpcServer := grpc.NewServer()
-	grpcHandler := handlers.NewHotelServiceGrpcHandler(service)
+	grpcHandler := handlers.NewHotelServiceGrpcHandler(&service)
 	bookingservice_api.RegisterBookingServiceServer(grpcServer, grpcHandler)
 
 	return &BookingServiceApp{&httpServer, grpcServer, conf}, nil
