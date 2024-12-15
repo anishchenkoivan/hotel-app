@@ -3,11 +3,11 @@ definitions:
     properties:
       clientEmail:
         type: string
-      clientName:
+      clientFirstName:
+        type: string
+      clientLastName:
         type: string
       clientPhone:
-        type: string
-      clientSurname:
         type: string
       inTime:
         type: string
@@ -16,15 +16,22 @@ definitions:
       roomId:
         type: string
     type: object
+  handlers.NewReservationDto:
+    properties:
+      id:
+        type: string
+      paymentUrl:
+        type: string
+    type: object
   handlers.ReservationDto:
     properties:
       clientEmail:
         type: string
-      clientName:
+      clientFirstName:
+        type: string
+      clientLastName:
         type: string
       clientPhone:
-        type: string
-      clientSurname:
         type: string
       cost:
         type: integer
@@ -64,7 +71,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/handlers.NewReservationDto'
         "400":
           description: Bad Request
           schema:
