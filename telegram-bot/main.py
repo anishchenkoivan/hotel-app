@@ -55,10 +55,10 @@ def handle_user_input(message):
 
     if 'roomId' not in user_data[user_id]:
         user_data[user_id]['roomId'] = message.text
-        bot.send_message(user_id, "Теперь введите дату и время заезда")
+        bot.send_message(user_id, "Теперь введите дату и время заезда в формате дд.мм.гггг")
     elif 'inTime' not in user_data[user_id]:
         user_data[user_id]['inTime'] = message.text
-        bot.send_message(user_id, "Теперь введите дату и время выезда")
+        bot.send_message(user_id, "Теперь введите дату и время выезда в формате дд.мм.гггг")
     elif 'outTime' not in user_data[user_id]:
         user_data[user_id]['outTime'] = message.text
         bot.send_message(user_id, "Теперь введите ваше имя")
