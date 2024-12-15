@@ -95,7 +95,7 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 	router.HandleFunc("/hotelier/{id}", hotelierHandler.UpdateHotelier).Methods("PUT")
 	router.HandleFunc("/hotelier/{id}", hotelierHandler.DeleteHotelier).Methods("DELETE")
 
-	router.HandleFunc("/room", roomHandler.FindAllRooms).Methods("POST")
+	router.HandleFunc("/room", roomHandler.CreateRoom).Methods("POST")
 	router.HandleFunc("/room", roomHandler.FindAllRooms).Methods("GET")
 	router.HandleFunc("/room/{id}", roomHandler.UpdateRoom).Methods("PUT")
 	router.HandleFunc("/room/{id}", roomHandler.FindRoomById).Methods("GET")
