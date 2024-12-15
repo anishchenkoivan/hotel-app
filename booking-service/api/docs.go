@@ -185,6 +185,9 @@ const docTemplate = `{
                 "clientPhone": {
                     "type": "string"
                 },
+                "clientTelegramId": {
+                    "type": "string"
+                },
                 "inTime": {
                     "type": "string"
                 },
@@ -220,6 +223,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "clientPhone": {
+                    "type": "string"
+                },
+                "clientTelegramId": {
                     "type": "string"
                 },
                 "cost": {

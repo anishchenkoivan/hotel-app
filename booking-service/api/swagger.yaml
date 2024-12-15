@@ -9,6 +9,8 @@ definitions:
         type: string
       clientPhone:
         type: string
+      clientTelegramId:
+        type: string
       inTime:
         type: string
       outTime:
@@ -32,6 +34,8 @@ definitions:
       clientLastName:
         type: string
       clientPhone:
+        type: string
+      clientTelegramId:
         type: string
       cost:
         type: integer

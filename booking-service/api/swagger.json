@@ -176,6 +176,9 @@
                 "clientPhone": {
                     "type": "string"
                 },
+                "clientTelegramId": {
+                    "type": "string"
+                },
                 "inTime": {
                     "type": "string"
                 },
@@ -211,6 +214,9 @@
                     "type": "string"
                 },
                 "clientPhone": {
+                    "type": "string"
+                },
+                "clientTelegramId": {
                     "type": "string"
                 },
                 "cost": {
