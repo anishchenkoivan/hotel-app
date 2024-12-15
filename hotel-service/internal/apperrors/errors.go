@@ -26,7 +26,20 @@ func (e *ParsingError) Error() string {
 	return fmt.Sprintf("parsing: %s", e.message)
 }
 
+type AccessDeniedError struct {
+	message string
+}
+
+func NewAccessDeniedError(message string) *AccessDeniedError {
+	return &AccessDeniedError{message: message}
+}
+
+func (e *AccessDeniedError) Error() string {
+	return fmt.Sprintf("access denied: %s", e.message)
+}
+
 var (
-	NotFoundErrorInstance = NewNotFoundError("instance not found")
-	ParsingErrorInstance  = NewParsingError("instance parsing")
+	NotFoundErrorInstance     = NewNotFoundError("instance not found")
+	ParsingErrorInstance      = NewParsingError("instance parsing")
+	AccessDeniedErrorInstance = NewAccessDeniedError("instance access denied")
 )

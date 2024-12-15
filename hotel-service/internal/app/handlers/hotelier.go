@@ -45,6 +45,29 @@ func (handler *HotelierHandler) FindHotelierById(w http.ResponseWriter, r *http.
 	}
 }
 
+// FindHotelierByTelegramId
+// @Summary Get a hotelier by Telegram ID
+// @Accept json
+// @Produce json
+// @Param telegram-id path string true "Hotelier ID"
+// @Success 200 {object} dto.HotelierDto
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /hotelier/telegram/{telegram-id} [get]
+func (handler *HotelierHandler) FindHotelierByTelegramId(w http.ResponseWriter, r *http.Request) {
+	hotelierTelegramId := mux.Vars(r)["telegram-id"]
+
+	hotelier, err := handler.service.GetHotelierByTelegramId(hotelierTelegramId)
+	if err != nil {
+		handler.handleError(err, w)
+	}
+
+	err = json.NewEncoder(w).Encode(hotelier)
+	if err != nil {
+		handler.handleError(apperrors.NewParsingError("FindHotelierTelegramId: "+err.Error()), w)
+	}
+}
+
 // CreateHotelier
 // @Summary Create a new hotelier
 // @Accept json
@@ -131,6 +154,8 @@ func (handler *HotelierHandler) handleError(err error, w http.ResponseWriter) {
 		http.Error(w, "Not found", http.StatusNotFound)
 	} else if errors.Is(err, apperrors.ParsingErrorInstance) {
 		http.Error(w, "Failed to parse", http.StatusBadRequest)
+	} else if errors.Is(err, apperrors.AccessDeniedErrorInstance) {
+		http.Error(w, "Access denied", http.StatusForbidden)
 	} else {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
