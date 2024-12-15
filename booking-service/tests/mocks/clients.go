@@ -1,6 +1,8 @@
 package mocks
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type MockHotelService struct {
 	GetPriceReturnValue int64
