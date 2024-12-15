@@ -77,7 +77,7 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 
 	hotelService := hotelservice.NewHotelService(hotelRepository, hotelierRepository)
 	hotelierService := hotelierservice.NewHotelierService(hotelierRepository)
-	roomService := roomservice.NewRoomService(roomRepository, hotelRepository)
+	roomService := roomservice.NewRoomService(roomRepository, hotelRepository, hotelierRepository)
 
 	hotelHandler := handlers.NewHotelHandler(hotelService)
 	hotelierHandler := handlers.NewHotelierHandler(hotelierService)
