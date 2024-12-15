@@ -29,7 +29,7 @@ func NewAddPaymentGrpcHandler(config config.Config, mu *sync.Mutex, bookingEntit
 func (s *AddPaymentGrpcHandler) AddPayment(_ context.Context, req *pb.AddPaymentRequest) (*pb.AddPaymentResponse, error) {
 	token := GenerateToken(req.BookingId)
 	s.mu.Lock()
-	bookingEntity, exists := s.bookingEntityByHash[token]
+	_, exists := s.bookingEntityByHash[token]
 	for exists {
 		_, exists = s.bookingEntityByHash[token]
 	}
@@ -38,28 +38,29 @@ func (s *AddPaymentGrpcHandler) AddPayment(_ context.Context, req *pb.AddPayment
 	go func() {
 		time.Sleep(s.config.PaymentTimeout)
 		s.mu.Lock()
-		_, exists := s.bookingEntityByHash[token]
-		if exists {
-			conn, err := grpc.NewClient(fmt.Sprintf("%s:%s", s.config.BookingServiceHost, s.config.BookingServicePort))
-			if err != nil {
-				log.Fatalf("did not connect: %v", err)
-			}
-			defer func(conn *grpc.ClientConn) {
-				err := conn.Close()
-				if err != nil {
-					log.Fatalf("could not close connection: %v", err)
-				}
-			}(conn)
-
-			client := booking_pb.NewBookingServiceClient(conn)
-			req := &booking_pb.ConfirmPaymentRequest{BookingId: bookingEntity.BookingId, IsConfirmed: false}
-			_, err = client.ConfirmPayment(context.Background(), req)
-			if err != nil {
-				log.Println("Payment system grpc webhook error with grpc request:", err)
-			}
-			s.mu.Lock()
-			delete(s.bookingEntityByHash, token)
+		bookingEntity, exists := s.bookingEntityByHash[token]
+		if !exists {
 			s.mu.Unlock()
+			return
+		}
+		delete(s.bookingEntityByHash, token)
+		s.mu.Unlock()
+		conn, err := grpc.NewClient(fmt.Sprintf("%s:%s", s.config.BookingServiceHost, s.config.BookingServicePort))
+		if err != nil {
+			log.Fatalf("did not connect: %v", err)
+		}
+		defer func(conn *grpc.ClientConn) {
+			err := conn.Close()
+			if err != nil {
+				log.Fatalf("could not close connection: %v", err)
+			}
+		}(conn)
+
+		client := booking_pb.NewBookingServiceClient(conn)
+		req := &booking_pb.ConfirmPaymentRequest{BookingId: bookingEntity.BookingId, IsConfirmed: false}
+		_, err = client.ConfirmPayment(context.Background(), req)
+		if err != nil {
+			log.Println("Payment system grpc webhook error with grpc request:", err)
 		}
 	}()
 
