@@ -18,7 +18,7 @@ if BOOKING_SERVICE_HOST is None:
 BOOKING_SERVICE_PORT = int(getenv("BOOKING_SERVICE_PORT"))
 if BOOKING_SERVICE_PORT is None:
     raise ValueError("No BOOKING_SERVICE_PORT variable set in .env")
-HOTEL_SERVICE_HOST = getenv("BOOKING_SERVICE_PORT")
+HOTEL_SERVICE_HOST = getenv("HOTEL_SERVICE_HOST")
 if HOTEL_SERVICE_HOST is None:
     raise ValueError("No HOTEL_SERVICE_HOST variable set in .env")
 HOTEL_SERVICE_PORT = int(getenv("HOTEL_SERVICE_PORT"))

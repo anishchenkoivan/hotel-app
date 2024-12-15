@@ -107,6 +107,7 @@ async def create_item(request: NotifyRequestModel):
 
 
 def start_bot():
+    logging.info("Starting bot")
     bot.polling(none_stop=True, interval=0)
 
 
