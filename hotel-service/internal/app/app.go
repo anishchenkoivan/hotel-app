@@ -91,6 +91,7 @@ func NewHotelServiceApp(config config.Config) *HotelServiceApp {
 
 	router.HandleFunc("/hotelier", hotelierHandler.CreateHotelier).Methods("POST")
 	router.HandleFunc("/hotelier/{id}", hotelierHandler.FindHotelierById).Methods("GET")
+	router.HandleFunc("/hotelier/telegram/{telegram-id}", hotelierHandler.FindHotelierByTelegramId).Methods("GET")
 	router.HandleFunc("/hotelier/{id}", hotelierHandler.UpdateHotelier).Methods("PUT")
 	router.HandleFunc("/hotelier/{id}", hotelierHandler.DeleteHotelier).Methods("DELETE")
 

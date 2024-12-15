@@ -18,6 +18,8 @@ definitions:
         type: string
       hotelierId:
         type: string
+      hotelierTelegramId:
+        type: string
       location:
         type: string
       name:
@@ -27,11 +29,15 @@ definitions:
     properties:
       id:
         type: string
+      telegramId:
+        type: string
       username:
         type: string
     type: object
   dto.HotelierModifyDto:
     properties:
+      telegramId:
+        type: string
       username:
         type: string
     type: object
@@ -62,6 +68,8 @@ definitions:
         type: string
       pricePerDay:
         type: integer
+      telegramId:
+        type: string
     type: object
 info:
   contact: {}
@@ -297,6 +305,32 @@ paths:
           schema:
             type: string
       summary: Update a hotelier
+  /hotelier/telegram/{telegram-id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Hotelier ID
+        in: path
+        name: telegram-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.HotelierDto'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get a hotelier by Telegram ID
   /room:
     get:
       consumes:

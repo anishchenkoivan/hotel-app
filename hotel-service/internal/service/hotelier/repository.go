@@ -7,6 +7,7 @@ import (
 
 type HotelierRepository interface {
 	Get(id uuid.UUID) (*model.Hotelier, error)
+	GetByTelegramId(telegramId string) (*model.Hotelier, error)
 	GetAll() ([]*model.Hotelier, error)
 	Put(*model.Hotelier) (uuid.UUID, error)
 	Update(*model.Hotelier) error
