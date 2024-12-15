@@ -176,13 +176,16 @@ const docTemplate = `{
                 "clientEmail": {
                     "type": "string"
                 },
-                "clientName": {
+                "clientFirstName": {
+                    "type": "string"
+                },
+                "clientLastName": {
                     "type": "string"
                 },
                 "clientPhone": {
                     "type": "string"
                 },
-                "clientSurname": {
+                "clientTelegramId": {
                     "type": "string"
                 },
                 "inTime": {
@@ -202,13 +205,16 @@ const docTemplate = `{
                 "clientEmail": {
                     "type": "string"
                 },
-                "clientName": {
+                "clientFirstName": {
+                    "type": "string"
+                },
+                "clientLastName": {
                     "type": "string"
                 },
                 "clientPhone": {
                     "type": "string"
                 },
-                "clientSurname": {
+                "clientTelegramId": {
                     "type": "string"
                 },
                 "cost": {

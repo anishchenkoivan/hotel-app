@@ -167,13 +167,16 @@
                 "clientEmail": {
                     "type": "string"
                 },
-                "clientName": {
+                "clientFirstName": {
+                    "type": "string"
+                },
+                "clientLastName": {
                     "type": "string"
                 },
                 "clientPhone": {
                     "type": "string"
                 },
-                "clientSurname": {
+                "clientTelegramId": {
                     "type": "string"
                 },
                 "inTime": {
@@ -193,13 +196,16 @@
                 "clientEmail": {
                     "type": "string"
                 },
-                "clientName": {
+                "clientFirstName": {
+                    "type": "string"
+                },
+                "clientLastName": {
                     "type": "string"
                 },
                 "clientPhone": {
                     "type": "string"
                 },
-                "clientSurname": {
+                "clientTelegramId": {
                     "type": "string"
                 },
                 "cost": {

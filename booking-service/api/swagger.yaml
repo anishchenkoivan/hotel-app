@@ -3,11 +3,13 @@ definitions:
     properties:
       clientEmail:
         type: string
-      clientName:
+      clientFirstName:
+        type: string
+      clientLastName:
         type: string
       clientPhone:
         type: string
-      clientSurname:
+      clientTelegramId:
         type: string
       inTime:
         type: string
@@ -20,11 +22,13 @@ definitions:
     properties:
       clientEmail:
         type: string
-      clientName:
+      clientFirstName:
+        type: string
+      clientLastName:
         type: string
       clientPhone:
         type: string
-      clientSurname:
+      clientTelegramId:
         type: string
       cost:
         type: integer
