@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -132,6 +131,7 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 
 	if err != nil {
+    log.Printf("BookingService: Failed to parse request: %v", err)
 		http.Error(w, "Failed to parse request", http.StatusBadRequest)
 		return
 	}
@@ -140,6 +140,7 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 	err = decoder.Decode(&query)
 
 	if err != nil {
+    log.Printf("BookingService: Failed to parse request: %v", err)
 		http.Error(w, "Failed to parse request", http.StatusBadRequest)
 		return
 	}
@@ -147,7 +148,7 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 	data, err := ReservationFromDto(query)
 
 	if err != nil {
-		fmt.Println(err.Error())
+    log.Printf("BookingService: Failed to parse request: %v", err)
 		http.Error(w, "Failed to parse request", http.StatusBadRequest)
 		return
 	}
@@ -157,10 +158,13 @@ func (handler *Handler) AddReservation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if errors.Is(err, service.RepositoryError) {
 			log.Printf("BookingService: Failed to insert: %v", err)
+			log.Printf("BookingService: %v", err)
 			http.Error(w, "Failed to insert", http.StatusInternalServerError)
 		} else if errors.Is(err, service.ReservationAlreadyExists) {
+			log.Printf("BookingService: %v", err)
 			http.Error(w, "Room is reserved on selected time range", http.StatusBadRequest)
 		} else if errors.Is(err, service.InvalidReservation) {
+			log.Printf("BookingService: %v", err)
 			http.Error(w, "Invalid reservation", http.StatusBadRequest)
 		} else if errors.Is(err, service.HotelServiceError) {
 			log.Printf("BookingService: Failed to get room price: %v", err)
