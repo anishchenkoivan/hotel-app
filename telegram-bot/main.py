@@ -45,6 +45,29 @@ def book_room_handler(message):
                      "Введите id комнаты, которую хотите забронировать:\n" + "\n".join([room['id'] for room in rooms]))
 
 
+@bot.message_handler(commands=['pay'])
+def pay_handler(message: types.Message):
+    logger.info(user_data)
+    user_id = message.from_user.id
+    if user_id not in user_data:
+        bot.send_message(user_id, "Сначала выберите номер /book")
+        return
+    # url = user_data[user_id]['paymentUrl']
+    bot.send_message(
+        user_id,
+        f"{user_data[user_id]['clientName'].capitalize()}, "
+        f"ваш номер успешно забронирован с {user_data[user_id]['inTime']} "
+        f"по {user_data[user_id]['inTime']}."
+    )
+    # response = requests.post(url)
+    # logger.info(response.status_code)
+    # if response.status_code == 200:
+    #     bot.send_message(user_id, "Номер успешно забронирован")
+    # else:
+    #     logger.info(f"Payment system responded with status {response.status_code}: {response.content}")
+    del user_data[user_id]
+
+
 @bot.message_handler(func=lambda message: True)
 def handle_user_input(message):
     user_id = message.from_user.id
@@ -82,7 +105,6 @@ def handle_user_input(message):
             logger.info("Booking service responded with status" + str(response.status_code) + ". Content:" + str(
                 response.content))
             return
-        del user_data[user_id]
         try:
             url = response.json()['PaymentUrl']
         except:
@@ -90,33 +112,20 @@ def handle_user_input(message):
             logger.info("Booking service responded with status" + str(response.status_code) + ". Content:" + str(
                 response.content))
             return
-        user_data[user_id] = {'paymentUrl': url}
-        markup = types.InlineKeyboardMarkup(
-            keyboard=[
-                [
-                    types.InlineKeyboardButton(
-                        text='Оплатить',
-                        callback_data='pay'
-                    )
-                ]
-            ]
-        )
-        bot.send_message(user_id, "Ссылка для оплаты\n" + str(url), reply_markup=markup)
+        # user_data[user_id] = {'paymentUrl': url}
+        # markup = types.InlineKeyboardMarkup(
+        #     keyboard=[
+        #         [
+        #             types.InlineKeyboardButton(
+        #                 text='Оплатить',
+        #                 callback_data='pay'
+        #             )
+        #         ]
+        #     ]
+        # )
+        bot.send_message(user_id, "Ссылка для оплаты\n" + str(url) + "\n /pay")
     else:
         bot.send_message(user_id, "Вы уже отправили данные. Оплатите бронь")
-
-
-@bot.callback_query_handler(func=lambda call: call == 'pay')
-def pay_callback(callback: types.CallbackQuery):
-    user_id = callback.from_user
-    url = user_data[user_id]['paymentUrl']
-    response = requests.post(url)
-    logger.info(response.status_code)
-    if response.status_code == 200:
-        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id, text="Номер успешно забронирован")
-    else:
-        logger.info(f"Payment system responded with status {response.status_code}: {response.content}")
-        bot.edit_message_text(chat_id=callback.message.chat.id, message_id=callback.message.message_id, text="Сервис временно не доступен")
 
 
 @app.post("/notify")
