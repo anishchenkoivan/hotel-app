@@ -26,9 +26,9 @@ func main() {
 		log.Fatal("Can't initialize app: ", err)
 	}
 
-  err = app.Start(ctx)
+	err = app.Start(ctx)
 
-  if err != nil {
+	if err != nil {
 		log.Fatal("Can't start app: ", err)
-  }
+	}
 }

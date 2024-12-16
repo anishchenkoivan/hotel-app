@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/anishchenkoivan/hotel-app/notification-service/config"
 	"github.com/anishchenkoivan/hotel-app/notification-service/internal/app/consumers"
+	"github.com/anishchenkoivan/hotel-app/notification-service/internal/client"
 	"github.com/anishchenkoivan/hotel-app/notification-service/internal/service"
 	"github.com/segmentio/kafka-go"
 	"golang.org/x/sync/errgroup"
@@ -24,7 +25,9 @@ func NewNotificationApp(config config.Config) *NotificationApp {
 		GroupID: config.GroupId,
 	})
 
-	notificationService := service.NewService()
+	botClient := client.NewBotClient(config.TelegramBotUrl)
+
+	notificationService := service.NewService(*botClient)
 
 	consumer := consumers.NewConsumer(reader, notificationService)
 
