@@ -153,6 +153,19 @@ services:
     networks:
       - backend
 
+  telegram-bot:
+    build: telegram-bot/
+    container_name: telegram-bot
+    environment:
+      BOT_TOKEN: your_token
+      BOT_HOST: 0.0.0.0
+      BOT_PORT: 8083
+      BOOKING_SERVICE_HOST: booking-service
+      BOOKING_SERVICE_PORT: 8080
+      HOTEL_SERVICE_HOST: hotel-service
+      HOTEL_SERVICE_PORT: 8081
+    networks:
+      - backend
 
 volumes:
   booking_service_data:
