@@ -13,6 +13,8 @@ type Config struct {
 	BrokerPort string
 	GroupId    string
 
+	TelegramBotUrl string
+
 	AppShutdownTimeout time.Duration
 }
 
@@ -32,10 +34,11 @@ func NewConfig() *Config {
 	}
 
 	return &Config{
-		Topic:      os.Getenv("KAFKA_CONSUME_TOPIC"),
-		BrokerHost: os.Getenv("KAFKA_BROKER_HOST"),
-		BrokerPort: os.Getenv("KAFKA_BROKER_PORT"),
-		GroupId:    os.Getenv("KAFKA_GROUP_ID"),
+		Topic:          os.Getenv("KAFKA_CONSUME_TOPIC"),
+		BrokerHost:     os.Getenv("KAFKA_BROKER_HOST"),
+		BrokerPort:     os.Getenv("KAFKA_BROKER_PORT"),
+		GroupId:        os.Getenv("KAFKA_GROUP_ID"),
+		TelegramBotUrl: os.Getenv("TELEGRAM_BOT_URL"),
 
 		AppShutdownTimeout: getTimeout(os.Getenv("NOTIFICATION_SERVICE_SHUTDOWN_TIMEOUT")),
 	}
