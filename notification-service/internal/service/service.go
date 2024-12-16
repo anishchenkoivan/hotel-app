@@ -12,7 +12,7 @@ func NewService() *Service {
 }
 
 func (s *Service) HandleMessage(key string, message model.Message) error {
-	log.Println("Message accepted")
+	log.Println("Message accepted: " + message.TelegramId)
 	if err := s.notifyClient(); err != nil {
 		log.Println(err)
 	}

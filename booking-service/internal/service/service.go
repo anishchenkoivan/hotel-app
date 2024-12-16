@@ -3,15 +3,16 @@ package service
 import (
 	"fmt"
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/clients"
+	"log"
 
 	"github.com/anishchenkoivan/hotel-app/booking-service/internal/model"
 	"github.com/google/uuid"
 )
 
 type Service struct {
-	repository    Repository
-	hotelService  HotelService
-	paymentSystem PaymentSystem
+	repository          Repository
+	hotelService        HotelService
+	paymentSystem       PaymentSystem
 	notificationService clients.NotificationService
 }
 
@@ -54,9 +55,9 @@ func (s Service) AddReservation(data model.Reservation) (uuid.UUID, string, erro
 		return uuid.UUID{}, "", fmt.Errorf("%w: %w", RepositoryError, err)
 	}
 
-  payURL, err := s.paymentSystem.AddPayment(id, data.Cost)
+	payURL, err := s.paymentSystem.AddPayment(id, data.Cost)
 
-  if err != nil {
+	if err != nil {
 		return uuid.UUID{}, "", fmt.Errorf("%w: %w", PayemntSystemError, err)
 	}
 
@@ -73,6 +74,8 @@ func (s Service) ConfirmPayment(id uuid.UUID) error {
 		return err
 	}
 
+	log.Println("Something is happening")
+
 	reservation, err := s.repository.GetById(id)
 	if err != nil {
 		return err
@@ -81,6 +84,7 @@ func (s Service) ConfirmPayment(id uuid.UUID) error {
 	err = s.notificationService.SendNotification(clients.Message{
 		FirstName:     reservation.Client.FirstName,
 		LastName:      reservation.Client.LastName,
+		TelegramId:    reservation.Client.TelegramId,
 		ReservationId: id,
 		RoomId:        reservation.RoomId,
 		InTime:        reservation.InTime,
